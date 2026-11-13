@@ -19,6 +19,7 @@ export default function OrganiserDashboard() {
   const [judgeData, setJudgeData] = useState(null);
   const [sponsorData, setSponsorData] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Modals
   const [isCheckinOpen, setIsCheckinOpen] = useState(false);
@@ -140,8 +141,15 @@ export default function OrganiserDashboard() {
     }
   };
 
+  const navItems = [
+    { key: 'ops', label: 'EventOps Console', icon: 'space_dashboard', desc: 'KPIs & Telemetry' },
+    { key: 'teams', label: 'Roll Call & Teams', icon: 'group', desc: 'Attendees & Scanner' },
+    { key: 'judge', label: 'Judge Calibration', icon: 'gavel', desc: 'Rubric Scoring' },
+    { key: 'sponsor', label: 'Sponsors & ROI', icon: 'storefront', desc: 'Talent & Proposals' },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#F8F5F0] text-[#1F1916] flex flex-col selection:bg-[#EBDDCF] selection:text-[#943C1D]">
+    <div className="min-h-screen bg-[#F8F5F0] text-[#1F1916] flex flex-col lg:flex-row selection:bg-[#EBDDCF] selection:text-[#943C1D]">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-[#1F1916] text-white text-xs px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 border border-[#382F2A] animate-fadeIn">
@@ -150,34 +158,66 @@ export default function OrganiserDashboard() {
         </div>
       )}
 
-      {/* Organiser Header */}
-      <header className="sticky top-0 z-40 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#E7DFD5]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          {/* Left: Brand & Event Context */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="h-10 w-10 rounded-xl bg-[#943C1D] flex items-center justify-center text-white font-mono font-bold text-xs tracking-tight shadow-sm">
-              EF
-            </div>
+      {/* Mobile Top Header */}
+      <div className="lg:hidden bg-[#FAF7F2] border-b border-[#E7DFD5] px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+        <div className="flex items-center gap-2">
+          <span className="font-sans font-bold text-lg tracking-tight text-[#1F1916]">
+            aegis
+          </span>
+          <span className="text-[10px] font-mono text-[#943C1D] font-semibold bg-[#FDF2F0] px-1.5 py-0.5 rounded border border-[#F5C7C1]">
+            COMMAND OPS
+          </span>
+        </div>
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="p-1.5 rounded-lg border border-[#E7DFD5] text-[#1F1916] hover:bg-white"
+        >
+          <span className="material-symbols-outlined text-xl">
+            {mobileMenuOpen ? 'close' : 'menu'}
+          </span>
+        </button>
+      </div>
+
+      {/* LEFT SIDEBAR (Floating card with space at top, left & bottom) */}
+      <aside className={`
+        fixed inset-y-0 left-0 z-50 w-72 bg-white border-r lg:border border-[#E7DFD5] p-4 flex flex-col justify-between transition-transform duration-200 ease-in-out
+        lg:static lg:w-64 xl:w-72 lg:h-[calc(100vh-2rem)] lg:sticky lg:top-4 lg:ml-4 lg:my-4 lg:rounded-2xl lg:shadow-sm
+        ${mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'}
+      `}>
+        {/* Top: Brand & Event Context */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between pb-3.5 border-b border-[#F0EAE1]">
             <div className="flex flex-col">
-              <span className="font-sans font-bold text-sm tracking-tight text-[#1F1916]">
-                EventForge <span className="text-[11px] font-mono text-[#943C1D] font-semibold bg-[#FDF2F0] px-1.5 py-0.5 rounded border border-[#F5C7C1] ml-1">COMMAND OPS</span>
-              </span>
-              <span className="text-[10px] font-mono text-[#73645A]">
-                {user?.role || "Lead Organizer Level 4"} • {user?.affiliation || "Steering Committee"}
+              <div className="flex items-center gap-2">
+                <span className="font-sans font-bold text-xl tracking-tight text-[#1F1916]">
+                  aegis
+                </span>
+                <span className="text-[9px] font-mono text-[#943C1D] font-semibold uppercase tracking-wider bg-[#FDF2F0] px-1.5 py-0.5 rounded border border-[#F5C7C1]">
+                  Command Ops
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-[#73645A] mt-0.5">
+                Director & Review Suite
               </span>
             </div>
 
-            <div className="h-5 w-px bg-[#E2D8CC] hidden xl:block"></div>
+            {/* Mobile close button */}
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="lg:hidden p-1 text-[#73645A] hover:text-[#1F1916]"
+            >
+              <span className="material-symbols-outlined text-lg">close</span>
+            </button>
+          </div>
 
-            {/* Event Picker Box */}
-            <div className="hidden xl:flex items-center h-10 px-3 rounded-xl bg-white border border-[#E5DDD2] shadow-sm max-w-[220px] relative group hover:border-[#D5C9BD] transition-colors">
-              <span className="material-symbols-outlined text-[16px] text-[#73645A] mr-1.5 shrink-0">
-                calendar_today
-              </span>
+          {/* Event Picker Selector */}
+          <div className="p-2.5 rounded-xl bg-[#FAF7F2] border border-[#E7DFD5] space-y-1">
+            <span className="text-[10px] font-mono text-[#73645A] uppercase tracking-wider block font-semibold">Active Event</span>
+            <div className="relative">
               <select
                 value={sprintStatus?.active_event || "Global Sprint 2025 (North America)"}
                 onChange={(e) => handleSwitchEvent(e.target.value)}
-                className="bg-transparent font-sans text-xs text-[#1F1916] focus:outline-none cursor-pointer w-full truncate pr-4 appearance-none"
+                className="w-full bg-white font-sans text-xs text-[#1F1916] p-2 pr-6 rounded-lg border border-[#E7DFD5] focus:outline-none cursor-pointer truncate appearance-none"
               >
                 {sprintStatus?.event_options?.map((opt) => (
                   <option key={opt} value={opt} className="bg-white text-[#1F1916]">
@@ -187,102 +227,99 @@ export default function OrganiserDashboard() {
                   <option>Autonomous Systems Hackathon 2025</option>
                 )}
               </select>
-              <span className="material-symbols-outlined text-[14px] text-[#73645A] absolute right-2.5 pointer-events-none">
+              <span className="material-symbols-outlined text-[14px] text-[#73645A] absolute right-2 top-2.5 pointer-events-none">
                 expand_more
               </span>
             </div>
           </div>
 
-          {/* Center: Organiser Management Nav Tabs */}
-          <div className="flex-1 flex justify-center min-w-0 max-w-2xl px-1">
-            <nav className="h-10 bg-[#EFE9DF] p-1 rounded-xl border border-[#E0D5C7] flex items-center gap-1 shadow-inner overflow-x-auto no-scrollbar">
-              <button
-                onClick={() => setActiveTab('ops')}
-                className={`h-8 px-3 rounded-lg text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap transition-all cursor-pointer ${
-                  activeTab === 'ops'
-                    ? 'bg-white text-[#1F1916] font-semibold shadow-sm border border-[#E5DDD2]'
-                    : 'text-[#6B5F54] hover:text-[#1F1916]'
-                }`}
-              >
-                <span className="material-symbols-outlined text-[15px]">space_dashboard</span>
-                <span>EventOps Console</span>
-              </button>
+          {/* Navigation Items (Vertical Stack) */}
+          <nav className="space-y-1.5">
+            <span className="text-[10px] font-mono text-[#73645A] uppercase tracking-wider px-2 block mb-1">
+              Director Modules
+            </span>
+            {navItems.map((item) => {
+              const isActive = activeTab === item.key;
+              return (
+                <button
+                  key={item.key}
+                  onClick={() => {
+                    setActiveTab(item.key);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-[#943C1D] text-white shadow-sm font-semibold'
+                      : 'text-[#5C5248] hover:text-[#1F1916] hover:bg-[#FAF7F2]'
+                  }`}
+                >
+                  <span className={`material-symbols-outlined text-lg ${isActive ? 'text-white' : 'text-[#73645A]'}`}>
+                    {item.icon}
+                  </span>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-xs leading-snug">{item.label}</span>
+                    <span className={`text-[10px] leading-none ${isActive ? 'text-white/80' : 'text-[#A89C92]'}`}>
+                      {item.desc}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </nav>
 
-              <button
-                onClick={() => setActiveTab('teams')}
-                className={`h-8 px-3 rounded-lg text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap transition-all cursor-pointer ${
-                  activeTab === 'teams'
-                    ? 'bg-white text-[#1F1916] font-semibold shadow-sm border border-[#E5DDD2]'
-                    : 'text-[#6B5F54] hover:text-[#1F1916]'
-                }`}
-              >
-                <span className="material-symbols-outlined text-[15px]">group</span>
-                <span>Roll Call & Teams</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('judge')}
-                className={`h-8 px-3 rounded-lg text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap transition-all cursor-pointer ${
-                  activeTab === 'judge'
-                    ? 'bg-white text-[#1F1916] font-semibold shadow-sm border border-[#E5DDD2]'
-                    : 'text-[#6B5F54] hover:text-[#1F1916]'
-                }`}
-              >
-                <span className="material-symbols-outlined text-[15px]">gavel</span>
-                <span>Judge Calibration</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('sponsor')}
-                className={`h-8 px-3 rounded-lg text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap transition-all cursor-pointer ${
-                  activeTab === 'sponsor'
-                    ? 'bg-white text-[#1F1916] font-semibold shadow-sm border border-[#E5DDD2]'
-                    : 'text-[#6B5F54] hover:text-[#1F1916]'
-                }`}
-              >
-                <span className="material-symbols-outlined text-[15px]">storefront</span>
-                <span>Sponsors & ROI</span>
-              </button>
-            </nav>
-          </div>
-
-          {/* Right: Actions & Logout */}
-          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-            {/* Quick Check-in Button */}
+          {/* Quick Operations Triggers */}
+          <div className="pt-2 border-t border-[#F0EAE1] space-y-1.5">
+            <span className="text-[10px] font-mono text-[#73645A] uppercase tracking-wider px-2 block mb-1">
+              Fast Actions
+            </span>
             <button
               onClick={() => setIsCheckinOpen(true)}
-              className="h-10 px-3 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1F1916] border border-[#E5DDD2] text-xs font-semibold inline-flex items-center gap-1.5 shadow-sm transition-colors cursor-pointer"
-              title="Scan Attendee Checkin"
+              className="w-full flex items-center justify-between p-2 rounded-xl bg-[#EFF5F1] text-[#2F5B3C] border border-[#DEEBE1] text-xs font-semibold hover:bg-[#E4EFE7] transition-colors cursor-pointer"
             >
-              <span className="material-symbols-outlined text-[16px] text-[#2F5B3C]">qr_code_scanner</span>
-              <span className="hidden sm:inline">Check-in</span>
+              <span className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-base">qr_code_scanner</span>
+                Scan Attendee
+              </span>
+              <span className="text-[10px] font-mono">Check-in</span>
             </button>
 
-            {/* Emergency Broadcast Button */}
             <button
               onClick={() => setIsBroadcastOpen(true)}
-              className="h-10 px-3 rounded-xl bg-[#FAF7F2] hover:bg-[#F2EDE4] text-[#943C1D] border border-[#E5DDD2] text-xs font-semibold inline-flex items-center gap-1.5 shadow-sm transition-colors cursor-pointer"
-              title="Dispatch Broadcast"
+              className="w-full flex items-center justify-between p-2 rounded-xl bg-[#FDF2F0] text-[#943C1D] border border-[#F5C7C1] text-xs font-semibold hover:bg-[#FBE4E1] transition-colors cursor-pointer"
             >
-              <span className="material-symbols-outlined text-[16px]">campaign</span>
-              <span className="hidden sm:inline">Dispatch</span>
-            </button>
-
-            {/* Logout */}
-            <button
-              onClick={logout}
-              className="h-10 px-3 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#943C1D] border border-[#E5DDD2] text-xs font-semibold inline-flex items-center gap-1.5 shadow-sm transition-colors cursor-pointer"
-              title="Logout from Command Ops"
-            >
-              <span className="material-symbols-outlined text-[16px]">logout</span>
-              <span className="hidden sm:inline">Logout</span>
+              <span className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-base">campaign</span>
+                Broadcast
+              </span>
+              <span className="text-[10px] font-mono">Alert</span>
             </button>
           </div>
         </div>
-      </header>
 
-      {/* Main Organiser Views */}
-      <main className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex-1">
+        {/* Bottom User Profile & Logout */}
+        <div className="pt-4 border-t border-[#F0EAE1] space-y-2">
+          <div className="flex items-center gap-2.5 p-2 rounded-xl bg-[#FAF7F2] border border-[#E7DFD5]">
+            <div className="w-8 h-8 rounded-lg bg-[#FDF2F0] text-[#943C1D] font-mono font-bold text-xs flex items-center justify-center border border-[#F5C7C1] shrink-0">
+              {user?.name ? user.name[0] : 'O'}
+            </div>
+            <div className="flex flex-col min-w-0 flex-1">
+              <span className="text-xs font-semibold text-[#1F1916] truncate">{user?.name || "Dr. Aris Vane"}</span>
+              <span className="text-[10px] text-[#73645A] truncate font-medium">{user?.role || "Director"}</span>
+            </div>
+          </div>
+
+          <button
+            onClick={logout}
+            className="w-full h-9 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#943C1D] border border-[#E7DFD5] text-xs font-semibold inline-flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-sm"
+          >
+            <span className="material-symbols-outlined text-base">logout</span>
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </aside>
+
+      {/* MAIN CONTENT AREA */}
+      <div className="flex-1 min-w-0 p-4 sm:p-6 lg:p-6 lg:pr-6 overflow-y-auto">
         {/* VIEW 1: EVENTOPS MISSION CONTROL */}
         {activeTab === 'ops' && (
           <OrganizerConsole
@@ -390,7 +427,7 @@ export default function OrganiserDashboard() {
             onSubmitProposal={handleProposalSubmit}
           />
         )}
-      </main>
+      </div>
 
       {/* Modals */}
       <CheckinModal
@@ -420,4 +457,3 @@ export default function OrganiserDashboard() {
     </div>
   );
 }
-

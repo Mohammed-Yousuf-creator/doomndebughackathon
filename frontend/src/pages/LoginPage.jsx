@@ -32,7 +32,7 @@ export default function LoginPage() {
       setEmail('marcus.chen@student.mit.edu');
       setPassword('password123');
     } else {
-      setEmail('aris.vane@eventforge.ai');
+      setEmail('aris.vane@aegis.io');
       setPassword('password123');
     }
   };
@@ -69,17 +69,12 @@ export default function LoginPage() {
       {/* Top Brand Header */}
       <div className="max-w-6xl mx-auto w-full flex items-center justify-between pb-6 border-b border-[#E7DFD5]">
         <div className="flex items-center gap-2.5">
-          <div className="h-9 w-9 rounded-xl bg-[#24422D] flex items-center justify-center text-white font-mono font-bold text-xs shadow-sm">
-            EF
-          </div>
-          <div className="flex flex-col">
-            <span className="font-sans font-bold text-base tracking-tight text-[#1F1916]">
-              EventForge <span className="font-serif italic font-normal text-xs text-[#73645A]">AI</span>
-            </span>
-            <span className="text-[10px] font-mono text-[#73645A]">
-              Security & Role Gateway
-            </span>
-          </div>
+          <span className="font-sans font-bold text-2xl tracking-tight text-[#1F1916]">
+            aegis
+          </span>
+          <span className="text-xs font-mono text-[#73645A] border-l border-[#DDD2C5] pl-2.5">
+            Security & Role Gateway
+          </span>
         </div>
 
         <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-[#73645A]">
@@ -190,7 +185,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@university.edu or name@eventforge.ai"
+                placeholder="name@university.edu or name@aegis.io"
                 className="w-full h-10 px-3.5 rounded-xl bg-[#FAF7F2] border border-[#E7DFD5] text-xs text-[#1F1916] placeholder-[#A89C92] focus:outline-none focus:border-[#24422D] focus:bg-white transition-colors"
               />
             </div>
@@ -261,7 +256,7 @@ export default function LoginPage() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <button
                   type="button"
-                  onClick={() => handleQuickFill('aris.vane@eventforge.ai', 'organiser')}
+                  onClick={() => handleQuickFill('aris.vane@aegis.io', 'organiser')}
                   className="p-2 rounded-lg bg-[#FAF7F2] border border-[#E7DFD5] text-left hover:bg-[#F2EDE4] transition-colors cursor-pointer"
                 >
                   <span className="text-xs font-semibold text-[#1F1916] block truncate">Dr. Aris Vane</span>
@@ -291,7 +286,7 @@ export default function LoginPage() {
 
       {/* Footer */}
       <div className="max-w-6xl mx-auto w-full pt-6 border-t border-[#E7DFD5] flex flex-col sm:flex-row items-center justify-between text-xs text-[#73645A] gap-2">
-        <span>© 2026 EventForge AI. Strict Zero-Trust Role Routing.</span>
+        <span>© 2026 Aegis. Strict Zero-Trust Role Routing.</span>
         <div className="flex items-center gap-4">
           <span className="text-[#2F5B3C] font-mono">Participant Route: /participant</span>
           <span>•</span>

@@ -45,12 +45,13 @@ class StateStore:
             },
             {
                 "id": "u-org-1",
-                "email": "aris.vane@eventforge.ai",
+                "email": "aris.vane@aegis.io",
+                "alt_email": "aris.vane@eventforge.ai",
                 "password": "password123",
                 "name": "Dr. Aris Vane",
                 "role": "Lead Event Director & Ops Chair",
                 "role_type": "organiser",
-                "affiliation": "EventForge Steering Committee",
+                "affiliation": "Aegis Steering Committee",
                 "badge_uuid": "0x00A1F0",
                 "permissions": ["all", "broadcast", "checkin", "judging", "analytics"]
             },
@@ -760,7 +761,7 @@ class StateStore:
     def authenticate(self, email: str, password: str, role_type: str):
         email_clean = email.strip().lower()
         for u in self.users:
-            if u["email"].lower() == email_clean:
+            if u["email"].lower() == email_clean or u.get("alt_email", "").lower() == email_clean:
                 if password in [u["password"], "password", "demo", "123456", "admin", "test"]:
                     if u["role_type"] == role_type:
                         return u

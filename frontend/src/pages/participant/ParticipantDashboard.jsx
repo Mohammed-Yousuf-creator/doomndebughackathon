@@ -11,6 +11,7 @@ export default function ParticipantDashboard() {
   const [loading, setLoading] = useState(true);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Project submission state
   const [submissionForm, setSubmissionForm] = useState({
@@ -50,7 +51,7 @@ export default function ParticipantDashboard() {
     try {
       await api.submitParticipantProject(submissionForm);
       setSubmittedStatus(true);
-      showToast('Project submission receipt logged & encrypted.');
+      showToast('Project deliverable logged & encrypted.');
     } catch {
       showToast('Project draft updated locally.');
     }
@@ -78,8 +79,16 @@ export default function ParticipantDashboard() {
     }
   };
 
+  const navItems = [
+    { key: 'war-room', label: 'Team War Room', icon: 'developer_board', desc: 'Hardware & Tasks' },
+    { key: 'discovery', label: 'Discover Hackathons', icon: 'explore', desc: 'Browse Challenges' },
+    { key: 'submissions', label: 'Project Submission', icon: 'send_and_archive', desc: 'Milestone Receipts' },
+    { key: 'schedule', label: 'Schedule & Alerts', icon: 'event', desc: 'Timeline & Dispatches' },
+    { key: 'passport', label: 'Impact Passport', icon: 'account_circle', desc: 'Verified Badges' },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#F8F5F0] text-[#1F1916] flex flex-col selection:bg-[#EBDDCF] selection:text-[#943C1D]">
+    <div className="min-h-screen bg-[#F8F5F0] text-[#1F1916] flex flex-col lg:flex-row selection:bg-[#EBDDCF] selection:text-[#943C1D]">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-[#1F1916] text-white text-xs px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 border border-[#382F2A] animate-fadeIn">
@@ -88,115 +97,132 @@ export default function ParticipantDashboard() {
         </div>
       )}
 
-      {/* Participant Top Navigation Bar */}
-      <header className="sticky top-0 z-40 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#E7DFD5]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          {/* Left: Brand & Participant Status */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="h-10 w-10 rounded-xl bg-[#24422D] flex items-center justify-center text-white font-mono font-bold text-xs tracking-tight shadow-sm">
-              EF
-            </div>
+      {/* Mobile Top Header */}
+      <div className="lg:hidden bg-[#FAF7F2] border-b border-[#E7DFD5] px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+        <div className="flex items-center gap-2">
+          <span className="font-sans font-bold text-lg tracking-tight text-[#1F1916]">
+            aegis
+          </span>
+          <span className="text-[10px] font-mono text-[#2F5B3C] font-semibold bg-[#EFF5F1] px-1.5 py-0.5 rounded border border-[#DEEBE1]">
+            PARTICIPANT
+          </span>
+        </div>
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="p-1.5 rounded-lg border border-[#E7DFD5] text-[#1F1916] hover:bg-white"
+        >
+          <span className="material-symbols-outlined text-xl">
+            {mobileMenuOpen ? 'close' : 'menu'}
+          </span>
+        </button>
+      </div>
+
+      {/* LEFT SIDEBAR (Floating card with space at top, left & bottom) */}
+      <aside className={`
+        fixed inset-y-0 left-0 z-50 w-72 bg-white border-r lg:border border-[#E7DFD5] p-4 flex flex-col justify-between transition-transform duration-200 ease-in-out
+        lg:static lg:w-64 xl:w-72 lg:h-[calc(100vh-2rem)] lg:sticky lg:top-4 lg:ml-4 lg:my-4 lg:rounded-2xl lg:shadow-sm
+        ${mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'}
+      `}>
+        {/* Top: Brand & Arena Info */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between pb-3.5 border-b border-[#F0EAE1]">
             <div className="flex flex-col">
-              <span className="font-sans font-bold text-sm tracking-tight text-[#1F1916]">
-                EventForge <span className="text-[11px] font-mono text-[#2F5B3C] font-semibold bg-[#EFF5F1] px-1.5 py-0.5 rounded border border-[#DEEBE1] ml-1">PARTICIPANT ARENA</span>
-              </span>
-              <span className="text-[10px] font-mono text-[#73645A]">
-                {user?.team_name || "Team VectorSwarm"} • Badge {user?.badge_uuid || "0x4D1A7E"}
+              <div className="flex items-center gap-2">
+                <span className="font-sans font-bold text-xl tracking-tight text-[#1F1916]">
+                  aegis
+                </span>
+                <span className="text-[9px] font-mono text-[#2F5B3C] font-semibold uppercase tracking-wider bg-[#EFF5F1] px-1.5 py-0.5 rounded border border-[#DEEBE1]">
+                  Participant
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-[#73645A] mt-0.5">
+                Builder Workspace
               </span>
             </div>
-          </div>
 
-          {/* Center: Participant-Only Nav Tabs */}
-          <div className="flex-1 flex justify-center min-w-0 max-w-2xl px-1">
-            <nav className="h-10 bg-[#EFE9DF] p-1 rounded-xl border border-[#E0D5C7] flex items-center gap-1 shadow-inner overflow-x-auto no-scrollbar">
-              <button
-                onClick={() => setActiveTab('war-room')}
-                className={`h-8 px-3 rounded-lg text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap transition-all cursor-pointer ${
-                  activeTab === 'war-room'
-                    ? 'bg-white text-[#1F1916] font-semibold shadow-sm border border-[#E5DDD2]'
-                    : 'text-[#6B5F54] hover:text-[#1F1916]'
-                }`}
-              >
-                <span className="material-symbols-outlined text-[15px]">developer_board</span>
-                <span>Team War Room</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('discovery')}
-                className={`h-8 px-3 rounded-lg text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap transition-all cursor-pointer ${
-                  activeTab === 'discovery'
-                    ? 'bg-white text-[#1F1916] font-semibold shadow-sm border border-[#E5DDD2]'
-                    : 'text-[#6B5F54] hover:text-[#1F1916]'
-                }`}
-              >
-                <span className="material-symbols-outlined text-[15px]">explore</span>
-                <span>Discover Hackathons</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('submissions')}
-                className={`h-8 px-3 rounded-lg text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap transition-all cursor-pointer ${
-                  activeTab === 'submissions'
-                    ? 'bg-white text-[#1F1916] font-semibold shadow-sm border border-[#E5DDD2]'
-                    : 'text-[#6B5F54] hover:text-[#1F1916]'
-                }`}
-              >
-                <span className="material-symbols-outlined text-[15px]">send_and_archive</span>
-                <span>Project Submission</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('schedule')}
-                className={`h-8 px-3 rounded-lg text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap transition-all cursor-pointer ${
-                  activeTab === 'schedule'
-                    ? 'bg-white text-[#1F1916] font-semibold shadow-sm border border-[#E5DDD2]'
-                    : 'text-[#6B5F54] hover:text-[#1F1916]'
-                }`}
-              >
-                <span className="material-symbols-outlined text-[15px]">event</span>
-                <span>Schedule & Alerts</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('passport')}
-                className={`h-8 px-3 rounded-lg text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap transition-all cursor-pointer ${
-                  activeTab === 'passport'
-                    ? 'bg-white text-[#1F1916] font-semibold shadow-sm border border-[#E5DDD2]'
-                    : 'text-[#6B5F54] hover:text-[#1F1916]'
-                }`}
-              >
-                <span className="material-symbols-outlined text-[15px]">account_circle</span>
-                <span>Impact Passport</span>
-              </button>
-            </nav>
-          </div>
-
-          {/* Right: User Profile & Logout */}
-          <div className="flex items-center gap-2.5 shrink-0">
-            <div className="hidden lg:flex items-center gap-2 bg-white h-10 px-3 rounded-xl border border-[#E5DDD2] shadow-sm">
-              <div className="w-6 h-6 rounded-lg bg-[#EFF5F1] text-[#2F5B3C] font-mono font-bold text-[10px] flex items-center justify-center border border-[#DEEBE1]">
-                {user?.name ? user.name[0] : 'P'}
-              </div>
-              <div className="flex flex-col text-left">
-                <span className="text-xs font-semibold text-[#1F1916] leading-tight truncate max-w-[100px]">{user?.name}</span>
-                <span className="text-[10px] text-[#2F5B3C] font-medium leading-none">Student Builder</span>
-              </div>
-            </div>
-
+            {/* Mobile close button */}
             <button
-              onClick={logout}
-              className="h-10 px-3 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#943C1D] border border-[#E5DDD2] text-xs font-semibold inline-flex items-center gap-1.5 shadow-sm transition-colors cursor-pointer"
-              title="Logout from Participant Arena"
+              onClick={() => setMobileMenuOpen(false)}
+              className="lg:hidden p-1 text-[#73645A] hover:text-[#1F1916]"
             >
-              <span className="material-symbols-outlined text-[16px]">logout</span>
-              <span className="hidden sm:inline">Logout</span>
+              <span className="material-symbols-outlined text-lg">close</span>
             </button>
           </div>
-        </div>
-      </header>
 
-      {/* Main Tab Views */}
-      <main className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex-1">
+          {/* Participant Team / Checkin Badge Pill */}
+          <div className="p-3 rounded-xl bg-[#FAF7F2] border border-[#E7DFD5] space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono text-[#73645A] uppercase tracking-wider font-semibold">Active Team</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-[#2F5B3C] animate-pulse"></span>
+            </div>
+            <div className="text-xs font-bold text-[#1F1916] truncate">
+              {user?.team_name || "Team VectorSwarm"}
+            </div>
+            <div className="flex items-center justify-between text-[10px] font-mono text-[#73645A] pt-1 border-t border-[#F0EAE1]">
+              <span>UUID: {user?.badge_uuid || "0x4D1A7E"}</span>
+              <span className="text-[#2F5B3C] font-semibold">Checked-In</span>
+            </div>
+          </div>
+
+          {/* Navigation Items (Vertical Stack) */}
+          <nav className="space-y-1.5">
+            <span className="text-[10px] font-mono text-[#73645A] uppercase tracking-wider px-2 block mb-1">
+              Builder Navigation
+            </span>
+            {navItems.map((item) => {
+              const isActive = activeTab === item.key;
+              return (
+                <button
+                  key={item.key}
+                  onClick={() => {
+                    setActiveTab(item.key);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-[#24422D] text-white shadow-sm font-semibold'
+                      : 'text-[#5C5248] hover:text-[#1F1916] hover:bg-[#FAF7F2]'
+                  }`}
+                >
+                  <span className={`material-symbols-outlined text-lg ${isActive ? 'text-[#82E6A1]' : 'text-[#73645A]'}`}>
+                    {item.icon}
+                  </span>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-xs leading-snug">{item.label}</span>
+                    <span className={`text-[10px] leading-none ${isActive ? 'text-white/70' : 'text-[#A89C92]'}`}>
+                      {item.desc}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Bottom User Profile & Logout */}
+        <div className="pt-4 border-t border-[#F0EAE1] space-y-2">
+          <div className="flex items-center gap-2.5 p-2 rounded-xl bg-[#FAF7F2] border border-[#E7DFD5]">
+            <div className="w-8 h-8 rounded-lg bg-[#EFF5F1] text-[#2F5B3C] font-mono font-bold text-xs flex items-center justify-center border border-[#DEEBE1] shrink-0">
+              {user?.name ? user.name[0] : 'P'}
+            </div>
+            <div className="flex flex-col min-w-0 flex-1">
+              <span className="text-xs font-semibold text-[#1F1916] truncate">{user?.name || "Marcus Chen"}</span>
+              <span className="text-[10px] text-[#2F5B3C] truncate font-medium">Student Builder</span>
+            </div>
+          </div>
+
+          <button
+            onClick={logout}
+            className="w-full h-9 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#943C1D] border border-[#E7DFD5] text-xs font-semibold inline-flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-sm"
+          >
+            <span className="material-symbols-outlined text-base">logout</span>
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </aside>
+
+      {/* MAIN CONTENT AREA */}
+      <div className="flex-1 min-w-0 p-4 sm:p-6 lg:p-6 lg:pr-6 overflow-y-auto">
         {/* VIEW 1: WAR ROOM */}
         {activeTab === 'war-room' && (
           <WarRoom
@@ -424,7 +450,6 @@ export default function ParticipantDashboard() {
         {/* VIEW 4: SCHEDULE & ANNOUNCEMENTS */}
         {activeTab === 'schedule' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left 2 Cols: Schedule Timeline */}
             <div className="lg:col-span-2 space-y-4">
               <div className="bg-white rounded-2xl p-6 border border-[#E7DFD5] shadow-sm">
                 <h3 className="font-serif text-xl font-semibold text-[#1F1916] mb-1">
@@ -461,7 +486,6 @@ export default function ParticipantDashboard() {
               </div>
             </div>
 
-            {/* Right Col: Announcements Stream */}
             <div className="space-y-4">
               <div className="bg-white rounded-2xl p-6 border border-[#E7DFD5] shadow-sm">
                 <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#F0EAE1]">
@@ -544,7 +568,7 @@ export default function ParticipantDashboard() {
             </div>
           </div>
         )}
-      </main>
+      </div>
 
       {/* Task Creation Modal */}
       <TaskModal
@@ -556,4 +580,3 @@ export default function ParticipantDashboard() {
     </div>
   );
 }
-

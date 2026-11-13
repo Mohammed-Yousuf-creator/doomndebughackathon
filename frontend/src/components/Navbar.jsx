@@ -54,23 +54,18 @@ export default function Navbar({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Left Section: Brand & Event Context */}
         <div className="flex items-center gap-3 shrink-0">
-          {/* Brand Logo Box */}
+          {/* Brand Wordmark (No Logo Box) */}
           <button
             onClick={() => setActiveTab('ops')}
-            className="flex items-center gap-2.5 group cursor-pointer text-left"
+            className="flex items-center gap-2 group cursor-pointer text-left"
             title="Go to EventOps"
           >
-            <div className="h-10 w-10 rounded-xl bg-[#24422D] flex items-center justify-center text-white font-mono font-bold text-xs tracking-tight shadow-sm group-hover:bg-[#1A3322] transition-colors border border-[#1A3322]">
-              EF
-            </div>
-            <div className="flex flex-col">
-              <span className="font-sans font-bold text-sm tracking-tight text-[#1F1916] group-hover:text-[#943C1D] transition-colors leading-snug">
-                EventForge <span className="font-serif italic font-normal text-xs text-[#73645A]">AI</span>
-              </span>
-              <span className="text-[10px] font-mono text-[#73645A] leading-none hidden sm:block">
-                Hackathon OS
-              </span>
-            </div>
+            <span className="font-sans font-bold text-xl tracking-tight text-[#1F1916] group-hover:text-[#943C1D] transition-colors leading-snug">
+              aegis
+            </span>
+            <span className="text-[10px] font-mono text-[#73645A] leading-none hidden sm:block border-l border-[#DDD2C5] pl-2">
+              EventOps
+            </span>
           </button>
 
           <div className="h-5 w-px bg-[#E2D8CC] hidden lg:block"></div>
