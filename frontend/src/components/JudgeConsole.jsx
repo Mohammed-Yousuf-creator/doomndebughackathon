@@ -194,32 +194,36 @@ export default function JudgeConsole({
             {/* Tab 1: Video Player */}
             {activeMediaTab === 'video' && (
               <div className="flex flex-col gap-1.5">
-                <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black shadow-subtle group">
-                  <img
-                    src={currentProject.video_url || "/assets/asset_07_940ce03e1c.png"}
-                    alt="Video Preview"
-                    className="w-full h-full object-cover opacity-90"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 p-3.5 flex flex-col justify-between">
+                <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-[#12100E] border border-[#2B231D] shadow-subtle group flex items-center justify-center">
+                  {/* Subtle vector grid and play icon */}
+                  <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1916_1px,transparent_1px),linear-gradient(to_bottom,#1f1916_1px,transparent_1px)] bg-[size:24px_24px] opacity-40"></div>
+                  <div className="relative z-10 flex flex-col items-center gap-2 text-center p-4">
+                    <div className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-all cursor-pointer shadow-lg">
+                      <span className="material-symbols-outlined text-2xl ml-0.5">play_arrow</span>
+                    </div>
+                    <span className="text-white/80 font-mono text-xs">Live System Validation Stream</span>
+                  </div>
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/40 p-3.5 flex flex-col justify-between pointer-events-none">
                     <div className="flex items-center justify-between text-white text-xs font-mono">
-                      <span className="bg-black/60 px-2 py-0.5 rounded text-[11px] flex items-center gap-1.5">
+                      <span className="bg-black/70 px-2.5 py-1 rounded-md text-[11px] flex items-center gap-1.5 border border-white/10">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#C2542D] animate-pulse"></span>
-                        4K / 60 FPS Replay
+                        4K / 60 FPS Telemetry
                       </span>
-                      <span className="text-[11px]">03:42 / 05:00</span>
+                      <span className="text-[11px] font-mono text-white/70">03:42 / 05:00</span>
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
+                    <div className="flex flex-col gap-1.5 pointer-events-auto">
                       <div className="flex items-center gap-2 text-[10px] font-mono text-white">
-                        <span className="bg-white/20 px-2 py-0.5 rounded">01:15 Live Hardware Test</span>
-                        <span className="bg-white/20 px-2 py-0.5 rounded">03:20 Edge Latency Benchmark</span>
+                        <span className="bg-white/10 px-2 py-0.5 rounded border border-white/10">01:15 Live Hardware Test</span>
+                        <span className="bg-white/10 px-2 py-0.5 rounded border border-white/10">03:20 Edge Latency Benchmark</span>
                       </div>
-                      <div className="w-full bg-white/30 h-1.5 rounded-full relative">
+                      <div className="w-full bg-white/20 h-1.5 rounded-full relative overflow-hidden">
                         <div className="bg-[#82E6A1] h-full rounded-full w-3/4"></div>
                       </div>
                       <div className="flex items-center justify-between text-white text-xs pt-0.5">
-                        <span className="font-mono text-[10px]">Jetson Orin: 48°C • 11.4ms EKF</span>
-                        <span className="material-symbols-outlined text-sm">fullscreen</span>
+                        <span className="font-mono text-[10px] text-white/80">Jetson Orin: 48°C • 11.4ms EKF Estimation</span>
+                        <span className="material-symbols-outlined text-sm text-white/80 cursor-pointer">fullscreen</span>
                       </div>
                     </div>
                   </div>
@@ -234,31 +238,42 @@ export default function JudgeConsole({
             {/* Tab 2: Deck Viewer */}
             {activeMediaTab === 'deck' && (
               <div className="flex flex-col gap-2">
-                <div className="relative w-full aspect-[16/9] rounded-lg bg-[#FAF7F2] overflow-hidden border border-[#E7DFD5] p-3 flex flex-col justify-between">
-                  <img
-                    src={currentProject.deck_slide_url || "/assets/asset_18_11df169078.png"}
-                    alt="Deck Slide"
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                  <div className="relative z-10 flex justify-between">
-                    <span className="text-xs font-semibold bg-white/90 px-2.5 py-1 rounded shadow-subtle">
-                      Slide {currentSlide} / {totalSlides} — Distributed Loop Closure
+                <div className="relative w-full aspect-[16/9] rounded-xl bg-white border border-[#E7DFD5] p-6 flex flex-col justify-between shadow-sm">
+                  <div className="flex items-center justify-between border-b border-[#F0EAE1] pb-3">
+                    <span className="text-xs font-mono font-semibold text-[#24422D] bg-[#EFF5F1] px-2.5 py-1 rounded-lg border border-[#DEEBE1]">
+                      Slide {currentSlide} of {totalSlides} • Pitch Deck
                     </span>
+                    <span className="text-xs text-[#73645A] font-mono">Distributed SLAM Protocol</span>
                   </div>
-                  <div className="relative z-10 flex justify-between">
+
+                  <div className="my-auto py-3 space-y-2">
+                    <h3 className="font-serif text-lg font-semibold text-[#1F1916]">
+                      {currentSlide === 1 && "Autonomous Multi-Agent Loop Closure"}
+                      {currentSlide === 2 && "Edge Latency & Network Resilience Benchmarks"}
+                      {currentSlide >= 3 && "Commercial Deployment & Hardware Verification"}
+                    </h3>
+                    <p className="text-xs text-[#73645A] leading-relaxed">
+                      Real-time peer-to-peer state synchronisation operating over bandwidth-constrained mesh radios with deterministic sub-15ms loop closure guarantees.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-3 border-t border-[#F0EAE1]">
                     <button
                       onClick={() => setCurrentSlide(s => Math.max(1, s - 1))}
                       disabled={currentSlide === 1}
-                      className="bg-white/90 hover:bg-white text-xs px-2.5 py-1 rounded shadow-subtle disabled:opacity-50 font-medium cursor-pointer"
+                      className="bg-[#FAF7F2] hover:bg-[#F0EBE1] text-xs px-3 py-1.5 rounded-lg border border-[#E7DFD5] disabled:opacity-40 font-medium cursor-pointer transition-colors"
                     >
-                      Previous
+                      ← Previous Slide
                     </button>
+                    <span className="text-[11px] font-mono text-[#73645A]">
+                      Use arrow keys or buttons to navigate
+                    </span>
                     <button
                       onClick={() => setCurrentSlide(s => Math.min(totalSlides, s + 1))}
                       disabled={currentSlide === totalSlides}
-                      className="bg-white/90 hover:bg-white text-xs px-2.5 py-1 rounded shadow-subtle disabled:opacity-50 font-medium cursor-pointer"
+                      className="bg-[#FAF7F2] hover:bg-[#F0EBE1] text-xs px-3 py-1.5 rounded-lg border border-[#E7DFD5] disabled:opacity-40 font-medium cursor-pointer transition-colors"
                     >
-                      Next
+                      Next Slide →
                     </button>
                   </div>
                 </div>
@@ -268,12 +283,37 @@ export default function JudgeConsole({
             {/* Tab 3: Architecture */}
             {activeMediaTab === 'arch' && (
               <div className="flex flex-col gap-3">
-                <div className="w-full aspect-[16/9] rounded-lg bg-[#FAF7F2] p-3 overflow-hidden border border-[#E7DFD5] flex items-center justify-center">
-                  <img
-                    src={currentProject.architecture_url || "/assets/asset_01_f6d18c8079.png"}
-                    alt="Architecture Diagram"
-                    className="w-full h-full object-contain"
-                  />
+                <div className="w-full aspect-[16/9] rounded-xl bg-white p-5 border border-[#E7DFD5] flex flex-col justify-between shadow-sm">
+                  <div className="flex items-center justify-between border-b border-[#F0EAE1] pb-2.5">
+                    <span className="text-xs font-mono font-semibold text-[#1F1916]">System Pipeline Architecture</span>
+                    <span className="text-[10px] font-mono bg-[#EFF5F1] text-[#2F5B3C] px-2 py-0.5 rounded border border-[#DEEBE1]">Live Validated</span>
+                  </div>
+
+                  {/* Native Node Diagram */}
+                  <div className="grid grid-cols-4 gap-2 my-auto items-center">
+                    <div className="p-3 rounded-lg bg-[#FAF7F2] border border-[#E7DFD5] text-center">
+                      <span className="text-[10px] font-mono text-[#73645A] uppercase block">Ingest</span>
+                      <span className="text-xs font-semibold text-[#1F1916] mt-0.5 block">LiDAR & Stereo</span>
+                    </div>
+                    <div className="p-3 rounded-lg bg-[#EFF5F1] border border-[#DEEBE1] text-center">
+                      <span className="text-[10px] font-mono text-[#2F5B3C] uppercase block">Compute Core</span>
+                      <span className="text-xs font-semibold text-[#1F1916] mt-0.5 block">Jetson Orin</span>
+                    </div>
+                    <div className="p-3 rounded-lg bg-[#FAF7F2] border border-[#E7DFD5] text-center">
+                      <span className="text-[10px] font-mono text-[#73645A] uppercase block">Estimation</span>
+                      <span className="text-xs font-semibold text-[#1F1916] mt-0.5 block">EKF Filter</span>
+                    </div>
+                    <div className="p-3 rounded-lg bg-[#FAF7F2] border border-[#E7DFD5] text-center">
+                      <span className="text-[10px] font-mono text-[#73645A] uppercase block">Sync</span>
+                      <span className="text-xs font-semibold text-[#1F1916] mt-0.5 block">Mesh Protocol</span>
+                    </div>
+                  </div>
+
+                  <div className="text-[11px] font-mono text-[#73645A] bg-[#FAF7F2] p-2 rounded-lg border border-[#F0EAE1] flex justify-between">
+                    <span>Target Latency: &lt;15ms</span>
+                    <span>Throughput: 120 FPS</span>
+                    <span>Packet Loss: 0.02%</span>
+                  </div>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                   {currentProject.tech_stack?.map((t, idx) => (

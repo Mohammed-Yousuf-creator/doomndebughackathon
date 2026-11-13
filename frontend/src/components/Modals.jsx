@@ -354,7 +354,9 @@ export function InterviewModal({ candidate, isOpen, onClose, onSubmit }) {
       <div className="bg-white rounded-xl max-w-sm w-full p-5 shadow-dropdown border border-[#E7DFD5] flex flex-col gap-3 animate-fadeIn">
         <div className="flex items-center justify-between pb-2 border-b border-[#F0EAE1]">
           <div className="flex items-center gap-2">
-            <img src={candidate.avatar} alt={candidate.name} className="w-8 h-8 rounded-full object-cover" />
+            <div className="w-8 h-8 rounded-lg bg-[#FAF7F2] text-[#1F1916] flex items-center justify-center text-xs font-bold font-mono border border-[#E7DFD5] shrink-0">
+              {candidate.name ? candidate.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : 'CD'}
+            </div>
             <div>
               <h3 className="font-serif font-bold text-sm text-[#1F1916]">
                 Interview Invitation

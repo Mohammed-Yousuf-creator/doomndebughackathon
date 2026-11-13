@@ -49,12 +49,8 @@ export default function SponsorPortal({
       <section className="w-full bg-white rounded-xl p-5 mb-5 border border-[#E7DFD5] shadow-card">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-5">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-lg bg-white p-1.5 shadow-subtle shrink-0 border border-[#E7DFD5] flex items-center justify-center">
-              <img
-                src={data?.logo || "/assets/asset_09_5517e51afc.png"}
-                alt="Partner Logo"
-                className="w-full h-full object-contain"
-              />
+            <div className="w-12 h-12 rounded-xl bg-[#24422D] text-white shadow-sm shrink-0 border border-[#1A3322] flex items-center justify-center font-mono font-bold text-sm tracking-wider">
+              NV
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -322,11 +318,9 @@ export default function SponsorPortal({
               <div>
                 <div className="flex items-start justify-between mb-2.5">
                   <div className="flex items-center gap-2.5">
-                    <img
-                      src={cand.avatar}
-                      alt={cand.name}
-                      className="w-10 h-10 rounded-full object-cover ring-1 ring-[#E7DFD5]"
-                    />
+                    <div className="w-10 h-10 rounded-xl bg-[#FAF7F2] text-[#1F1916] flex items-center justify-center text-xs font-bold font-mono border border-[#E7DFD5] shrink-0">
+                      {cand.name ? cand.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : 'CD'}
+                    </div>
                     <div>
                       <h4 className="font-semibold text-sm text-[#1F1916] leading-snug">{cand.name}</h4>
                       <span className="text-[11px] text-[#73645A]">{cand.school}</span>

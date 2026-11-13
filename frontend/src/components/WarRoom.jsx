@@ -112,11 +112,9 @@ export default function WarRoom({
                 className="flex items-center gap-2 bg-[#FAF7F2] px-2.5 py-1 rounded-lg border border-[#E7DFD5]"
               >
                 <div className="relative">
-                  <img
-                    src={member.avatar}
-                    alt={member.name}
-                    className="w-5 h-5 rounded-full object-cover"
-                  />
+                  <div className="w-5 h-5 rounded-full bg-[#E5DDD2] text-[#1F1916] flex items-center justify-center text-[9px] font-bold font-mono">
+                    {member.name ? member.name[0].toUpperCase() : 'M'}
+                  </div>
                   <span className="absolute bottom-0 right-0 w-1.5 h-1.5 rounded-full bg-[#2F5B3C] ring-1 ring-white"></span>
                 </div>
                 <span className="font-semibold text-[#1F1916] text-[11px]">{member.short_name || member.name}</span>
@@ -346,11 +344,7 @@ export default function WarRoom({
                 <div key={msg.id} className="flex flex-col gap-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
-                      {msg.avatar ? (
-                        <img src={msg.avatar} alt={msg.author} className="w-4 h-4 rounded-full object-cover" />
-                      ) : (
-                        <span className="material-symbols-outlined text-[14px] text-[#2F5B3C]">{msg.icon || 'smart_toy'}</span>
-                      )}
+                      <span className="material-symbols-outlined text-[14px] text-[#2F5B3C]">{msg.icon || 'smart_toy'}</span>
                       <span className="font-semibold text-[#1F1916] text-[11px]">{msg.author}</span>
                       <span className="text-[10px] text-[#73645A]">({msg.role})</span>
                     </div>
