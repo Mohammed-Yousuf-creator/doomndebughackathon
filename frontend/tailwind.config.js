@@ -1,0 +1,67 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "primary": "#0f412e",
+        "primary-container": "#2a5944",
+        "primary-fixed": "#bbeed2",
+        "primary-fixed-dim": "#9fd2b7",
+        "on-primary": "#ffffff",
+        "on-primary-container": "#9cceb3",
+        "on-primary-fixed": "#002114",
+        "on-primary-fixed-variant": "#204f3b",
+        "secondary": "#924b1c",
+        "secondary-container": "#ffa26c",
+        "secondary-fixed": "#ffdbc9",
+        "secondary-fixed-dim": "#ffb68d",
+        "on-secondary": "#ffffff",
+        "on-secondary-container": "#783707",
+        "on-secondary-fixed": "#331200",
+        "on-secondary-fixed-variant": "#743404",
+        "surface": "#fafaf3",
+        "surface-container": "#eeeee7",
+        "surface-container-low": "#f4f4ed",
+        "surface-container-lowest": "#ffffff",
+        "surface-container-high": "#e8e9e2",
+        "surface-container-highest": "#e3e3dc",
+        "surface-bright": "#fafaf3",
+        "surface-dim": "#dadad4",
+        "surface-tint": "#396752",
+        "on-surface": "#1a1c18",
+        "on-surface-variant": "#414943",
+        "outline": "#717973",
+        "outline-variant": "#c0c9c2",
+        "inverse-primary": "#9fd2b7",
+        "inverse-surface": "#2f312d",
+        "inverse-on-surface": "#f1f1ea",
+        "tertiary": "#5a2f00",
+        "tertiary-container": "#7b4200",
+        "tertiary-fixed": "#ffdcc2",
+        "error": "#ba1a1a",
+        "error-container": "#ffdad6"
+      },
+      fontFamily: {
+        sans: ["Geist", "Inter", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
+        headline: ["Geist", "sans-serif"],
+      },
+      spacing: {
+        "space-xs": "0.25rem",
+        "space-sm": "0.5rem",
+        "space-md": "1rem",
+        "space-lg": "1.5rem",
+        "space-xl": "2.5rem",
+        "gutter": "1.5rem",
+        "margin": "2.5rem",
+      }
+    },
+  },
+  plugins: [],
+}
+
