@@ -14,164 +14,160 @@ export default function Navbar({
   const [showUserDropdown, setShowUserDropdown] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-surface/90 backdrop-blur-xl border-b border-surface-container-high shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-      {/* Optional Broadcast Ticker Bar */}
+    <header className="sticky top-0 z-50 w-full bg-[#F8F5F0]/90 backdrop-blur-md border-b border-[#E7DFD5]">
+      {/* Live Broadcast Ticker Banner if exists */}
       {broadcasts.length > 0 && broadcasts[0] && (
-        <div className="bg-primary-container text-on-primary-container px-4 py-1.5 text-xs flex items-center justify-between border-b border-primary/20">
-          <div className="flex items-center gap-2 max-w-5xl mx-auto w-full">
-            <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-fixed opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-fixed"></span>
-            </span>
-            <span className="font-mono font-bold uppercase tracking-wider text-primary-fixed">
-              [LIVE BROADCAST {broadcasts[0].timestamp}]
-            </span>
-            <span className="font-medium text-white truncate">
-              {broadcasts[0].title}: {broadcasts[0].message}
+        <div className="bg-[#24422D] text-white px-4 py-1 text-xs">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-2 truncate">
+              <span className="flex h-1.5 w-1.5 rounded-full bg-[#82E6A1] animate-pulse"></span>
+              <span className="font-mono text-[11px] text-[#A3E5B8] uppercase tracking-wider font-semibold">
+                ANNOUNCEMENT [{broadcasts[0].timestamp}]
+              </span>
+              <span className="font-medium text-[12px] truncate">
+                {broadcasts[0].title} — {broadcasts[0].message}
+              </span>
+            </div>
+            <span className="font-mono text-[10px] text-white/60 ml-4 shrink-0 hidden sm:inline">
+              EventOps Live
             </span>
           </div>
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
         {/* Left: Brand & Event Context */}
-        <div className="flex items-center gap-4">
-          <div
+        <div className="flex items-center gap-3.5">
+          <button
             onClick={() => setActiveTab('ops')}
-            className="flex items-center gap-2.5 cursor-pointer group"
+            className="flex items-center gap-2 group text-left cursor-pointer"
           >
-            <div className="w-9 h-9 rounded-lg bg-surface-container-lowest p-1 shadow-sm flex items-center justify-center border border-surface-container-high group-hover:border-primary transition-all">
+            <div className="w-7 h-7 rounded-md bg-[#24422D] p-1 flex items-center justify-center shadow-subtle group-hover:bg-[#1A3322] transition-colors">
               <img
                 src="/assets/asset_19_4a08b610d8.png"
-                alt="AEGIS Emblem"
-                className="w-full h-full object-contain"
+                alt="EventForge Logo"
+                className="w-full h-full object-contain invert"
               />
             </div>
             <div className="flex flex-col">
-              <span className="font-headline font-bold text-lg tracking-tight text-primary leading-none group-hover:text-primary-container transition-colors">
-                AEGIS
-              </span>
-              <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-widest leading-none mt-0.5">
-                OS // v3.4
+              <span className="font-sans font-bold text-sm tracking-tight text-[#1F1916] group-hover:text-[#C2542D] transition-colors">
+                EventForge <span className="font-serif italic font-normal text-xs text-[#73645A]">AI</span>
               </span>
             </div>
-          </div>
+          </button>
 
-          <div className="h-5 w-px bg-outline-variant hidden sm:block"></div>
+          <div className="h-4 w-px bg-[#DDD2C5] hidden sm:block"></div>
 
           {/* Event Picker Dropdown */}
-          <div className="hidden sm:flex items-center gap-1.5 bg-surface-container px-2.5 py-1 rounded-lg border border-surface-container-high">
-            <span className="material-symbols-outlined text-sm text-primary">flag</span>
+          <div className="hidden md:flex items-center gap-1.5 bg-white/70 px-2.5 py-1 rounded-md border border-[#E7DFD5]">
+            <span className="material-symbols-outlined text-[15px] text-[#73645A]">event</span>
             <select
               value={sprint?.active_event || "Global Sprint 2025 (North America)"}
               onChange={(e) => onSwitchEvent && onSwitchEvent(e.target.value)}
-              className="bg-transparent font-mono text-xs text-on-surface focus:outline-none cursor-pointer pr-1"
+              className="bg-transparent font-sans text-xs text-[#1F1916] focus:outline-none cursor-pointer pr-1"
             >
               {sprint?.event_options?.map((opt) => (
-                <option key={opt} value={opt} className="bg-surface text-on-surface">
+                <option key={opt} value={opt} className="bg-white text-[#1F1916]">
                   {opt}
                 </option>
               )) || (
-                <option>Global Sprint 2025 (North America)</option>
+                <option>Autonomous Systems Hackathon 2025</option>
               )}
             </select>
           </div>
 
-          {/* Real-time Status Beacon */}
-          <div className="hidden lg:inline-flex items-center gap-2 bg-surface-container-low px-3 py-1 rounded-full border border-surface-container-high">
-            <span className="w-2 h-2 rounded-full bg-primary animate-ping"></span>
-            <span className="font-mono text-xs text-primary font-semibold tracking-wide">
-              {sprint?.phase || "Mid-Sprint Checkpoint"}
+          {/* Live Stage Beacon */}
+          <div className="hidden xl:inline-flex items-center gap-1.5 bg-[#EFF5F1] text-[#2F5B3C] px-2.5 py-0.5 rounded-full border border-[#DEEBE1]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#2F5B3C] animate-pulse"></span>
+            <span className="font-mono text-[11px] font-semibold">
+              Day 2 • Hacking Sprint Active
             </span>
           </div>
         </div>
 
-        {/* Center: Major Portals Navigation */}
-        <nav className="flex items-center gap-1 bg-surface-container-low p-1 rounded-xl border border-surface-container-high">
+        {/* Center: Module Navigation Tabs */}
+        <nav className="flex items-center gap-1 bg-[#EBE3DA]/60 p-0.5 rounded-lg border border-[#DDD2C5]/80">
           <button
             onClick={() => setActiveTab('ops')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs transition-all cursor-pointer ${
               activeTab === 'ops'
-                ? 'bg-primary text-white shadow-sm font-semibold'
-                : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
+                ? 'bg-white text-[#1F1916] font-semibold shadow-subtle'
+                : 'text-[#73645A] hover:text-[#1F1916]'
             }`}
           >
-            <span className="material-symbols-outlined text-base">terminal</span>
-            <span className="hidden md:inline">Ops Console</span>
+            <span className="material-symbols-outlined text-[15px]">space_dashboard</span>
+            <span>EventOps</span>
           </button>
 
           <button
             onClick={() => setActiveTab('war-room')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs transition-all cursor-pointer ${
               activeTab === 'war-room'
-                ? 'bg-primary text-white shadow-sm font-semibold'
-                : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
+                ? 'bg-white text-[#1F1916] font-semibold shadow-subtle'
+                : 'text-[#73645A] hover:text-[#1F1916]'
             }`}
           >
-            <span className="material-symbols-outlined text-base">view_kanban</span>
-            <span className="hidden md:inline">Team War Room</span>
+            <span className="material-symbols-outlined text-[15px]">developer_board</span>
+            <span>Team War Room</span>
           </button>
 
           <button
             onClick={() => setActiveTab('judge')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs transition-all cursor-pointer ${
               activeTab === 'judge'
-                ? 'bg-primary text-white shadow-sm font-semibold'
-                : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
+                ? 'bg-white text-[#1F1916] font-semibold shadow-subtle'
+                : 'text-[#73645A] hover:text-[#1F1916]'
             }`}
           >
-            <span className="material-symbols-outlined text-base">gavel</span>
-            <span className="hidden md:inline">Judge Console</span>
+            <span className="material-symbols-outlined text-[15px]">gavel</span>
+            <span>Judge Console</span>
           </button>
 
           <button
             onClick={() => setActiveTab('sponsor')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs transition-all cursor-pointer ${
               activeTab === 'sponsor'
-                ? 'bg-primary text-white shadow-sm font-semibold'
-                : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
+                ? 'bg-white text-[#1F1916] font-semibold shadow-subtle'
+                : 'text-[#73645A] hover:text-[#1F1916]'
             }`}
           >
-            <span className="material-symbols-outlined text-base">storefront</span>
-            <span className="hidden md:inline">Sponsor Portal</span>
+            <span className="material-symbols-outlined text-[15px]">storefront</span>
+            <span>Sponsors & Talent</span>
           </button>
         </nav>
 
-        {/* Right: Notifications & Profile Selector */}
-        <div className="flex items-center gap-3">
+        {/* Right: Notifications & Persona Switcher */}
+        <div className="flex items-center gap-2.5">
           {/* Notifications Button */}
           <div className="relative">
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="w-9 h-9 rounded-lg bg-surface-container hover:bg-surface-container-high border border-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors relative"
-              title="Notifications & Broadcasts"
+              className="w-8 h-8 rounded-md bg-white hover:bg-[#F3EFEA] border border-[#E7DFD5] flex items-center justify-center text-[#73645A] hover:text-[#1F1916] transition-colors relative cursor-pointer"
+              title="Notifications"
             >
-              <span className="material-symbols-outlined text-lg">notifications</span>
+              <span className="material-symbols-outlined text-[18px]">notifications</span>
               {broadcasts.length > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-secondary"></span>
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#C2542D]"></span>
               )}
             </button>
 
-            {/* Notifications Dropdown */}
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 bg-surface-container-lowest rounded-xl shadow-xl border border-surface-container-high p-3 z-50">
-                <div className="flex items-center justify-between pb-2 mb-2 border-b border-surface-container">
-                  <span className="font-mono text-xs font-bold uppercase text-on-surface">
-                    Operations Dispatch Stream
-                  </span>
-                  <span className="text-[10px] bg-primary-fixed text-primary px-1.5 py-0.5 rounded font-bold">
+              <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-dropdown border border-[#E7DFD5] p-3 z-50 animate-fadeIn">
+                <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#F0EAE1]">
+                  <span className="font-sans text-xs font-bold text-[#1F1916]">Event Dispatches</span>
+                  <span className="font-mono text-[10px] bg-[#EFF5F1] text-[#2F5B3C] px-1.5 py-0.5 rounded font-semibold">
                     {broadcasts.length} Messages
                   </span>
                 </div>
-                <div className="flex flex-col gap-2 max-h-64 overflow-y-auto">
+                <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
                   {broadcasts.map((b) => (
-                    <div key={b.id} className="p-2 rounded-lg bg-surface-container-low text-xs">
-                      <div className="flex items-center justify-between text-on-surface-variant font-mono text-[10px]">
+                    <div key={b.id} className="p-2.5 rounded-lg bg-[#FAF7F2] border border-[#F0EAE1] text-xs">
+                      <div className="flex items-center justify-between text-[#73645A] font-mono text-[10px]">
                         <span>{b.timestamp}</span>
-                        <span className="uppercase text-primary font-bold">{b.type}</span>
+                        <span className="uppercase text-[#2F5B3C] font-semibold">{b.type}</span>
                       </div>
-                      <p className="font-semibold text-on-surface mt-1">{b.title}</p>
-                      <p className="text-on-surface-variant text-[11px] mt-0.5">{b.message}</p>
+                      <p className="font-semibold text-[#1F1916] mt-0.5">{b.title}</p>
+                      <p className="text-[#73645A] text-[11px] mt-0.5 leading-snug">{b.message}</p>
                     </div>
                   ))}
                 </div>
@@ -179,32 +175,32 @@ export default function Navbar({
             )}
           </div>
 
-          {/* User Profile Switcher */}
+          {/* Perspective Dropdown */}
           <div className="relative">
             <button
               onClick={() => setShowUserDropdown(!showUserDropdown)}
-              className="flex items-center gap-2 p-1 pl-2 pr-2.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-surface-container-high transition-colors"
+              className="flex items-center gap-2 py-1 px-2 rounded-md bg-white hover:bg-[#F3EFEA] border border-[#E7DFD5] transition-colors cursor-pointer"
             >
               <img
                 src={currentUser?.avatar || "/assets/asset_16_9592fa2f36.png"}
-                alt="Profile"
-                className="w-7 h-7 rounded-full object-cover ring-1 ring-primary/30"
+                alt={currentUser?.name}
+                className="w-6 h-6 rounded-full object-cover ring-1 ring-[#DDD2C5]"
               />
-              <div className="hidden md:flex flex-col text-left">
-                <span className="font-mono text-xs font-semibold text-on-surface leading-tight">
+              <div className="hidden lg:flex flex-col text-left">
+                <span className="font-sans text-xs font-semibold text-[#1F1916] leading-tight">
                   {currentUser?.name || "Dr. Aris Vane"}
                 </span>
-                <span className="text-[10px] text-on-surface-variant uppercase tracking-wider leading-none">
-                  {currentUser?.role || "Organizer Lead"}
+                <span className="text-[10px] text-[#73645A] leading-none">
+                  {currentUser?.role || "Organizer"}
                 </span>
               </div>
-              <span className="material-symbols-outlined text-sm text-outline">arrow_drop_down</span>
+              <span className="material-symbols-outlined text-sm text-[#73645A]">expand_more</span>
             </button>
 
             {showUserDropdown && (
-              <div className="absolute right-0 mt-2 w-64 bg-surface-container-lowest rounded-xl shadow-xl border border-surface-container-high p-2 z-50">
-                <div className="px-2 py-1.5 text-[10px] font-mono text-outline uppercase tracking-wider">
-                  Switch Active Perspective
+              <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-dropdown border border-[#E7DFD5] p-1.5 z-50 animate-fadeIn">
+                <div className="px-2 py-1 font-mono text-[10px] text-[#73645A] uppercase tracking-wider">
+                  Switch Active Role
                 </div>
                 {userOptions.map((u) => (
                   <button
@@ -214,16 +210,16 @@ export default function Navbar({
                       setShowUserDropdown(false);
                       if (u.defaultTab) setActiveTab(u.defaultTab);
                     }}
-                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-colors ${
+                    className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-left transition-colors cursor-pointer ${
                       currentUser?.id === u.id
-                        ? 'bg-primary-container text-white'
-                        : 'hover:bg-surface-container-high text-on-surface'
+                        ? 'bg-[#FAF7F2] font-semibold text-[#1F1916]'
+                        : 'hover:bg-[#FAF7F2] text-[#382F2A]'
                     }`}
                   >
-                    <img src={u.avatar} alt={u.name} className="w-7 h-7 rounded-full object-cover" />
+                    <img src={u.avatar} alt={u.name} className="w-6 h-6 rounded-full object-cover" />
                     <div className="flex flex-col">
-                      <span className="text-xs font-semibold leading-tight">{u.name}</span>
-                      <span className="text-[10px] opacity-80 leading-none">{u.role}</span>
+                      <span className="text-xs leading-tight">{u.name}</span>
+                      <span className="text-[10px] text-[#73645A] leading-none">{u.role}</span>
                     </div>
                   </button>
                 ))}
@@ -235,4 +231,3 @@ export default function Navbar({
     </header>
   );
 }
-

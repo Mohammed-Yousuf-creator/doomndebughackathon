@@ -9,15 +9,13 @@ export default function WarRoom({
 }) {
   const [countdown, setCountdown] = useState({ hours: 18, minutes: 42, seconds: 10 });
   const [chatInput, setChatInput] = useState('');
-  const [selectedTask, setSelectedTask] = useState(null);
   const [checklist, setChecklist] = useState([
-    { id: 'chk-1', text: 'Calibrated LiDAR Extrinsics & Transform URDF', checked: true },
-    { id: 'chk-2', text: 'Multi-Drone Peer-to-Peer Heartbeat Protocol', checked: true },
-    { id: 'chk-3', text: 'TensorRT FP16 Engine Calibration & Benchmark', checked: false },
-    { id: 'chk-4', text: 'Autonomous Trajectory Replay in Zero-Lux', checked: false },
+    { id: 'chk-1', text: 'Calibrate LiDAR Extrinsics & Transform URDF', checked: true },
+    { id: 'chk-2', text: 'Peer-to-Peer Heartbeat Protocol over CycloneDDS', checked: true },
+    { id: 'chk-3', text: 'TensorRT FP16 Engine Calibration on Orin Nano', checked: false },
+    { id: 'chk-4', text: 'Autonomous Trajectory Replay in Zero-Lux Corridor', checked: false },
   ]);
 
-  // Live countdown timer
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown((prev) => {
@@ -46,165 +44,135 @@ export default function WarRoom({
   };
 
   return (
-    <div className="flex flex-col w-full pb-16 animate-fadeIn">
-      {/* Team Header Banner: Editorial Architectural Ledger Style */}
-      <section className="w-full bg-surface-container-lowest rounded-2xl shadow-sm p-6 mb-6 border border-surface-container-high flex flex-col gap-4">
-        {/* Top Metadata Ledger */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-3">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="font-mono text-[10px] bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded font-bold uppercase tracking-wider">
-                {data?.track || "TRACK 04 // SWARM INTELLIGENCE"}
+    <div className="flex flex-col w-full pb-12">
+      {/* Team Header Banner */}
+      <section className="w-full bg-white rounded-xl p-5 mb-5 border border-[#E7DFD5] shadow-card flex flex-col gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <span className="font-mono text-[11px] text-[#C2542D] font-semibold bg-[#FBEFEA] px-2 py-0.5 rounded border border-[#F6DDD3]">
+                Track 04: Swarm Intelligence & Autonomous Robotics
               </span>
-              <span className="font-mono text-xs text-outline">
-                WORKSPACE ID: {data?.workspace_id || "VS-9920-ALPHA"}
-              </span>
-              <span className="font-mono text-[10px] bg-primary-fixed text-primary px-2 py-0.5 rounded font-bold">
-                {data?.status || "BENCH VERIFIED"}
+              <span className="text-[#A89C92] text-xs">•</span>
+              <span className="font-mono text-xs text-[#73645A]">Table 4B • Stata Lab</span>
+              <span className="text-[#A89C92] text-xs">•</span>
+              <span className="font-mono text-[11px] text-[#2F5B3C] font-semibold bg-[#EFF5F1] px-1.5 py-0.5 rounded">
+                Bench Verified
               </span>
             </div>
 
-            <div className="flex items-baseline gap-3 flex-wrap mt-1">
-              <h1 className="font-headline font-extrabold text-2xl lg:text-3xl text-primary tracking-tight">
-                {data?.team_name || "Team VectorSwarm"}
+            <div className="flex items-baseline gap-3 flex-wrap">
+              <h1 className="font-serif text-2xl lg:text-3xl font-medium tracking-tight text-[#1F1916]">
+                Team VectorSwarm
               </h1>
-              <span className="text-xs text-on-surface-variant font-medium">
-                {data?.tagline || "Autonomous Robotics & Swarm Navigation Pipeline"}
+              <span className="text-xs text-[#73645A]">
+                Multi-Rover LiDAR SLAM & Decentralized State Estimation
               </span>
             </div>
           </div>
 
-          {/* Realtime Sprint Clock Module */}
-          <div className="flex items-center gap-4 bg-surface-container-low px-4 py-2.5 rounded-xl border border-surface-container-high self-start lg:self-auto">
+          {/* Countdown & Next Wave */}
+          <div className="flex items-center gap-4 bg-[#FAF7F2] px-4 py-2 rounded-xl border border-[#E7DFD5] self-start lg:self-auto">
             <div className="flex flex-col">
-              <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider font-semibold">
-                Sprint Phase Countdown
+              <span className="font-mono text-[10px] text-[#73645A] uppercase tracking-wider">
+                Submission Freeze In
               </span>
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-secondary animate-ping"></span>
-                <span className="font-mono text-base text-primary font-bold tabular-nums">
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C2542D] animate-ping"></span>
+                <span className="font-mono text-sm text-[#1F1916] font-bold tabular-nums">
                   {String(countdown.hours).padStart(2, '0')}h {String(countdown.minutes).padStart(2, '0')}m {String(countdown.seconds).padStart(2, '0')}s
                 </span>
               </div>
             </div>
 
-            <div className="w-px h-8 bg-surface-container-highest"></div>
+            <div className="w-px h-7 bg-[#E7DFD5]"></div>
 
             <div className="flex flex-col">
-              <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider font-semibold">
+              <span className="font-mono text-[10px] text-[#73645A] uppercase tracking-wider">
                 Evaluation Wave
               </span>
-              <span className="font-mono text-xs text-secondary font-bold">
-                {data?.evaluation_wave || "WAVE 03 // 22:00 UTC"}
+              <span className="font-mono text-xs text-[#2F5B3C] font-bold mt-0.5">
+                Wave 03 (22:00 UTC)
               </span>
             </div>
           </div>
         </div>
 
-        {/* Middle Divider */}
-        <div className="w-full h-px bg-surface-container-high"></div>
+        {/* Divider */}
+        <div className="w-full h-px bg-[#F0EAE1]"></div>
 
-        {/* Operational Strip: Personnel & Repository Status */}
-        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
-          {/* Team Personnel Manifest */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-            <span className="font-mono text-[11px] text-on-surface-variant uppercase tracking-wider font-semibold sm:w-28 shrink-0">
-              Unit Roster ({data?.members?.length || 4}/5)
-            </span>
-
-            <div className="flex items-center gap-2 flex-wrap">
-              {data?.members?.map((member) => (
-                <div
-                  key={member.id}
-                  className="flex items-center gap-2 bg-surface-container-low hover:bg-surface-container px-2.5 py-1.5 rounded-xl border border-surface-container-high transition-colors"
-                >
-                  <div className="relative">
-                    <img
-                      src={member.avatar}
-                      alt={member.name}
-                      className="w-7 h-7 rounded-full object-cover ring-1 ring-primary/20"
-                    />
-                    <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-primary ring-2 ring-white"></span>
-                  </div>
-                  <div className="flex flex-col pr-1">
-                    <span className="text-xs font-semibold text-on-surface leading-tight">
-                      {member.short_name || member.name}
-                    </span>
-                    <span className="font-mono text-[10px] text-on-surface-variant leading-none">
-                      {member.role}
-                    </span>
-                  </div>
-                </div>
-              ))}
-
-              <button
-                onClick={onInviteClick}
-                className="flex items-center gap-1.5 bg-surface-container hover:bg-primary hover:text-white text-primary px-3 py-1.5 rounded-xl font-mono text-xs font-semibold border border-surface-container-high transition-all cursor-pointer"
+        {/* Roster & Git Capsule */}
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3 text-xs">
+          {/* Members */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-[#73645A] font-medium mr-1">Roster (4/5):</span>
+            {data?.members?.map((member) => (
+              <div
+                key={member.id}
+                className="flex items-center gap-2 bg-[#FAF7F2] px-2.5 py-1 rounded-lg border border-[#E7DFD5]"
               >
-                <span className="material-symbols-outlined text-sm">person_add</span>
-                <span>+ Invite Teammate</span>
-              </button>
-            </div>
+                <div className="relative">
+                  <img
+                    src={member.avatar}
+                    alt={member.name}
+                    className="w-5 h-5 rounded-full object-cover"
+                  />
+                  <span className="absolute bottom-0 right-0 w-1.5 h-1.5 rounded-full bg-[#2F5B3C] ring-1 ring-white"></span>
+                </div>
+                <span className="font-semibold text-[#1F1916] text-[11px]">{member.short_name || member.name}</span>
+                <span className="text-[10px] text-[#73645A]">{member.role}</span>
+              </div>
+            ))}
+
+            <button
+              onClick={onInviteClick}
+              className="flex items-center gap-1 bg-white hover:bg-[#FAF7F2] text-[#C2542D] px-2.5 py-1 rounded-lg font-medium border border-[#E7DFD5] transition-colors cursor-pointer text-[11px]"
+            >
+              <span className="material-symbols-outlined text-[13px]">add</span>
+              <span>Invite</span>
+            </button>
           </div>
 
-          {/* Git / CI Pipeline Capsule */}
-          <div className="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-xl border border-surface-container-high overflow-x-auto text-xs">
-            <span className="material-symbols-outlined text-on-surface-variant text-base">terminal</span>
-            <a
-              href={data?.repository?.url || "https://github.com"}
-              target="_blank"
-              rel="noreferrer"
-              className="font-mono text-xs text-primary font-bold hover:underline"
-            >
-              github.com/aegis-sprint/vectorswarm-nav
-            </a>
-            <div className="flex items-center gap-1 bg-surface-container-highest px-2 py-0.5 rounded font-mono text-[11px] text-on-surface font-semibold">
-              <span className="material-symbols-outlined text-xs">alt_route</span>
-              <span>main</span>
-            </div>
-            <span className="font-mono text-outline font-semibold">#8f2a1b</span>
-            <span className="inline-flex items-center gap-1 bg-primary text-white font-mono text-[10px] px-2.5 py-0.5 rounded-full font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary-fixed animate-pulse"></span>
-              <span>CI Passing (3m ago)</span>
+          {/* Repo status */}
+          <div className="flex items-center gap-2 bg-[#FAF7F2] px-3 py-1 rounded-lg border border-[#E7DFD5] font-mono text-[11px] text-[#73645A]">
+            <span className="material-symbols-outlined text-[14px]">terminal</span>
+            <span className="text-[#1F1916] font-semibold">vectorswarm-nav</span>
+            <span>:main</span>
+            <span>(#8f2a1b)</span>
+            <span className="inline-flex items-center gap-1 text-[#2F5B3C] font-semibold bg-[#EFF5F1] px-1.5 py-0.2 rounded ml-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2F5B3C]"></span>
+              CI Pass (3m ago)
             </span>
           </div>
         </div>
       </section>
 
-      {/* 3-Column Tactical Command Canvas */}
-      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* COLUMN 1: Sprint Kanban Board & Hardware Telemetry (5 cols) */}
-        <div className="lg:col-span-5 flex flex-col gap-6">
-          <div className="bg-surface-container-lowest rounded-2xl shadow-sm p-5 border border-surface-container-high flex flex-col gap-4">
-            {/* Kanban Header */}
-            <div className="flex items-center justify-between pb-2 border-b border-surface-container">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-xl">view_kanban</span>
-                <h2 className="font-headline font-bold text-base text-primary">Sprint Workstream</h2>
+      {/* 3-Column Tactical Workspace */}
+      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        {/* COLUMN 1: Kanban Board & Hardware Telemetry (5 cols) */}
+        <div className="lg:col-span-5 flex flex-col gap-5">
+          <div className="bg-white rounded-xl p-4 border border-[#E7DFD5] shadow-card flex flex-col gap-3">
+            <div className="flex items-center justify-between pb-2 border-b border-[#F0EAE1]">
+              <div className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[17px] text-[#73645A]">view_kanban</span>
+                <h2 className="font-sans font-bold text-sm text-[#1F1916]">Sprint Kanban</h2>
               </div>
-              <div className="flex items-center gap-2 font-mono text-xs">
-                <span className="bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-semibold">
-                  10 Tasks
-                </span>
-                <button
-                  onClick={onAddTaskClick}
-                  className="w-7 h-7 rounded-lg bg-primary text-white flex items-center justify-center hover:bg-primary-container transition-colors shadow-sm cursor-pointer"
-                  title="Add Task"
-                >
-                  <span className="material-symbols-outlined text-sm font-bold">add</span>
-                </button>
-              </div>
+              <button
+                onClick={onAddTaskClick}
+                className="flex items-center gap-1 bg-[#2F5B3C] hover:bg-[#254B31] text-white text-[11px] font-semibold px-2.5 py-1 rounded-md transition-colors cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[14px]">add</span>
+                <span>New Task</span>
+              </button>
             </div>
 
-            {/* Kanban Columns Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {/* Kanban Columns */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
               {/* Backlog */}
-              <div className="bg-surface-container-low rounded-xl p-3 border border-surface-container-high flex flex-col gap-2">
-                <div className="flex items-center justify-between px-1">
-                  <span className="font-mono text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">
-                    Backlog
-                  </span>
-                  <span className="font-mono text-[10px] bg-surface-container-highest px-1.5 py-0.5 rounded text-on-surface font-semibold">
+              <div className="bg-[#FAF7F2] rounded-lg p-2.5 border border-[#E7DFD5] flex flex-col gap-2">
+                <div className="flex items-center justify-between font-mono text-[10px] text-[#73645A] uppercase px-1">
+                  <span>Backlog</span>
+                  <span className="bg-[#EBE3DA] px-1.5 py-0.2 rounded font-semibold text-[#1F1916]">
                     {kanban.backlog?.length || 0}
                   </span>
                 </div>
@@ -212,35 +180,27 @@ export default function WarRoom({
                   <div
                     key={task.id}
                     onClick={() => onMoveTask && onMoveTask(task.id, 'backlog', 'in_progress')}
-                    className="bg-surface-container-lowest rounded-xl p-3 shadow-sm hover:border-primary/40 border border-surface-container-high cursor-pointer transition-all hover:shadow flex flex-col gap-1.5"
-                    title="Click to move to In Progress"
+                    className="bg-white rounded-md p-2 border border-[#E7DFD5] shadow-subtle hover:border-[#C2542D] cursor-pointer transition-colors flex flex-col gap-1"
+                    title="Move to In Progress"
                   >
-                    <div className="flex items-start justify-between gap-1">
-                      <span className="font-mono text-[10px] bg-surface-container text-on-surface-variant px-1.5 py-0.5 rounded font-bold">
-                        {task.id}
-                      </span>
-                      <span className="font-mono text-[10px] bg-surface-container text-outline px-1.5 py-0.5 rounded">
-                        {task.priority}
-                      </span>
+                    <div className="flex items-center justify-between font-mono text-[10px]">
+                      <span className="text-[#C2542D] font-bold">{task.id}</span>
+                      <span className="text-[#73645A]">{task.priority}</span>
                     </div>
-                    <p className="text-xs font-semibold text-on-surface leading-snug">
-                      {task.title}
-                    </p>
-                    <div className="flex items-center justify-between pt-1 text-[10px] font-mono">
-                      <span className="text-secondary font-medium">{task.project}</span>
-                      <span className="text-on-surface-variant">{task.assignee}</span>
+                    <p className="font-semibold text-xs text-[#1F1916] leading-snug">{task.title}</p>
+                    <div className="flex justify-between text-[10px] text-[#73645A] font-mono mt-0.5">
+                      <span>{task.project}</span>
+                      <span>{task.assignee}</span>
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* In Progress */}
-              <div className="bg-surface-container-low rounded-xl p-3 border border-surface-container-high flex flex-col gap-2">
-                <div className="flex items-center justify-between px-1">
-                  <span className="font-mono text-[10px] font-bold text-primary uppercase tracking-wider">
-                    In Progress
-                  </span>
-                  <span className="font-mono text-[10px] bg-primary text-white px-1.5 py-0.5 rounded font-bold">
+              <div className="bg-[#FAF7F2] rounded-lg p-2.5 border border-[#E7DFD5] flex flex-col gap-2">
+                <div className="flex items-center justify-between font-mono text-[10px] text-[#2F5B3C] uppercase px-1 font-semibold">
+                  <span>In Progress</span>
+                  <span className="bg-[#2F5B3C] text-white px-1.5 py-0.2 rounded font-semibold">
                     {kanban.in_progress?.length || 0}
                   </span>
                 </div>
@@ -248,46 +208,29 @@ export default function WarRoom({
                   <div
                     key={task.id}
                     onClick={() => onMoveTask && onMoveTask(task.id, 'in_progress', 'under_review')}
-                    className="bg-surface-container-lowest rounded-xl p-3 shadow-sm hover:border-primary/40 border border-surface-container-high cursor-pointer transition-all hover:shadow flex flex-col gap-1.5"
-                    title="Click to move to Under Review"
+                    className="bg-white rounded-md p-2 border border-[#E7DFD5] shadow-subtle hover:border-[#2F5B3C] cursor-pointer transition-colors flex flex-col gap-1"
+                    title="Move to Under Review"
                   >
-                    <div className="flex items-start justify-between gap-1">
-                      <span className="font-mono text-[10px] bg-primary-fixed text-primary font-bold px-1.5 py-0.5 rounded">
-                        {task.id}
-                      </span>
-                      <span
-                        className={`font-mono text-[10px] px-1.5 py-0.5 rounded font-bold ${
-                          task.priority === 'URGENT'
-                            ? 'bg-error/15 text-error animate-pulse'
-                            : 'bg-surface-container-high text-on-surface-variant'
-                        }`}
-                      >
+                    <div className="flex items-center justify-between font-mono text-[10px]">
+                      <span className="text-[#2F5B3C] font-bold">{task.id}</span>
+                      <span className={`px-1 py-0.2 rounded font-semibold ${task.priority === 'URGENT' ? 'bg-[#FDF2F2] text-[#B83A3A]' : 'text-[#73645A]'}`}>
                         {task.priority}
                       </span>
                     </div>
-                    <p className="text-xs font-semibold text-on-surface leading-snug">
-                      {task.title}
-                    </p>
-                    <span className="font-mono text-[10px] text-secondary font-medium">
-                      {task.project}
-                    </span>
-                    <div className="flex items-center justify-between pt-1 text-[10px] font-mono">
-                      <span className="font-semibold text-on-surface">{task.assignee}</span>
-                      {task.badge && (
-                        <span className="text-secondary font-bold">{task.badge}</span>
-                      )}
+                    <p className="font-semibold text-xs text-[#1F1916] leading-snug">{task.title}</p>
+                    <div className="flex justify-between text-[10px] text-[#73645A] font-mono mt-0.5">
+                      <span>{task.assignee}</span>
+                      {task.badge && <span className="text-[#C2542D] font-semibold">{task.badge}</span>}
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* Under Review */}
-              <div className="bg-surface-container-low rounded-xl p-3 border border-surface-container-high flex flex-col gap-2">
-                <div className="flex items-center justify-between px-1">
-                  <span className="font-mono text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">
-                    Under Review
-                  </span>
-                  <span className="font-mono text-[10px] bg-surface-container-highest px-1.5 py-0.5 rounded text-on-surface font-semibold">
+              <div className="bg-[#FAF7F2] rounded-lg p-2.5 border border-[#E7DFD5] flex flex-col gap-2">
+                <div className="flex items-center justify-between font-mono text-[10px] text-[#73645A] uppercase px-1">
+                  <span>Under Review</span>
+                  <span className="bg-[#EBE3DA] px-1.5 py-0.2 rounded font-semibold text-[#1F1916]">
                     {kanban.under_review?.length || 0}
                   </span>
                 </div>
@@ -295,200 +238,134 @@ export default function WarRoom({
                   <div
                     key={task.id}
                     onClick={() => onMoveTask && onMoveTask(task.id, 'under_review', 'deployed')}
-                    className="bg-surface-container-lowest rounded-xl p-3 shadow-sm hover:border-primary/40 border border-surface-container-high cursor-pointer transition-all hover:shadow flex flex-col gap-1.5"
-                    title="Click to move to Deployed"
+                    className="bg-white rounded-md p-2 border border-[#E7DFD5] shadow-subtle hover:border-[#2F5B3C] cursor-pointer transition-colors flex flex-col gap-1"
+                    title="Move to Deployed"
                   >
-                    <div className="flex items-start justify-between gap-1">
-                      <span className="font-mono text-[10px] bg-surface-container text-primary font-bold px-1.5 py-0.5 rounded">
-                        {task.id}
-                      </span>
-                      <span className="font-mono text-[10px] bg-primary-fixed text-primary px-1.5 py-0.5 rounded font-bold">
-                        {task.priority}
-                      </span>
+                    <div className="flex items-center justify-between font-mono text-[10px]">
+                      <span className="text-[#2F5B3C] font-bold">{task.id}</span>
+                      <span className="text-[#2F5B3C] bg-[#EFF5F1] px-1 rounded">{task.priority}</span>
                     </div>
-                    <p className="text-xs font-semibold text-on-surface leading-snug">
-                      {task.title}
-                    </p>
-                    <div className="flex items-center justify-between pt-1 text-[10px] font-mono">
-                      <span className="text-on-surface font-semibold">{task.assignee}</span>
-                      <span className="text-outline">{task.badge || "1 Approval Req"}</span>
+                    <p className="font-semibold text-xs text-[#1F1916] leading-snug">{task.title}</p>
+                    <div className="flex justify-between text-[10px] text-[#73645A] font-mono mt-0.5">
+                      <span>{task.assignee}</span>
+                      <span>{task.badge || "PR Ready"}</span>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Deployed / Done */}
-              <div className="bg-surface-container-low rounded-xl p-3 border border-surface-container-high flex flex-col gap-2">
-                <div className="flex items-center justify-between px-1">
-                  <span className="font-mono text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">
-                    Deployed / Done
-                  </span>
-                  <span className="font-mono text-[10px] bg-primary-fixed text-primary px-1.5 py-0.5 rounded font-bold">
+              {/* Deployed */}
+              <div className="bg-[#FAF7F2] rounded-lg p-2.5 border border-[#E7DFD5] flex flex-col gap-2">
+                <div className="flex items-center justify-between font-mono text-[10px] text-[#73645A] uppercase px-1">
+                  <span>Deployed</span>
+                  <span className="bg-[#EFF5F1] text-[#2F5B3C] px-1.5 py-0.2 rounded font-semibold">
                     {kanban.deployed?.length || 0}
                   </span>
                 </div>
                 {kanban.deployed?.map((task) => (
-                  <div
-                    key={task.id}
-                    className="bg-surface-container-lowest rounded-xl p-2.5 shadow-sm border border-surface-container-high opacity-90 flex flex-col gap-1"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-[10px] text-outline line-through">
-                        {task.id} {task.title}
-                      </span>
-                      <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
+                  <div key={task.id} className="bg-white rounded-md p-2 border border-[#E7DFD5] opacity-80 flex flex-col gap-0.5">
+                    <div className="flex items-center justify-between font-mono text-[10px]">
+                      <span className="text-[#73645A] line-through">{task.id}</span>
+                      <span className="material-symbols-outlined text-[#2F5B3C] text-[13px]">check_circle</span>
                     </div>
-                    {task.note && (
-                      <span className="font-mono text-[10px] text-on-surface-variant truncate">
-                        {task.note}
-                      </span>
-                    )}
+                    <p className="text-xs text-[#73645A] leading-snug">{task.title}</p>
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Realtime Swarm Hardware Telemetry (Sparkline Data Viz) */}
-          <div className="bg-surface-container-lowest rounded-2xl shadow-sm p-5 border border-surface-container-high flex flex-col gap-3">
+          {/* Realtime Edge Telemetry */}
+          <div className="bg-white rounded-xl p-4 border border-[#E7DFD5] shadow-card flex flex-col gap-2.5">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-base">memory</span>
-                <span className="font-mono text-xs font-bold uppercase text-on-surface">
-                  Orin Edge Compute Telemetry
-                </span>
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1F1916]">
+                <span className="material-symbols-outlined text-[16px] text-[#2F5B3C]">memory</span>
+                <span>Jetson Orin Edge Compute Telemetry</span>
               </div>
-              <span className="font-mono text-[11px] bg-primary-fixed/40 text-primary px-2.5 py-0.5 rounded-full font-bold">
-                {telemetry.temperature || "39.4°C"} // {telemetry.status || "NOMINAL"}
+              <span className="font-mono text-[10px] text-[#2F5B3C] bg-[#EFF5F1] px-2 py-0.5 rounded font-bold">
+                {telemetry.temperature || "39.4°C"} // NOMINAL
               </span>
             </div>
 
-            <div className="grid grid-cols-3 gap-3 pt-1">
-              {/* NPU Load */}
-              <div className="bg-surface-container-low p-3 rounded-xl border border-surface-container-high flex flex-col">
-                <span className="font-mono text-[10px] text-on-surface-variant uppercase font-semibold">
-                  NPU Load
-                </span>
-                <span className="font-headline font-bold text-lg text-primary mt-0.5">
-                  {telemetry.npu_load || "84.2%"}
-                </span>
-                <svg className="w-full h-7 text-primary mt-1" fill="none" viewBox="0 0 100 24">
-                  <path
-                    d="M0 18 L15 14 L30 19 L45 8 L60 11 L75 4 L90 7 L100 5"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className="bg-[#FAF7F2] p-2.5 rounded-lg border border-[#E7DFD5]">
+                <span className="text-[10px] text-[#73645A] font-mono block">NPU Load</span>
+                <span className="font-sans font-bold text-base text-[#2F5B3C]">{telemetry.npu_load || "84.2%"}</span>
+                <svg className="w-full h-5 text-[#2F5B3C] mt-0.5" fill="none" viewBox="0 0 100 24">
+                  <path d="M0 18 L15 14 L30 19 L45 8 L60 11 L75 4 L90 7 L100 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                 </svg>
               </div>
 
-              {/* VRAM Alloc */}
-              <div className="bg-surface-container-low p-3 rounded-xl border border-surface-container-high flex flex-col">
-                <span className="font-mono text-[10px] text-on-surface-variant uppercase font-semibold">
-                  VRAM Alloc
-                </span>
-                <span className="font-headline font-bold text-lg text-secondary mt-0.5">
-                  {telemetry.vram_alloc || "6.8 / 8GB"}
-                </span>
-                <svg className="w-full h-7 text-secondary mt-1" fill="none" viewBox="0 0 100 24">
-                  <path
-                    d="M0 20 L20 18 L40 16 L60 12 L80 10 L100 6"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
+              <div className="bg-[#FAF7F2] p-2.5 rounded-lg border border-[#E7DFD5]">
+                <span className="text-[10px] text-[#73645A] font-mono block">VRAM</span>
+                <span className="font-sans font-bold text-base text-[#C2542D]">{telemetry.vram_alloc || "6.8 / 8GB"}</span>
+                <svg className="w-full h-5 text-[#C2542D] mt-0.5" fill="none" viewBox="0 0 100 24">
+                  <path d="M0 20 L20 18 L40 16 L60 12 L80 10 L100 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                 </svg>
               </div>
 
-              {/* Sync Jitter */}
-              <div className="bg-surface-container-low p-3 rounded-xl border border-surface-container-high flex flex-col">
-                <span className="font-mono text-[10px] text-on-surface-variant uppercase font-semibold">
-                  Sync Jitter
-                </span>
-                <span className="font-headline font-bold text-lg text-primary mt-0.5">
-                  {telemetry.sync_jitter || "1.82 ms"}
-                </span>
-                <svg className="w-full h-7 text-primary mt-1" fill="none" viewBox="0 0 100 24">
-                  <path
-                    d="M0 10 L25 12 L50 8 L75 14 L100 11"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
+              <div className="bg-[#FAF7F2] p-2.5 rounded-lg border border-[#E7DFD5]">
+                <span className="text-[10px] text-[#73645A] font-mono block">Sync Jitter</span>
+                <span className="font-sans font-bold text-base text-[#2F5B3C]">{telemetry.sync_jitter || "1.82 ms"}</span>
+                <svg className="w-full h-5 text-[#2F5B3C] mt-0.5" fill="none" viewBox="0 0 100 24">
+                  <path d="M0 10 L25 12 L50 8 L75 14 L100 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                 </svg>
               </div>
             </div>
           </div>
         </div>
 
-        {/* COLUMN 2: Live War Room Channel & Collaboration Log (4 cols) */}
-        <div className="lg:col-span-4 flex flex-col gap-6">
-          <div className="bg-surface-container-lowest rounded-2xl shadow-sm p-5 border border-surface-container-high flex flex-col gap-4">
-            {/* Header with Audio Huddle Indicator */}
-            <div className="flex items-center justify-between pb-2 border-b border-surface-container">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-xl">forum</span>
-                <h2 className="font-headline font-bold text-base text-primary">Mission Log</h2>
+        {/* COLUMN 2: Mission Log & Collaboration Stream (4 cols) */}
+        <div className="lg:col-span-4 flex flex-col gap-5">
+          <div className="bg-white rounded-xl p-4 border border-[#E7DFD5] shadow-card flex flex-col gap-3">
+            <div className="flex items-center justify-between pb-2 border-b border-[#F0EAE1]">
+              <div className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[17px] text-[#73645A]">chat</span>
+                <h2 className="font-sans font-bold text-sm text-[#1F1916]">Team Log & Huddle</h2>
               </div>
-              <div className="flex items-center gap-1.5 bg-surface-container-low px-2.5 py-1 rounded-full border border-surface-container-high">
-                <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                <span className="material-symbols-outlined text-xs text-primary">headphones</span>
-                <span className="font-mono text-[10px] text-primary font-bold">Audio: 3 listening</span>
-              </div>
+              <span className="text-[11px] text-[#2F5B3C] font-mono flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2F5B3C] animate-pulse"></span>
+                Audio: 3 listening
+              </span>
             </div>
 
-            {/* Pinned Architecture Directives & Decisions */}
-            <div className="bg-surface-container-low rounded-xl p-3 border border-surface-container-high flex flex-col gap-1.5">
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-[10px] font-bold text-secondary uppercase tracking-wider flex items-center gap-1">
-                  <span className="material-symbols-outlined text-xs">push_pin</span>
-                  Architecture ADR-004
-                </span>
-                <span className="font-mono text-[10px] text-on-surface-variant">Ratified 1h ago</span>
-              </div>
-              <p className="text-xs text-on-surface font-medium leading-relaxed">
-                Decided: Fallback from centralized coordinator to peer-to-peer relative consensus over CycloneDDS if RSSI drops below -82dBm. No master node single point of failure.
+            {/* Pinned Consensus */}
+            <div className="p-2.5 rounded-lg bg-[#FAF7F2] border border-[#E7DFD5] text-xs">
+              <span className="font-mono text-[10px] text-[#C2542D] font-bold uppercase flex items-center gap-1">
+                <span className="material-symbols-outlined text-[12px]">push_pin</span>
+                Consensus ADR-004
+              </span>
+              <p className="text-[11px] text-[#1F1916] mt-0.5 leading-snug">
+                Fallback to P2P relative consensus over CycloneDDS if RSSI &lt; -82dBm. No single point of failure.
               </p>
             </div>
 
-            {/* Live Activity Stream */}
-            <div className="flex flex-col gap-4 max-h-[440px] overflow-y-auto pr-1">
+            {/* Message Feed */}
+            <div className="flex flex-col gap-3 max-h-[360px] overflow-y-auto pr-1 text-xs">
               {missionLog.map((msg) => (
-                <div key={msg.id} className="flex flex-col gap-1.5 text-xs">
+                <div key={msg.id} className="flex flex-col gap-1">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
                       {msg.avatar ? (
-                        <img
-                          src={msg.avatar}
-                          alt={msg.author}
-                          className="w-5 h-5 rounded-full object-cover ring-1 ring-surface-container-high"
-                        />
+                        <img src={msg.avatar} alt={msg.author} className="w-4 h-4 rounded-full object-cover" />
                       ) : (
-                        <span className="material-symbols-outlined text-primary text-base">
-                          {msg.icon || 'smart_toy'}
-                        </span>
+                        <span className="material-symbols-outlined text-[14px] text-[#2F5B3C]">{msg.icon || 'smart_toy'}</span>
                       )}
-                      <span className="font-bold text-on-surface">{msg.author}</span>
-                      <span className="font-mono text-[10px] bg-surface-container text-on-surface-variant px-1.5 py-0.2 rounded font-semibold">
-                        {msg.role}
-                      </span>
+                      <span className="font-semibold text-[#1F1916] text-[11px]">{msg.author}</span>
+                      <span className="text-[10px] text-[#73645A]">({msg.role})</span>
                     </div>
-                    <span className="font-mono text-[10px] text-outline">{msg.time}</span>
+                    <span className="text-[10px] text-[#A89C92] font-mono">{msg.time}</span>
                   </div>
 
-                  <p className="text-on-surface leading-relaxed pl-7">{msg.text}</p>
+                  <p className="text-[#382F2A] text-[11px] pl-5 leading-relaxed">{msg.text}</p>
 
-                  {/* Optional Code Snippet Component */}
                   {msg.code_snippet && (
-                    <div className="ml-7 bg-surface-container-highest rounded-xl p-3 font-mono text-[11px] text-on-surface border border-surface-container-high flex flex-col gap-1 overflow-x-auto">
-                      <div className="flex items-center justify-between text-on-surface-variant pb-1 border-b border-surface-container text-[10px]">
+                    <div className="ml-5 bg-[#FAF7F2] rounded-md p-2 font-mono text-[10px] border border-[#E7DFD5] overflow-x-auto">
+                      <div className="text-[#73645A] pb-1 border-b border-[#E7DFD5] flex justify-between">
                         <span>{msg.code_snippet.filename}</span>
-                        <span className="uppercase font-bold">{msg.code_snippet.lang}</span>
+                        <span>{msg.code_snippet.lang}</span>
                       </div>
-                      <pre className="text-primary font-mono text-xs whitespace-pre-wrap leading-tight mt-1">
+                      <pre className="text-[#2F5B3C] pt-1 leading-tight">
                         <code>{msg.code_snippet.code}</code>
                       </pre>
                     </div>
@@ -497,90 +374,81 @@ export default function WarRoom({
               ))}
             </div>
 
-            {/* Chat & Prompt Dispatch Input */}
-            <form onSubmit={handleSendChat} className="flex flex-col gap-2 pt-2 border-t border-surface-container">
+            {/* Chat Input */}
+            <form onSubmit={handleSendChat} className="flex flex-col gap-1 pt-2 border-t border-[#F0EAE1]">
               <div className="relative flex items-center">
                 <input
                   type="text"
-                  placeholder="Post telemetry note or @AEGIS Synthesizer prompt..."
+                  placeholder="Post message or ask @AI-Mentor..."
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
-                  className="w-full bg-surface-container-low text-on-surface text-xs rounded-xl px-3 py-2.5 pr-10 border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary focus:bg-surface-container-lowest transition-all"
+                  className="w-full bg-[#FAF7F2] text-[#1F1916] text-xs rounded-lg px-3 py-2 pr-8 border border-[#E7DFD5] focus:outline-none focus:bg-white focus:border-[#C2542D] transition-colors"
                 />
                 <button
                   type="submit"
-                  className="absolute right-2 text-primary hover:text-primary-container p-1 rounded-lg hover:bg-surface-container cursor-pointer transition-colors"
+                  className="absolute right-2 text-[#C2542D] hover:text-[#A8431F] p-0.5 cursor-pointer"
                 >
-                  <span className="material-symbols-outlined text-lg">send</span>
+                  <span className="material-symbols-outlined text-[16px]">send</span>
                 </button>
               </div>
-              <div className="flex items-center justify-between text-[10px] font-mono text-on-surface-variant px-1">
-                <span>Tip: Ask @AEGIS Synthesizer for instant ROS2 advice</span>
-                <span className="text-primary font-semibold">Active Session</span>
-              </div>
+              <span className="text-[10px] text-[#A89C92] font-mono px-1">
+                Tip: Type @AI-Mentor to critique your architecture
+              </span>
             </form>
           </div>
         </div>
 
-        {/* COLUMN 3: AI Mentor Agent ("AEGIS Synthesizer") & Deliverables Checklist (3 cols) */}
-        <div className="lg:col-span-3 flex flex-col gap-6">
-          {/* AI Mentor Card */}
-          <div className="bg-surface-container-lowest rounded-2xl shadow-sm p-5 border border-surface-container-high flex flex-col gap-3">
-            <div className="flex items-center justify-between pb-2 border-b border-surface-container">
+        {/* COLUMN 3: AI-Mentor Rubric Critic & Checklist (3 cols) */}
+        <div className="lg:col-span-3 flex flex-col gap-5">
+          {/* AI-Mentor Card */}
+          <div className="bg-white rounded-xl p-4 border border-[#E7DFD5] shadow-card flex flex-col gap-2.5">
+            <div className="flex items-center justify-between pb-2 border-b border-[#F0EAE1]">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-white shadow-sm">
-                  <span className="material-symbols-outlined text-lg">smart_toy</span>
+                <div className="w-6 h-6 rounded-md bg-[#2F5B3C] text-white flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[14px]">smart_toy</span>
                 </div>
-                <div className="flex flex-col">
-                  <span className="font-headline font-bold text-sm text-primary leading-tight">
-                    AEGIS Synthesizer
-                  </span>
-                  <span className="font-mono text-[10px] text-on-surface-variant">
-                    Sprint Autonomous AI Copilot
-                  </span>
-                </div>
+                <span className="font-sans font-bold text-xs text-[#1F1916]">@AI-Mentor Critic</span>
               </div>
-              <span className="font-mono text-[10px] bg-primary-fixed text-primary px-2 py-0.5 rounded font-bold">
-                ONLINE
+              <span className="font-mono text-[10px] text-[#2F5B3C] font-semibold bg-[#EFF5F1] px-1.5 py-0.2 rounded">
+                ACTIVE
               </span>
             </div>
 
-            <div className="bg-surface-container-low rounded-xl p-3 border border-surface-container-high flex flex-col gap-1.5 text-xs">
-              <div className="flex items-center gap-1.5 text-secondary font-mono text-[10px] font-bold uppercase">
-                <span className="material-symbols-outlined text-xs">psychology</span>
-                Active Technical Advisory
-              </div>
-              <p className="text-on-surface leading-snug">
-                Swarm formation UDP latency SLA is currently healthy at 1.82ms. Ensure dynamic obstacle rejection is tested before 16:30 Milestone 2 Freeze.
+            <div className="p-2.5 rounded-lg bg-[#FAF7F2] border border-[#E7DFD5] text-xs">
+              <span className="text-[10px] font-mono text-[#C47D1C] font-semibold block">
+                Rubric Assessment (Estimated: 88/100)
+              </span>
+              <p className="text-[11px] text-[#382F2A] mt-1 leading-relaxed">
+                Strong technical depth on pointcloud deskewing. Ensure dynamic obstacle rejection is demonstrated in the demo video to maximize Criterion 3 (Real-World Performance).
               </p>
             </div>
           </div>
 
-          {/* Deliverables Checklist */}
-          <div className="bg-surface-container-lowest rounded-2xl shadow-sm p-5 border border-surface-container-high flex flex-col gap-3">
-            <div className="flex items-center justify-between pb-2 border-b border-surface-container">
-              <span className="font-headline font-bold text-sm text-on-surface">
-                Sprint Deliverables Checklist
+          {/* Submission Checklist */}
+          <div className="bg-white rounded-xl p-4 border border-[#E7DFD5] shadow-card flex flex-col gap-2.5">
+            <div className="flex items-center justify-between pb-2 border-b border-[#F0EAE1]">
+              <span className="font-sans font-bold text-xs text-[#1F1916]">
+                Deliverables Checklist
               </span>
-              <span className="font-mono text-[10px] bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-semibold">
-                {checklist.filter(c => c.checked).length} of {checklist.length} Done
+              <span className="font-mono text-[10px] text-[#73645A]">
+                {checklist.filter(c => c.checked).length} of {checklist.length}
               </span>
             </div>
 
-            <div className="flex flex-col gap-2.5">
+            <div className="flex flex-col gap-2">
               {checklist.map((item) => (
                 <label
                   key={item.id}
                   onClick={() => toggleChecklist(item.id)}
-                  className="flex items-start gap-2.5 text-xs cursor-pointer p-1.5 rounded-lg hover:bg-surface-container-low transition-colors"
+                  className="flex items-start gap-2 text-xs cursor-pointer p-1 rounded hover:bg-[#FAF7F2] transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={item.checked}
                     onChange={() => {}}
-                    className="mt-0.5 rounded text-primary focus:ring-primary h-4 w-4 accent-primary"
+                    className="mt-0.5 rounded text-[#2F5B3C] focus:ring-[#2F5B3C] h-3.5 w-3.5 accent-[#2F5B3C]"
                   />
-                  <span className={item.checked ? 'line-through text-outline' : 'text-on-surface font-medium'}>
+                  <span className={item.checked ? 'line-through text-[#A89C92] text-[11px]' : 'text-[#1F1916] text-[11px] font-medium'}>
                     {item.text}
                   </span>
                 </label>
@@ -592,4 +460,3 @@ export default function WarRoom({
     </div>
   );
 }
-

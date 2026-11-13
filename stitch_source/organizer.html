@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"inverse-primary":"#9fd2b7","surface-container-low":"#f4f4ed","surface":"#fafaf3","error-container":"#ffdad6","on-secondary-fixed-variant":"#743404","secondary-fixed-dim":"#ffb68d","tertiary-container":"#7b4200","outline-variant":"#c0c9c2","tertiary-fixed":"#ffdcc2","primary":"#0f412e","surface-container":"#eeeee7","on-background":"#1a1c18","inverse-on-surface":"#f1f1ea","outline":"#717973","on-primary-fixed":"#002114","surface-tint":"#396752","on-tertiary-container":"#ffb371","on-surface-variant":"#414943","on-tertiary-fixed":"#2e1500","tertiary-fixed-dim":"#ffb77a","primary-fixed":"#bbeed2","inverse-surface":"#2f312d","background":"#fafaf3","secondary-fixed":"#ffdbc9","on-error-container":"#93000a","primary-container":"#2a5944","secondary-container":"#ffa26c","on-error":"#ffffff","on-primary-container":"#9cceb3","tertiary":"#5a2f00","on-secondary-container":"#783707","surface-container-lowest":"#ffffff","on-primary-fixed-variant":"#204f3b","on-tertiary-fixed-variant":"#6d3a00","surface-container-highest":"#e3e3dc","on-surface":"#1a1c18","surface-bright":"#fafaf3","on-primary":"#ffffff","primary-fixed-dim":"#9fd2b7","surface-variant":"#e3e3dc","on-secondary-fixed":"#331200","surface-dim":"#dadad4","on-secondary":"#ffffff","surface-container-high":"#e8e9e2","secondary":"#924b1c","on-tertiary":"#ffffff","error":"#ba1a1a"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{"space-xs":"0.25rem",gutter:"1.5rem","space-lg":"1.5rem","space-md":"1rem","space-xl":"2.5rem","gutter-mobile":"1rem",margin:"2.5rem","margin-mobile":"1rem","space-sm":"0.5rem"},fontFamily:{"headline-lg-mobile":["Geist"],"label-md":["JetBrains Mono"],"body-md":["Geist"],"headline-lg":["Geist"],"headline-md":["Geist"],"body-lg":["Geist"],"headline-xl-mobile":["Geist"],"label-lg":["JetBrains Mono"],"label-sm":["JetBrains Mono"],"headline-xl":["Geist"],"headline-sm":["Geist"],"body-sm":["Geist"]},fontSize:{"headline-lg-mobile":["1.625rem",{lineHeight:"2.125rem",letterSpacing:"-0.02em",fontWeight:"500"}],"label-md":["0.75rem",{lineHeight:"1rem",letterSpacing:"0.02em",fontWeight:"500"}],"body-md":["0.9375rem",{lineHeight:"1.5rem",letterSpacing:"-0.005em",fontWeight:"400"}],"headline-lg":["2.25rem",{lineHeight:"2.75rem",letterSpacing:"-0.025em",fontWeight:"500"}],"headline-md":["1.75rem",{lineHeight:"2.25rem",letterSpacing:"-0.02em",fontWeight:"500"}],"body-lg":["1.125rem",{lineHeight:"1.75rem",letterSpacing:"-0.01em",fontWeight:"400"}],"headline-xl-mobile":["2rem",{lineHeight:"2.5rem",letterSpacing:"-0.02em",fontWeight:"500"}],"label-lg":["0.875rem",{lineHeight:"1.25rem",letterSpacing:"-0.01em",fontWeight:"500"}],"label-sm":["0.6875rem",{lineHeight:"0.875rem",letterSpacing:"0.04em",fontWeight:"500"}],"headline-xl":["3rem",{lineHeight:"3.5rem",letterSpacing:"-0.03em",fontWeight:"500"}],"headline-sm":["1.25rem",{lineHeight:"1.75rem",letterSpacing:"-0.015em",fontWeight:"500"}],"body-sm":["0.8125rem",{lineHeight:"1.25rem",letterSpacing:"0em",fontWeight:"400"}]}}}}</script></head><body class="bg-surface font-body-md text-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low z-50 flex flex-col justify-between py-space-md"><div class="flex flex-col gap-space-md"><div class="h-16 px-space-md flex items-center gap-space-sm"><img alt="AEGIS Emblem" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrCpANY9x9oqXKg7X0Jt7iHyUAwZQW0-laYwYbPqa4oOGULjl-iNzyLt1i696_7TlfM7DYNomoa9g61Qjq9QfA6b7BbDLd78FiI7TWuabuFcnb3iOmvuSlkxf791l6A2WTXLgQpflYfvBUfbt0pyjUR1BsrZJtqMfaTkpzK0YkemnVOe5mpJAF6q98MUks59K0_tvoYwks8RwnzeSKl2hMEhxM-F7lR4W9TwICN-avPN"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm tracking-tight text-primary leading-none">AEGIS</span><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">OS // v3.4</span></div></div><div class="px-space-md"><div class="p-space-sm rounded-lg bg-surface-container flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-base text-primary">token</span><div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Context</span><span class="font-label-md text-label-md text-on-surface font-bold">GLOBAL-SYS</span></div></div><span class="font-label-sm text-label-sm bg-surface-container-highest px-space-xs py-0.5 rounded text-on-surface-variant">ACTIVE</span></div></div><div class="px-space-md"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider block mb-space-xs">Operations Modules</span><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary-container font-medium rounded-lg"><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-medium rounded-lg" data-path="operations-console" href="#"><span class="material-symbols-outlined text-lg">terminal</span><span class="font-label-md text-label-md">Ops Console</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="participant-registry" href="#"><span class="material-symbols-outlined text-lg">group</span><span class="font-label-md text-label-md">Registry</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="live-timelines" href="#"><span class="material-symbols-outlined text-lg">schedule</span><span class="font-label-md text-label-md">Timelines</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="check-in-and-qr" href="#"><span class="material-symbols-outlined text-lg">qr_code_scanner</span><span class="font-label-md text-label-md">Check-in / QR</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="judging-and-rubrics" href="#"><span class="material-symbols-outlined text-lg">gavel</span><span class="font-label-md text-label-md">Rubrics</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="operations-analytics" href="#"><span class="material-symbols-outlined text-lg">monitoring</span><span class="font-label-md text-label-md">Analytics</span></a></nav></div><div class="px-space-md pt-space-xs"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider block mb-space-xs">Marketplace Node</span><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary-container font-medium rounded-lg"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="sponsor-marketplace" href="#"><span class="material-symbols-outlined text-lg">storefront</span><span class="font-label-md text-label-md">Sponsor Portal</span></a></nav></div></div><div class="px-space-md flex flex-col gap-space-xs"><div class="p-space-sm rounded-lg bg-surface-container-lowest flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="font-label-sm text-label-sm text-primary font-bold uppercase">Live Sync</span></div><span class="font-label-sm text-label-sm text-on-surface-variant">99.98%</span></div><div class="text-center"><span class="font-label-sm text-label-sm text-outline">AEGIS PROTOCOL 2025</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs bg-surface-container px-space-sm py-1 rounded-lg"><span class="material-symbols-outlined text-base text-on-surface-variant">flag</span><select class="bg-transparent font-label-md text-label-md text-on-surface focus:outline-none cursor-pointer pr-space-xs"><option>Global Sprint 2025 (North America)</option><option>DeepTech Hackathon Berlin</option><option>BioDesign Summit Singapore</option></select></div><div class="inline-flex items-center gap-space-xs bg-surface-container-low px-space-sm py-1 rounded-full"><span class="w-2 h-2 rounded-full bg-primary animate-ping"></span><span class="font-label-sm text-label-sm text-primary font-medium tracking-wide">● System Active / Sprint Phase</span></div></div><div class="flex items-center gap-space-md"><button class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors relative"><span class="material-symbols-outlined text-xl">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-secondary"></span></button><div class="flex items-center gap-space-sm pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZhn8xD4-I23CtfyAjyb3OgzXbRnx_9MpPBKBQ4t2mzOHFb3XwEk7GbSlLlusIY9uKCdIbvBby_eqi2_UVdYH4v8A2vE5JuCgzzPGHOPfZ8OU0r7yRhTa6i2MTPCUETQHAcq4-mEh3LTnvqLMUoEU2Fb6cN59OGqkqD8DwwaECTo2UFwAk8DxYXvq0DGfKyzX8SwPgcxu5InGvJJjwYdDmgU5zqSo_Z_416mc6NgrJ"/><div class="flex flex-col text-left"><span class="font-label-md text-label-md text-on-surface font-medium leading-none">Dr. Aris Vane</span><span class="font-label-sm text-label-sm text-on-surface-variant font-normal uppercase leading-tight">Organizer Lead</span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-gutter"><div class="flex flex-col w-full pb-space-xl">
+<!-- Top Operational Context Banner -->
+<div class="bg-surface-container-low py-space-sm px-space-md mb-space-md flex flex-wrap items-center justify-between gap-space-sm rounded-lg">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Cluster Node:</span>
+<span class="font-label-md text-label-md font-bold text-primary">MIT-CSAIL-RBL-04</span>
+<span class="font-label-sm text-label-sm text-outline">/</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Auth: Lead Organizer Level 4</span>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wide">Telemetry Synced (0.14s)</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">|</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Session #908-OPS</span>
+</div>
+</div>
+<!-- 1. Operations Command Bar -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl mb-space-lg shadow-sm flex flex-col xl:flex-row xl:items-center justify-between gap-space-lg">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="bg-primary text-on-primary font-label-sm text-label-sm px-space-xs py-0.5 rounded font-bold uppercase">Sprint Ops Core</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">MIT CSAIL & Robotics Guild</span>
+<span class="font-label-sm text-label-sm bg-surface-container-high text-on-surface px-space-xs py-0.5 rounded">ID: MIT-2025-AUTONOMY</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Autonomous Systems Hackathon 2025</h1>
+<div class="flex items-center gap-space-md flex-wrap pt-space-xs">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-1 bg-surface-container-low rounded-full">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary animate-ping"></span>
+<span class="font-label-md text-label-md text-secondary font-medium">Day 2 — Mid-Sprint Checkpoint</span>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container px-space-sm py-1 rounded">
+<span class="material-symbols-outlined text-sm text-primary">timer</span>
+<span class="font-label-md text-label-md text-primary font-bold" id="master-clock">14:32:08 EST</span>
+</div>
+<div class="flex items-center gap-space-xs text-primary">
+<span class="material-symbols-outlined text-sm">verified</span>
+<span class="font-label-sm text-label-sm font-medium">All Systems Operational</span>
+</div>
+</div>
+</div>
+<!-- Quick Action Buttons -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="inline-flex items-center gap-space-xs bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-space-md py-space-sm rounded-lg transition-colors cursor-pointer" onclick="triggerModal('broadcast-modal')">
+<span class="material-symbols-outlined text-base">campaign</span>
+<span>Broadcast Announcement</span>
+</button>
+<button class="inline-flex items-center gap-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md px-space-md py-space-sm rounded-lg transition-colors cursor-pointer" onclick="exportRollCall()">
+<span class="material-symbols-outlined text-base">download</span>
+<span>Export Roll Call (CSV)</span>
+</button>
+<button class="inline-flex items-center gap-space-xs bg-surface-container-low hover:bg-error-container text-error font-label-md text-label-md px-space-md py-space-sm rounded-lg transition-colors cursor-pointer" onclick="triggerModal('alert-modal')">
+<span class="material-symbols-outlined text-base">warning</span>
+<span>Emergency Alert Dispatch</span>
+</button>
+</div>
+</div>
+<!-- 2. Operational Metrics Bar (4 Key KPI Cards) -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-md mb-space-lg">
+<!-- Card 1: Check-in Turnout -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider block">Attendance & Turnout</span>
+<div class="flex items-baseline gap-space-xs mt-1">
+<span class="font-headline-md text-headline-md text-primary font-bold">1,420</span>
+<span class="font-label-md text-label-md text-on-surface-variant">/ 1,500 Check-in</span>
+</div>
+</div>
+<div class="w-9 h-9 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg">how_to_reg</span>
+</div>
+</div>
+<div class="mt-space-md">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-sm text-label-sm text-on-surface font-medium">94.6% Turnout</span>
+<span class="font-label-sm text-label-sm text-primary">+8.4% vs T-12h</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 94.6%"></div>
+</div>
+<div class="flex items-center gap-space-xs mt-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-xs">speed</span>
+<span class="font-label-sm text-label-sm">QR throughput: ~38 scans/min avg</span>
+</div>
+</div>
+</div>
+<!-- Card 2: Teams & Submissions -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider block">Teams & Repositories</span>
+<div class="flex items-baseline gap-space-xs mt-1">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">348</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Active Teams</span>
+</div>
+</div>
+<div class="w-9 h-9 rounded-lg bg-surface-container-low flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-lg">lan</span>
+</div>
+</div>
+<div class="mt-space-md">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-sm text-label-sm text-on-surface font-medium">312 Repos Synchronized</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">89.6%</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 89.6%"></div>
+</div>
+<div class="flex items-center justify-between mt-2 text-on-surface-variant font-label-sm text-label-sm">
+<span>36 Missing first commit</span>
+<span class="text-secondary font-medium">Action Needed</span>
+</div>
+</div>
+</div>
+<!-- Card 3: Volunteer & Mentor Fleet -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider block">Staff & Mentorship</span>
+<div class="flex items-baseline gap-space-xs mt-1">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">42</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Volunteers on Duty</span>
+</div>
+</div>
+<div class="w-9 h-9 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg">support_agent</span>
+</div>
+</div>
+<div class="mt-space-md bg-surface-container-low p-space-xs rounded-lg flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Active Dispatches</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">18 Mentors in field</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Response Velocity</span>
+<span class="font-label-md text-label-md text-primary font-bold">4.2 min avg</span>
+</div>
+</div>
+</div>
+<!-- Card 4: Hardware & Compute Allocation -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider block">Compute & Gear Reserves</span>
+<div class="flex items-baseline gap-space-xs mt-1">
+<span class="font-headline-md text-headline-md text-primary font-bold">128</span>
+<span class="font-label-md text-label-md text-on-surface-variant">/ 140 Jetson Kits</span>
+</div>
+</div>
+<div class="w-9 h-9 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg">developer_board</span>
+</div>
+</div>
+<div class="mt-space-md">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-on-surface font-medium">Jetson Orin AGX Checkouts</span>
+<span class="font-label-sm text-label-sm text-secondary font-bold">12 Kits Left</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 91.4%"></div>
+</div>
+<div class="flex items-center justify-between mt-2 text-on-surface-variant font-label-sm text-label-sm">
+<span>Cloud Compute: $64k Activated</span>
+<span class="text-primary font-medium">AWS / Lambda Labs</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 3. Live Operations Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg">
+<!-- Section A: Real-Time Event Timeline & Schedule Ticker (xl:col-span-4) -->
+<div class="xl:col-span-4 flex flex-col gap-space-lg">
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col">
+<div class="flex items-center justify-between pb-space-sm mb-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Event Timeline</h2>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container text-on-surface-variant px-space-xs py-0.5 rounded uppercase">Live Flow</span>
+</div>
+<!-- Schedule Items -->
+<div class="flex flex-col gap-space-md relative pl-4">
+<!-- Timeline Vertical Bar -->
+<div class="absolute left-1.5 top-2 bottom-4 w-0.5 bg-surface-container-highest"></div>
+<!-- Item 1 (Past) -->
+<div class="relative flex items-start gap-space-sm">
+<div class="w-3.5 h-3.5 rounded-full bg-surface-container-highest -ml-[23px] mt-1 flex items-center justify-center">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+</div>
+<div class="flex flex-col flex-1 bg-surface-container-low p-space-sm rounded-lg opacity-75">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline">10:00 - 11:30 EST</span>
+<span class="font-label-sm text-label-sm text-outline">COMPLETED</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface font-medium">Hardware Desk Opens & Sensor Kit Pickup</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Stata Center 4th Floor Lab</span>
+</div>
+</div>
+<!-- Item 2 (Active Running Stage) -->
+<div class="relative flex items-start gap-space-sm">
+<div class="w-3.5 h-3.5 rounded-full bg-primary -ml-[23px] mt-1 flex items-center justify-center shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-on-primary animate-ping"></span>
+</div>
+<div class="flex flex-col flex-1 bg-surface-container-lowest p-space-md rounded-lg shadow-sm">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-secondary font-bold">14:00 - 15:30 EST</span>
+<span class="font-label-sm text-label-sm bg-secondary-fixed text-on-secondary-fixed px-space-xs py-0.5 rounded font-bold uppercase animate-pulse">Running Now</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">Workshop: Zero-Copy ROS2 Architecture</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Speaker: Dr. Kenji Tanaka (NVIDIA Autonomy Lab). Live streaming in D-Auditorium & Discord Channel #stream-a.</p>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline">Elapsed: 32 mins</span>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-xs">group</span>
+<span class="font-label-sm text-label-sm font-medium">210 in Room · 440 Stream</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 3 (Upcoming Critical) -->
+<div class="relative flex items-start gap-space-sm">
+<div class="w-3.5 h-3.5 rounded-full bg-surface-container-highest -ml-[23px] mt-1 flex items-center justify-center">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+</div>
+<div class="flex flex-col flex-1 bg-surface-container-low p-space-sm rounded-lg">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">16:30 EST</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">IN 1H 58M</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface font-semibold">Milestone 2: Repo Freeze & CI Check</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Enforces build pipeline validation on main branch.</span>
+</div>
+</div>
+<!-- Item 4 (Later) -->
+<div class="relative flex items-start gap-space-sm">
+<div class="w-3.5 h-3.5 rounded-full bg-surface-container-highest -ml-[23px] mt-1 flex items-center justify-center">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+</div>
+<div class="flex flex-col flex-1 bg-surface-container-low p-space-sm rounded-lg">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">19:00 EST</span>
+<span class="font-label-sm text-label-sm text-outline">UPCOMING</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface font-medium">Catered Dinner & Lead Mentor Office Hours</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Central Atrium / Mentors Desk 1-8</span>
+</div>
+</div>
+<!-- Item 5 (Late Night) -->
+<div class="relative flex items-start gap-space-sm">
+<div class="w-3.5 h-3.5 rounded-full bg-surface-container-highest -ml-[23px] mt-1 flex items-center justify-center">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+</div>
+<div class="flex flex-col flex-1 bg-surface-container-low p-space-sm rounded-lg">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">22:00 EST</span>
+<span class="font-label-sm text-label-sm text-outline">UPCOMING</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface font-medium">Midnight Diagnostic Blitz & Cloud Scale-Up</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">DevOps sprint teams standby.</span>
+</div>
+</div>
+</div>
+<button class="mt-space-md w-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md py-space-xs rounded-lg transition-colors flex items-center justify-center gap-space-xs">
+<span class="material-symbols-outlined text-sm">edit_calendar</span>
+<span>Modify Run-of-Show Timetable</span>
+</button>
+</div>
+<!-- Section D: Automated Code & Integrity Monitor -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary">security</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Code & Integrity Telemetry</h2>
+</div>
+<span class="w-2.5 h-2.5 rounded-full bg-primary animate-ping"></span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<div class="bg-surface-container-low p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-xl">hub</span>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-medium block">GitHub Enterprise Webhook Sync</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Push events processed: 2,491</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm bg-primary-fixed text-on-primary-fixed-variant px-space-xs py-0.5 rounded font-bold">STABLE</span>
+</div>
+<div class="bg-surface-container-low p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-xl">policy</span>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-medium block">AST Plagiarism & Origin Scanner</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Pre-existing open source base check</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm bg-surface-container-highest text-primary px-space-xs py-0.5 rounded font-bold">0 FLAGS DETECTED</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-xl">deployed_code</span>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-medium block">Docker Build Runners (AWS ECS)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">32/32 worker instances healthy</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">100% PASS</span>
+</div>
+</div>
+<div class="mt-space-md p-space-sm bg-surface-container rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">memory</span>
+<span class="font-label-sm text-label-sm">Cluster CPU: 41.2% · RAM: 64.8GB / 128GB</span>
+</div>
+<a class="font-label-sm text-label-sm text-primary font-bold hover:underline" href="#">View Grafana Logs →</a>
+</div>
+</div>
+</div>
+<!-- Section B & C (xl:col-span-8) -->
+<div class="xl:col-span-8 flex flex-col gap-space-lg">
+<!-- Section B: Live QR Check-in & Station Throughput -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm pb-space-sm mb-space-sm">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary">qr_code_scanner</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Live Check-in & Gear Distribution Node</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Real-time NFC/QR credentials validation across 4 building access gateways.</p>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Gate Status:</span>
+<span class="font-label-sm text-label-sm bg-primary-fixed text-primary px-space-xs py-0.5 rounded font-bold">4 Active</span>
+</div>
+</div>
+<!-- Checkin Search Input & Mini Scanner Terminal -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-md mb-space-md">
+<div class="md:col-span-8 flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md uppercase text-on-surface-variant tracking-wider">Search Registry / Badge UUID lookup</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-lg">search</span>
+<input class="w-full h-10 pl-10 pr-space-md bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary transition-all" id="attendee-search" placeholder="Search by participant name, university email, team, or UUID badge..." type="text"/>
+</div>
+</div>
+<div class="md:col-span-4 flex items-end">
+<button class="w-full h-10 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md rounded-lg flex items-center justify-center gap-space-xs transition-colors cursor-pointer" onclick="simulateManualCheckin()">
+<span class="material-symbols-outlined text-base text-primary">barcode_reader</span>
+<span>Fast Manual Scan</span>
+</button>
+</div>
+</div>
+<!-- Live Attendee Feed Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low font-label-sm text-label-sm text-on-surface-variant uppercase">
+<th class="py-space-xs px-space-sm rounded-l">Time</th>
+<th class="py-space-xs px-space-sm">Attendee</th>
+<th class="py-space-xs px-space-sm">Affiliation</th>
+<th class="py-space-xs px-space-sm">Checkpoint / Event</th>
+<th class="py-space-xs px-space-sm text-right rounded-r">Badge UUID</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container font-body-sm text-body-sm text-on-surface" id="scan-stream">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-sm px-space-sm font-label-sm text-label-sm text-primary font-bold">14:31:54</td>
+<td class="py-space-sm px-space-sm font-medium">Elena Rostova</td>
+<td class="py-space-sm px-space-sm text-on-surface-variant">Carnegie Mellon (Team V-SLAM)</td>
+<td class="py-space-sm px-space-sm">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm bg-surface-container px-space-xs py-0.5 rounded text-on-surface">
+<span class="material-symbols-outlined text-xs text-primary">door_front</span> Gate B - Hardware Desk
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm text-right font-label-sm text-label-sm text-outline">0x8F9C2B</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-sm px-space-sm font-label-sm text-label-sm text-primary font-bold">14:30:12</td>
+<td class="py-space-sm px-space-sm font-medium">Marcus Chen</td>
+<td class="py-space-sm px-space-sm text-on-surface-variant">Stanford Robotics (AeroPulse)</td>
+<td class="py-space-sm px-space-sm">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm bg-secondary-fixed text-on-secondary-fixed px-space-xs py-0.5 rounded font-medium">
+<span class="material-symbols-outlined text-xs">memory</span> Collected Jetson AGX Kit #084
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm text-right font-label-sm text-label-sm text-outline">0x4D1A7E</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-sm px-space-sm font-label-sm text-label-sm text-primary font-bold">14:28:44</td>
+<td class="py-space-sm px-space-sm font-medium">Amina Diallo</td>
+<td class="py-space-sm px-space-sm text-on-surface-variant">MIT CSAIL (Autonomous Ag)</td>
+<td class="py-space-sm px-space-sm">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm bg-surface-container px-space-xs py-0.5 rounded text-on-surface">
+<span class="material-symbols-outlined text-xs text-primary">door_front</span> Gate A - Main Rotunda
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm text-right font-label-sm text-label-sm text-outline">0x99AE12</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-sm px-space-sm font-label-sm text-label-sm text-primary font-bold">14:26:09</td>
+<td class="py-space-sm px-space-sm font-medium">Julian Thorne</td>
+<td class="py-space-sm px-space-sm text-on-surface-variant">Imperial College London (QuadZero)</td>
+<td class="py-space-sm px-space-sm">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm bg-surface-container px-space-xs py-0.5 rounded text-on-surface">
+<span class="material-symbols-outlined text-xs text-primary">sensor_door</span> Gate C - West Concourse
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm text-right font-label-sm text-label-sm text-outline">0x3B66D0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Section C: Mentor & Help Queue Dispatch Console -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm pb-space-sm mb-space-sm">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary">psychology</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Mentor & Help Queue Dispatch Console</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Real-time technical assistance tickets submitted by participating engineering teams.</p>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm bg-surface-container-high px-space-xs py-0.5 rounded text-on-surface-variant">4 Pending Dispatch</span>
+<span class="font-label-sm text-label-sm bg-primary-fixed text-primary px-space-xs py-0.5 rounded font-bold">14 Resolved This Hour</span>
+</div>
+</div>
+<!-- Help Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low font-label-sm text-label-sm text-on-surface-variant uppercase">
+<th class="py-space-xs px-space-sm rounded-l">Team & Location</th>
+<th class="py-space-xs px-space-sm">Category</th>
+<th class="py-space-xs px-space-sm">Urgency</th>
+<th class="py-space-xs px-space-sm">Wait Time</th>
+<th class="py-space-xs px-space-sm">Mentor Assigned</th>
+<th class="py-space-xs px-space-sm text-right rounded-r">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container font-body-sm text-body-sm text-on-surface">
+<!-- Ticket 1 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-sm px-space-sm">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Team HyperNav</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Table B-12 (Stata North)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm bg-surface-container px-space-xs py-0.5 rounded text-primary font-bold">
+                    ROS2 C++ Lifecycle Node
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="font-label-sm text-label-sm bg-error-container text-error px-space-xs py-0.5 rounded font-bold uppercase">Critical</span>
+</td>
+<td class="py-space-sm px-space-sm font-label-sm text-label-sm text-secondary font-bold">03:45m</td>
+<td class="py-space-sm px-space-sm">
+<span class="font-label-sm text-label-sm text-outline italic">Unassigned</span>
+</td>
+<td class="py-space-sm px-space-sm text-right">
+<button class="bg-primary hover:bg-primary-container text-on-primary font-label-sm text-label-sm px-space-sm py-1 rounded transition-colors cursor-pointer" onclick="assignMentor('Team HyperNav')">
+                    Dispatch Mentor
+                  </button>
+</td>
+</tr>
+<!-- Ticket 2 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-sm px-space-sm">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">OmniVision Swarm</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Table F-04 (Hangar Bay)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm bg-surface-container px-space-xs py-0.5 rounded text-primary font-bold">
+                    PyTorch ONNX TensorRT
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="font-label-sm text-label-sm bg-surface-container-highest text-on-surface-variant px-space-xs py-0.5 rounded font-medium">Standard</span>
+</td>
+<td class="py-space-sm px-space-sm font-label-sm text-label-sm text-on-surface">06:12m</td>
+<td class="py-space-sm px-space-sm">
+<div class="flex items-center gap-1 font-label-sm text-label-sm text-primary font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span>Dr. Sarah Al-Mansoor</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm text-right">
+<span class="font-label-sm text-label-sm text-primary bg-primary-fixed px-space-xs py-1 rounded font-bold">In Progress</span>
+</td>
+</tr>
+<!-- Ticket 3 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-sm px-space-sm">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">SubSea LiDAR</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Table A-08 (Pool Testing Basin)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm bg-surface-container px-space-xs py-0.5 rounded text-secondary font-bold">
+                    Hardware Power Supply 24V
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="font-label-sm text-label-sm bg-secondary-fixed text-on-secondary-fixed px-space-xs py-0.5 rounded font-bold uppercase">High</span>
+</td>
+<td class="py-space-sm px-space-sm font-label-sm text-label-sm text-secondary font-bold">01:20m</td>
+<td class="py-space-sm px-space-sm">
+<span class="font-label-sm text-label-sm text-outline italic">Unassigned</span>
+</td>
+<td class="py-space-sm px-space-sm text-right">
+<button class="bg-primary hover:bg-primary-container text-on-primary font-label-sm text-label-sm px-space-sm py-1 rounded transition-colors cursor-pointer" onclick="assignMentor('SubSea LiDAR')">
+                    Dispatch Mentor
+                  </button>
+</td>
+</tr>
+<!-- Ticket 4 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-sm px-space-sm">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">NeuralRover-6</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Table D-21 (Mezzanine East)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm bg-surface-container px-space-xs py-0.5 rounded text-primary font-bold">
+                    CAN Bus Baudrate Sync
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="font-label-sm text-label-sm bg-surface-container-highest text-on-surface-variant px-space-xs py-0.5 rounded font-medium">Standard</span>
+</td>
+<td class="py-space-sm px-space-sm font-label-sm text-label-sm text-on-surface">08:50m</td>
+<td class="py-space-sm px-space-sm">
+<div class="flex items-center gap-1 font-label-sm text-label-sm text-primary font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span>T. Henderson (Hardware Lead)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm text-right">
+<span class="font-label-sm text-label-sm text-primary bg-primary-fixed px-space-xs py-1 rounded font-bold">On Site</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-space-md pt-space-sm flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-sm">wifi_tethering</span>
+<span>Dispatch radio channel: VHF 146.520 MHz / Slack #mentors-rapid-response</span>
+</div>
+<button class="font-label-sm text-label-sm text-primary font-bold hover:underline cursor-pointer">
+            View All 28 Resolved Tickets Today →
+          </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Announcement Modal (Hidden by Default) -->
+<div class="fixed inset-0 bg-inverse-surface/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-space-md" id="broadcast-modal">
+<div class="bg-surface-container-lowest max-w-lg w-full p-space-lg rounded-xl shadow-xl flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-space-xs text-primary">
+<span class="material-symbols-outlined">campaign</span>
+<h3 class="font-headline-sm text-headline-sm font-bold">Broadcast Announcement</h3>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface cursor-pointer" onclick="closeModal('broadcast-modal')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex flex-col gap-space-sm">
+<div>
+<label class="font-label-md text-label-md uppercase text-on-surface-variant block mb-1">Target Audience Channels</label>
+<div class="grid grid-cols-2 gap-space-xs">
+<label class="flex items-center gap-space-xs p-space-xs bg-surface-container-low rounded cursor-pointer">
+<input checked="" class="accent-primary" type="checkbox"/>
+<span class="font-label-sm text-label-sm">All Hacker Badges (App Push)</span>
+</label>
+<label class="flex items-center gap-space-xs p-space-xs bg-surface-container-low rounded cursor-pointer">
+<input checked="" class="accent-primary" type="checkbox"/>
+<span class="font-label-sm text-label-sm">Discord Main #announcements</span>
+</label>
+<label class="flex items-center gap-space-xs p-space-xs bg-surface-container-low rounded cursor-pointer">
+<input class="accent-primary" type="checkbox"/>
+<span class="font-label-sm text-label-sm">SMS Broadcast (Critical only)</span>
+</label>
+<label class="flex items-center gap-space-xs p-space-xs bg-surface-container-low rounded cursor-pointer">
+<input checked="" class="accent-primary" type="checkbox"/>
+<span class="font-label-sm text-label-sm">Main Stage Projector Ticker</span>
+</label>
+</div>
+</div>
+<div>
+<label class="font-label-md text-label-md uppercase text-on-surface-variant block mb-1">Message Header</label>
+<input class="w-full h-10 px-space-sm bg-surface-container-low rounded font-body-md text-body-md text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" type="text" value="Milestone 2 Freeze Reminder — 60 Minutes Remaining"/>
+</div>
+<div>
+<label class="font-label-md text-label-md uppercase text-on-surface-variant block mb-1">Message Body</label>
+<textarea class="w-full p-space-sm bg-surface-container-low rounded font-body-md text-body-md text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" rows="3">Ensure your team repo has the ci-build-test.yml passing before 16:30 EST. Mentors are roaming floor 4 & 5 for git integration issues.</textarea>
+</div>
+</div>
+<div class="flex items-center justify-end gap-space-sm pt-space-xs">
+<button class="px-space-md py-space-sm bg-surface-container text-on-surface font-label-md text-label-md rounded-lg hover:bg-surface-container-high transition-colors" onclick="closeModal('broadcast-modal')">Cancel</button>
+<button class="px-space-md py-space-sm bg-primary text-on-primary font-label-md text-label-md rounded-lg hover:bg-primary-container transition-colors" onclick="sendBroadcast()">Transmit Broadcast</button>
+</div>
+</div>
+</div>
+<!-- Interactive Alert Modal (Hidden by Default) -->
+<div class="fixed inset-0 bg-inverse-surface/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-space-md" id="alert-modal">
+<div class="bg-surface-container-lowest max-w-lg w-full p-space-lg rounded-xl shadow-xl flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-space-xs text-error">
+<span class="material-symbols-outlined">crisis_alert</span>
+<h3 class="font-headline-sm text-headline-sm font-bold">Emergency Alert Dispatch</h3>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface cursor-pointer" onclick="closeModal('alert-modal')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="bg-error-container p-space-sm rounded-lg text-on-error-container">
+<div class="flex items-center gap-1 font-label-md text-label-md font-bold mb-1">
+<span class="material-symbols-outlined text-base">warning</span>
+<span>HIGH PRIORITY OVERRIDE PROTOCOL</span>
+</div>
+<p class="font-body-sm text-body-sm">This action triggers instant audible alerts across building PA system, high-priority push notifications, and notifies MIT Campus Safety operations.</p>
+</div>
+<div>
+<label class="font-label-md text-label-md uppercase text-on-surface-variant block mb-1">Alert Classification</label>
+<select class="w-full h-10 px-space-sm bg-surface-container-low rounded font-body-md text-body-md text-on-surface focus:outline-none">
+<option>Facility Alert: Lab Evacuation / Water Leak</option>
+<option>Power Anomaly: Stata Center Substation Standby</option>
+<option>Medical Incident in Building</option>
+<option>Immediate Schedule Halt</option>
+</select>
+</div>
+<div class="flex items-center justify-end gap-space-sm pt-space-xs">
+<button class="px-space-md py-space-sm bg-surface-container text-on-surface font-label-md text-label-md rounded-lg hover:bg-surface-container-high transition-colors" onclick="closeModal('alert-modal')">Abort</button>
+<button class="px-space-md py-space-sm bg-error text-on-error font-label-md text-label-md rounded-lg hover:opacity-90 transition-opacity" onclick="alertSent()">Arm & Transmit</button>
+</div>
+</div>
+</div>
+<script>
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const clockEl = document.getElementById('master-clock');
+      if (clockEl) {
+        clockEl.textContent = `${hours}:${minutes}:${seconds} EST`;
+      }
+    }
+    setInterval(updateClock, 1000);
+
+    function triggerModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function sendBroadcast() {
+      alert('Broadcast transmitted to 1,420 registered mobile nodes & live streams.');
+      closeModal('broadcast-modal');
+    }
+
+    function alertSent() {
+      alert('Emergency Dispatch protocol initiated. Incident ID: EM-2025-09.');
+      closeModal('alert-modal');
+    }
+
+    function exportRollCall() {
+      alert('Generating roll call CSV export with 1,420 checked-in participants, seat numbers, and emergency contact details...');
+    }
+
+    function assignMentor(team) {
+      alert(`Mentor dispatch request routed for ${team}. Radio broadcast pinged to on-duty roster.`);
+    }
+
+    function simulateManualCheckin() {
+      const tbody = document.getElementById('scan-stream');
+      if (!tbody) return;
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+      const names = ['Kavita Rao (Harvard SEAS)', 'Devon Vance (Cornell Tech)', 'Liam Gallagher (Georgia Tech Autonomy)', 'Zoe Martinez (Berkeley EECS)'];
+      const pick = names[Math.floor(Math.random() * names.length)];
+      const randHex = '0x' + Math.floor(Math.random()*16777215).toString(16).toUpperCase();
+
+      const newRow = document.createElement('tr');
+      newRow.className = 'hover:bg-surface-container-low transition-colors bg-primary-fixed/20';
+      newRow.innerHTML = `
+        <td class="py-space-sm px-space-sm font-label-sm text-label-sm text-primary font-bold">${timeStr}</td>
+        <td class="py-space-sm px-space-sm font-medium">${pick.split(' (')[0]}</td>
+        <td class="py-space-sm px-space-sm text-on-surface-variant">${pick.split(' (')[1].replace(')', '')}</td>
+        <td class="py-space-sm px-space-sm">
+          <span class="inline-flex items-center gap-1 font-label-sm text-label-sm bg-surface-container px-space-xs py-0.5 rounded text-primary font-bold">
+            <span class="material-symbols-outlined text-xs">verified</span> Manual Fast-Pass Check-in
+          </span>
+        </td>
+        <td class="py-space-sm px-space-sm text-right font-label-sm text-label-sm text-outline">${randHex}</td>
+      `;
+      tbody.insertBefore(newRow, tbody.firstChild);
+    }
+  </script>
+</div></main></div></body></html>

@@ -5,12 +5,11 @@ export default function JudgeConsole({
   onSubmitEvaluation,
   onSaveDraft
 }) {
-  const [activeMediaTab, setActiveMediaTab] = useState('video'); // 'video', 'deck', 'arch'
+  const [activeMediaTab, setActiveMediaTab] = useState('video');
   const [currentSlide, setCurrentSlide] = useState(4);
   const totalSlides = 10;
   const [copiedCommit, setCopiedCommit] = useState(false);
 
-  // Active rubric sliders
   const [scores, setScores] = useState({
     technical_rigor: 9,
     algorithmic_novelty: 8,
@@ -40,7 +39,6 @@ export default function JudgeConsole({
   const submissions = data?.submissions || [];
   const currentProject = submissions.find(s => s.id === selectedProjectId) || submissions[0] || {};
 
-  // Initialize scores when project changes
   useEffect(() => {
     if (currentProject?.rubric) {
       setScores({
@@ -56,7 +54,6 @@ export default function JudgeConsole({
     }
   }, [selectedProjectId]);
 
-  // Compute weighted composite score live
   const weights = {
     technical_rigor: 0.30,
     algorithmic_novelty: 0.25,
@@ -75,102 +72,59 @@ export default function JudgeConsole({
     setTimeout(() => setCopiedCommit(false), 2000);
   };
 
-  const handleSubmit = () => {
-    onSubmitEvaluation && onSubmitEvaluation({
-      projectId: currentProject.id,
-      scores,
-      privateNotes,
-      feedback,
-      compositeScore
-    });
-  };
-
-  const handleDraft = () => {
-    onSaveDraft && onSaveDraft({
-      projectId: currentProject.id,
-      scores,
-      privateNotes,
-      feedback
-    });
-  };
-
   return (
-    <div className="flex flex-col w-full pb-16 animate-fadeIn">
-      {/* Top Control Bar / Judge Session Banner */}
-      <div className="w-full bg-surface-container-low rounded-2xl p-5 mb-6 border border-surface-container-high shadow-sm">
+    <div className="flex flex-col w-full pb-12">
+      {/* Top Juror Control Bar */}
+      <div className="w-full bg-white rounded-xl p-4 mb-5 border border-[#E7DFD5] shadow-card">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          {/* Judge Identity & Assignment */}
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center font-headline font-bold text-base shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-[#2F5B3C] text-white flex items-center justify-center font-bold text-sm">
               {judgeProfile.initials || "AT"}
             </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-headline font-bold text-lg text-on-surface">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-serif font-bold text-lg text-[#1F1916]">
                   {judgeProfile.name}
                 </span>
-                <span className="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant font-semibold">
-                  {judgeProfile.title}
+                <span className="text-[11px] text-[#73645A] font-medium">
+                  ({judgeProfile.title})
                 </span>
               </div>
-              <div className="flex items-center gap-1.5 mt-1 text-xs text-on-surface-variant font-medium">
-                <span className="material-symbols-outlined text-sm text-primary">account_tree</span>
-                <span>{judgeProfile.track}</span>
+              <div className="flex items-center gap-2 text-xs text-[#73645A] mt-0.5">
+                <span className="text-[#2F5B3C] font-medium">{judgeProfile.track}</span>
+                <span>•</span>
+                <span className="font-mono text-[11px] text-[#C47D1C]">Double-Blind Active</span>
               </div>
             </div>
           </div>
 
-          {/* Anonymization & Quota Progress Indicator */}
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Protocol Lock Badge */}
-            <div className="flex items-center gap-2 bg-surface-container px-3 py-2 rounded-xl border border-surface-container-high shadow-sm">
-              <span className="material-symbols-outlined text-base text-secondary">visibility_off</span>
-              <div className="flex flex-col">
-                <span className="font-mono text-[10px] text-secondary uppercase font-bold tracking-wider leading-none">
-                  Protocol Lock
-                </span>
-                <span className="font-mono text-xs font-semibold text-on-surface leading-tight mt-0.5">
-                  Double-Blind Active
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* Progress */}
+            <div className="bg-[#FAF7F2] px-3 py-1.5 rounded-lg border border-[#E7DFD5] text-xs">
+              <div className="flex justify-between items-center gap-4 text-[11px] font-mono mb-1">
+                <span className="text-[#73645A]">Evaluation Quota</span>
+                <span className="font-bold text-[#2F5B3C]">
+                  {judgeProfile.completed_count} of {judgeProfile.total_quota} Projects
                 </span>
               </div>
-            </div>
-
-            {/* Evaluation Progress Tracker */}
-            <div className="bg-surface-container-lowest px-4 py-2.5 rounded-xl border border-surface-container-high shadow-sm min-w-[220px]">
-              <div className="flex items-center justify-between mb-1.5 text-xs">
-                <span className="font-mono text-[10px] text-on-surface-variant uppercase font-semibold">
-                  Jury Quota
-                </span>
-                <span className="font-mono font-bold text-primary">
-                  Project {judgeProfile.completed_count} of {judgeProfile.total_quota}
-                </span>
-              </div>
-              <div className="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden">
+              <div className="w-40 bg-[#E7DFD5] h-1.5 rounded-full overflow-hidden">
                 <div
-                  className="bg-primary h-full rounded-full transition-all duration-500"
+                  className="bg-[#2F5B3C] h-full rounded-full transition-all duration-300"
                   style={{ width: `${(judgeProfile.completed_count / judgeProfile.total_quota) * 100}%` }}
                 ></div>
               </div>
-              <div className="flex justify-between items-center mt-1 text-[11px] font-mono">
-                <span className="text-outline">
-                  {Math.round((judgeProfile.completed_count / judgeProfile.total_quota) * 100)}% Completed
-                </span>
-                <span className="text-secondary font-semibold">
-                  {judgeProfile.remaining} remaining
-                </span>
-              </div>
             </div>
 
-            {/* Project Quick Switcher */}
+            {/* Project Switcher */}
             {submissions.length > 1 && (
               <select
                 value={selectedProjectId}
                 onChange={(e) => setSelectedProjectId(e.target.value)}
-                className="bg-surface-container-lowest text-xs font-mono font-semibold text-on-surface px-3 py-2.5 rounded-xl border border-surface-container-high cursor-pointer shadow-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                className="bg-white text-xs font-mono font-medium text-[#1F1916] px-2.5 py-2 rounded-lg border border-[#E7DFD5] shadow-subtle cursor-pointer focus:outline-none"
               >
                 {submissions.map((s) => (
                   <option key={s.id} value={s.id}>
-                    {s.id}: {s.title.substring(0, 32)}...
+                    {s.id}: {s.title.substring(0, 30)}...
                   </option>
                 ))}
               </select>
@@ -179,213 +133,153 @@ export default function JudgeConsole({
         </div>
       </div>
 
-      {/* Primary 2-Column Inspection Workspace */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* LEFT COLUMN: Project Submission Inspector (7 cols) */}
-        <div className="lg:col-span-7 flex flex-col gap-6">
-          {/* Submission Identity & Overview */}
-          <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-surface-container-high">
+      {/* Main 2-Column Split Workspace */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        {/* Left Column: Submission Inspector (7 cols) */}
+        <div className="lg:col-span-7 flex flex-col gap-5">
+          <div className="bg-white rounded-xl p-5 border border-[#E7DFD5] shadow-card">
             <div className="flex items-start justify-between gap-4 mb-2">
               <div>
-                <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                  <span className="font-mono text-[10px] bg-surface-container-high px-2 py-0.5 rounded text-on-surface font-bold tracking-wider border border-surface-container-highest">
-                    PROJECT #{currentProject.id}
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-mono text-[10px] text-[#73645A] font-semibold bg-[#FAF7F2] px-2 py-0.5 rounded border border-[#E7DFD5]">
+                    #{currentProject.id}
                   </span>
-                  <span className="font-mono text-[10px] bg-primary-fixed text-primary px-2 py-0.5 rounded font-bold flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                    {currentProject.tag || "Hardware Validated"}
+                  <span className="font-mono text-[10px] text-[#2F5B3C] font-semibold bg-[#EFF5F1] px-2 py-0.5 rounded">
+                    Hardware Bench Validated
                   </span>
                 </div>
-                <h1 className="font-headline font-extrabold text-2xl text-on-surface tracking-tight">
+                <h1 className="font-serif text-2xl font-medium tracking-tight text-[#1F1916]">
                   {currentProject.title}
                 </h1>
               </div>
 
               <div className="text-right shrink-0">
-                <span className="font-mono text-[10px] text-outline uppercase block font-semibold">
-                  Track Category
-                </span>
-                <span className="text-xs font-semibold text-primary">
-                  {currentProject.category}
-                </span>
+                <span className="text-[10px] text-[#73645A] block uppercase font-mono">Category</span>
+                <span className="text-xs font-medium text-[#2F5B3C]">{currentProject.category}</span>
               </div>
             </div>
 
-            <p className="text-xs text-on-surface-variant bg-surface-container-low p-3.5 rounded-xl border border-surface-container-high mt-3 leading-relaxed">
+            <p className="text-xs text-[#73645A] leading-relaxed bg-[#FAF7F2] p-3 rounded-lg border border-[#E7DFD5] mt-2 mb-4">
               {currentProject.description}
             </p>
 
-            {/* Media Viewer Tab Navigation */}
-            <div className="flex items-center gap-1 bg-surface-container p-1 rounded-xl mt-4 mb-4 border border-surface-container-high">
+            {/* Media Tabs */}
+            <div className="flex items-center gap-1 bg-[#FAF7F2] p-1 rounded-lg mb-3 border border-[#E7DFD5] text-xs">
               <button
                 onClick={() => setActiveMediaTab('video')}
-                className={`flex-1 py-2 px-3 rounded-lg text-xs font-mono font-semibold flex items-center justify-center gap-1.5 transition-all ${
-                  activeMediaTab === 'video'
-                    ? 'bg-surface-container-lowest text-primary shadow-sm'
-                    : 'text-on-surface-variant hover:text-on-surface'
+                className={`flex-1 py-1.5 px-3 rounded-md font-medium transition-colors cursor-pointer ${
+                  activeMediaTab === 'video' ? 'bg-white text-[#1F1916] font-semibold shadow-subtle' : 'text-[#73645A] hover:text-[#1F1916]'
                 }`}
               >
-                <span className="material-symbols-outlined text-base">videocam</span>
-                <span>Video Demonstration</span>
+                Video Demonstration
               </button>
-
               <button
                 onClick={() => setActiveMediaTab('deck')}
-                className={`flex-1 py-2 px-3 rounded-lg text-xs font-mono font-semibold flex items-center justify-center gap-1.5 transition-all ${
-                  activeMediaTab === 'deck'
-                    ? 'bg-surface-container-lowest text-primary shadow-sm'
-                    : 'text-on-surface-variant hover:text-on-surface'
+                className={`flex-1 py-1.5 px-3 rounded-md font-medium transition-colors cursor-pointer ${
+                  activeMediaTab === 'deck' ? 'bg-white text-[#1F1916] font-semibold shadow-subtle' : 'text-[#73645A] hover:text-[#1F1916]'
                 }`}
               >
-                <span className="material-symbols-outlined text-base">slideshow</span>
-                <span>Pitch Deck ({totalSlides})</span>
+                Pitch Deck ({totalSlides})
               </button>
-
               <button
                 onClick={() => setActiveMediaTab('arch')}
-                className={`flex-1 py-2 px-3 rounded-lg text-xs font-mono font-semibold flex items-center justify-center gap-1.5 transition-all ${
-                  activeMediaTab === 'arch'
-                    ? 'bg-surface-container-lowest text-primary shadow-sm'
-                    : 'text-on-surface-variant hover:text-on-surface'
+                className={`flex-1 py-1.5 px-3 rounded-md font-medium transition-colors cursor-pointer ${
+                  activeMediaTab === 'arch' ? 'bg-white text-[#1F1916] font-semibold shadow-subtle' : 'text-[#73645A] hover:text-[#1F1916]'
                 }`}
               >
-                <span className="material-symbols-outlined text-base">schema</span>
-                <span>Architecture & Stack</span>
+                Architecture & Stack
               </button>
             </div>
 
-            {/* TAB CONTENT 1: Video Demo Player */}
+            {/* Tab 1: Video Player */}
             {activeMediaTab === 'video' && (
-              <div className="flex flex-col gap-2">
-                <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-inverse-surface shadow-md group">
+              <div className="flex flex-col gap-1.5">
+                <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black shadow-subtle group">
                   <img
                     src={currentProject.video_url || "/assets/asset_07_940ce03e1c.png"}
-                    alt="Video Telemetry Replay"
-                    className="w-full h-full object-cover"
+                    alt="Video Preview"
+                    className="w-full h-full object-cover opacity-90"
                   />
-                  {/* Video Overlay UI */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/40 p-4 flex flex-col justify-between">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 p-3.5 flex flex-col justify-between">
                     <div className="flex items-center justify-between text-white text-xs font-mono">
-                      <span className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-2 border border-white/10">
-                        <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-                        <span>4K / 60 FPS Telemetry Replay</span>
+                      <span className="bg-black/60 px-2 py-0.5 rounded text-[11px] flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#C2542D] animate-pulse"></span>
+                        4K / 60 FPS Replay
                       </span>
-                      <span className="bg-black/50 px-2 py-0.5 rounded font-mono">
-                        03:42 / 05:00
-                      </span>
+                      <span className="text-[11px]">03:42 / 05:00</span>
                     </div>
 
-                    <div className="flex flex-col gap-2">
-                      {/* Chapter Markers */}
-                      <div className="flex items-center gap-2 font-mono text-[11px]">
-                        <button className="px-2.5 py-0.5 rounded bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm transition-all flex items-center gap-1">
-                          <span className="material-symbols-outlined text-xs">flag</span>
-                          <span>01:15 Live Hardware Test</span>
-                        </button>
-                        <button className="px-2.5 py-0.5 rounded bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm transition-all flex items-center gap-1">
-                          <span className="material-symbols-outlined text-xs">warning</span>
-                          <span>03:20 Failure Edge Cases</span>
-                        </button>
+                    <div className="flex flex-col gap-1.5">
+                      <div className="flex items-center gap-2 text-[10px] font-mono text-white">
+                        <span className="bg-white/20 px-2 py-0.5 rounded">01:15 Live Hardware Test</span>
+                        <span className="bg-white/20 px-2 py-0.5 rounded">03:20 Edge Latency Benchmark</span>
                       </div>
-
-                      {/* Video Seek Bar */}
-                      <div className="w-full bg-white/30 h-1.5 rounded-full relative cursor-pointer">
-                        <div className="bg-primary-fixed h-full rounded-full w-3/4 relative">
-                          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3.5 h-3.5 bg-white rounded-full shadow"></div>
-                        </div>
+                      <div className="w-full bg-white/30 h-1.5 rounded-full relative">
+                        <div className="bg-[#82E6A1] h-full rounded-full w-3/4"></div>
                       </div>
-
-                      <div className="flex items-center justify-between text-white text-xs pt-1">
-                        <div className="flex items-center gap-3">
-                          <button className="hover:text-primary-fixed transition-colors">
-                            <span className="material-symbols-outlined text-xl">play_arrow</span>
-                          </button>
-                          <button className="hover:text-primary-fixed transition-colors">
-                            <span className="material-symbols-outlined text-xl">volume_up</span>
-                          </button>
-                          <span className="font-mono text-[11px]">Jetson Orin Core #2: 48°C</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button className="hover:text-primary-fixed">
-                            <span className="material-symbols-outlined text-base">settings</span>
-                          </button>
-                          <button className="hover:text-primary-fixed">
-                            <span className="material-symbols-outlined text-base">fullscreen</span>
-                          </button>
-                        </div>
+                      <div className="flex items-center justify-between text-white text-xs pt-0.5">
+                        <span className="font-mono text-[10px]">Jetson Orin: 48°C • 11.4ms EKF</span>
+                        <span className="material-symbols-outlined text-sm">fullscreen</span>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center justify-between text-on-surface-variant font-mono text-[11px] px-1">
-                  <span>Caption: {currentProject.caption}</span>
+                <div className="flex justify-between text-[11px] text-[#73645A] font-mono px-0.5">
+                  <span>{currentProject.caption}</span>
                   <span>Dataset: {currentProject.dataset}</span>
                 </div>
               </div>
             )}
 
-            {/* TAB CONTENT 2: Pitch Deck Slide Viewer */}
+            {/* Tab 2: Deck Viewer */}
             {activeMediaTab === 'deck' && (
               <div className="flex flex-col gap-2">
-                <div className="relative w-full aspect-[16/9] rounded-xl bg-surface-container-low overflow-hidden border border-surface-container-high flex flex-col justify-between p-4 shadow-sm">
+                <div className="relative w-full aspect-[16/9] rounded-lg bg-[#FAF7F2] overflow-hidden border border-[#E7DFD5] p-3 flex flex-col justify-between">
                   <img
                     src={currentProject.deck_slide_url || "/assets/asset_18_11df169078.png"}
-                    alt="Pitch Deck Slide"
+                    alt="Deck Slide"
                     className="absolute inset-0 w-full h-full object-cover"
                   />
-                  <div className="relative z-10 flex justify-between items-center">
-                    <span className="font-mono text-xs bg-white/95 px-3 py-1 rounded-lg shadow-sm text-on-surface font-semibold border border-surface-container-high">
-                      Slide {String(currentSlide).padStart(2, '0')} / {totalSlides} — Distributed Loop Closure
+                  <div className="relative z-10 flex justify-between">
+                    <span className="text-xs font-semibold bg-white/90 px-2.5 py-1 rounded shadow-subtle">
+                      Slide {currentSlide} / {totalSlides} — Distributed Loop Closure
                     </span>
-                    <div className="flex items-center gap-1 bg-white/95 rounded-lg p-1 shadow-sm border border-surface-container-high">
-                      <button className="p-1 hover:bg-surface-container rounded text-on-surface">
-                        <span className="material-symbols-outlined text-sm">zoom_in</span>
-                      </button>
-                      <button className="p-1 hover:bg-surface-container rounded text-on-surface">
-                        <span className="material-symbols-outlined text-sm">zoom_out</span>
-                      </button>
-                    </div>
                   </div>
-
-                  <div className="relative z-10 flex justify-between items-center">
+                  <div className="relative z-10 flex justify-between">
                     <button
                       onClick={() => setCurrentSlide(s => Math.max(1, s - 1))}
                       disabled={currentSlide === 1}
-                      className="bg-white/95 hover:bg-white text-on-surface px-3 py-1.5 rounded-lg font-mono text-xs font-semibold flex items-center gap-1 shadow-sm border border-surface-container-high disabled:opacity-50"
+                      className="bg-white/90 hover:bg-white text-xs px-2.5 py-1 rounded shadow-subtle disabled:opacity-50 font-medium cursor-pointer"
                     >
-                      <span className="material-symbols-outlined text-sm">chevron_left</span> Previous
+                      Previous
                     </button>
                     <button
                       onClick={() => setCurrentSlide(s => Math.min(totalSlides, s + 1))}
                       disabled={currentSlide === totalSlides}
-                      className="bg-white/95 hover:bg-white text-on-surface px-3 py-1.5 rounded-lg font-mono text-xs font-semibold flex items-center gap-1 shadow-sm border border-surface-container-high disabled:opacity-50"
+                      className="bg-white/90 hover:bg-white text-xs px-2.5 py-1 rounded shadow-subtle disabled:opacity-50 font-medium cursor-pointer"
                     >
-                      Next <span className="material-symbols-outlined text-sm">chevron_right</span>
+                      Next
                     </button>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* TAB CONTENT 3: Architecture & Tech Stack */}
+            {/* Tab 3: Architecture */}
             {activeMediaTab === 'arch' && (
               <div className="flex flex-col gap-3">
-                <div className="w-full aspect-[16/9] rounded-xl bg-surface-container-low p-4 overflow-hidden relative flex items-center justify-center border border-surface-container-high">
+                <div className="w-full aspect-[16/9] rounded-lg bg-[#FAF7F2] p-3 overflow-hidden border border-[#E7DFD5] flex items-center justify-center">
                   <img
                     src={currentProject.architecture_url || "/assets/asset_01_f6d18c8079.png"}
-                    alt="System Architecture Diagram"
+                    alt="Architecture Diagram"
                     className="w-full h-full object-contain"
                   />
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                   {currentProject.tech_stack?.map((t, idx) => (
-                    <div key={idx} className="bg-surface-container p-3 rounded-xl border border-surface-container-high flex flex-col">
-                      <span className="font-mono text-[10px] text-outline uppercase font-semibold">
-                        {t.label}
-                      </span>
-                      <span className="text-xs font-bold text-on-surface mt-0.5">
-                        {t.value}
-                      </span>
+                    <div key={idx} className="bg-[#FAF7F2] p-2 rounded-lg border border-[#E7DFD5]">
+                      <span className="text-[10px] text-[#73645A] font-mono block uppercase">{t.label}</span>
+                      <span className="font-semibold text-[#1F1916] mt-0.5 block">{t.value}</span>
                     </div>
                   ))}
                 </div>
@@ -393,360 +287,253 @@ export default function JudgeConsole({
             )}
           </div>
 
-          {/* Code & Automated Verification Card */}
-          <div className="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-surface-container-high flex flex-col gap-3">
-            <div className="flex items-center justify-between pb-2 border-b border-surface-container">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-xl">verified</span>
-                <span className="font-headline font-bold text-sm text-on-surface">
-                  Automated Verification Protocol
-                </span>
-              </div>
-              <span className="font-mono text-[10px] bg-primary-fixed text-primary px-2.5 py-0.5 rounded font-bold">
-                {currentProject.verification?.build_status || "SANDBOX-BUILD: PASS"}
+          {/* Automated Verification Tokens */}
+          <div className="bg-white rounded-xl p-4 border border-[#E7DFD5] shadow-card flex flex-col gap-2.5">
+            <div className="flex items-center justify-between pb-2 border-b border-[#F0EAE1]">
+              <span className="font-sans font-bold text-xs text-[#1F1916]">Automated Code & Benchmark SLA</span>
+              <span className="font-mono text-[10px] text-[#2F5B3C] bg-[#EFF5F1] px-2 py-0.5 rounded font-semibold">
+                SANDBOX PASS
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {/* Commit Hash */}
-              <div className="bg-surface-container-low p-3 rounded-xl border border-surface-container-high">
-                <span className="font-mono text-[10px] text-outline uppercase block font-semibold">
-                  GitHub Tree Commit
-                </span>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="material-symbols-outlined text-sm text-on-surface-variant">terminal</span>
-                  <span className="font-mono text-xs text-primary font-bold">
-                    {currentProject.verification?.commit || "#d9e14a"}
-                  </span>
-                  <button
-                    onClick={handleCopyCommit}
-                    className="material-symbols-outlined text-xs text-outline hover:text-on-surface cursor-pointer"
-                    title="Copy commit hash"
-                  >
+            <div className="grid grid-cols-3 gap-2.5 text-xs">
+              <div className="bg-[#FAF7F2] p-2.5 rounded-lg border border-[#E7DFD5]">
+                <span className="text-[10px] text-[#73645A] font-mono block">Git Commit</span>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className="font-mono font-bold text-[#2F5B3C]">{currentProject.verification?.commit || "#d9e14a"}</span>
+                  <button onClick={handleCopyCommit} className="material-symbols-outlined text-[13px] text-[#73645A] cursor-pointer">
                     {copiedCommit ? 'check' : 'content_copy'}
                   </button>
                 </div>
               </div>
 
-              {/* Docker Bench SLA */}
-              <div className="bg-surface-container-low p-3 rounded-xl border border-surface-container-high">
-                <span className="font-mono text-[10px] text-outline uppercase block font-semibold">
-                  Docker Bench SLA
+              <div className="bg-[#FAF7F2] p-2.5 rounded-lg border border-[#E7DFD5]">
+                <span className="text-[10px] text-[#73645A] font-mono block">Loop Latency</span>
+                <span className="font-mono font-bold text-[#1F1916] mt-0.5 block">
+                  {currentProject.verification?.docker_sla || "11.4ms"}
                 </span>
-                <div className="flex items-center gap-1.5 mt-1 font-mono text-xs font-bold text-on-surface">
-                  <span className="w-2 h-2 rounded-full bg-primary"></span>
-                  <span>{currentProject.verification?.docker_sla || "11.4ms latency"}</span>
-                </div>
               </div>
 
-              {/* Unit Test Coverage */}
-              <div className="bg-surface-container-low p-3 rounded-xl border border-surface-container-high">
-                <span className="font-mono text-[10px] text-outline uppercase block font-semibold">
-                  Regression Testing
+              <div className="bg-[#FAF7F2] p-2.5 rounded-lg border border-[#E7DFD5]">
+                <span className="text-[10px] text-[#73645A] font-mono block">Unit Tests</span>
+                <span className="font-mono font-bold text-[#2F5B3C] mt-0.5 block">
+                  {currentProject.verification?.unit_tests?.split(' ')[0] || "98.4%"}
                 </span>
-                <div className="flex items-center gap-1.5 mt-1 font-mono text-xs">
-                  <span className="font-bold text-primary">
-                    {currentProject.verification?.unit_tests?.split(' ')[0] || "98.4%"}
-                  </span>
-                  <span className="text-on-surface-variant text-[11px]">
-                    (124/126 Tests)
-                  </span>
-                </div>
               </div>
             </div>
 
-            <div className="flex items-center justify-between bg-surface-container p-3 rounded-xl text-xs font-mono">
-              <div className="flex items-center gap-2 text-on-surface-variant">
-                <span className="material-symbols-outlined text-base">integration_instructions</span>
-                <span>Deterministic replay container executed on AWS Graviton3 edge emulator.</span>
-              </div>
+            <div className="flex justify-between items-center text-[11px] text-[#73645A] pt-1 font-mono">
+              <span>Target: AWS Graviton3 edge emulator</span>
               <button
                 onClick={() => setShowLogModal(true)}
-                className="px-3 py-1 bg-surface-container-lowest text-on-surface hover:bg-surface-container-high rounded-lg text-xs font-semibold transition-colors shadow-sm cursor-pointer border border-surface-container-high"
+                className="text-[#2F5B3C] hover:underline font-semibold cursor-pointer"
               >
-                View Log Stream
+                Inspect Logs →
               </button>
             </div>
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Weighted Scoring Rubric Matrix (5 cols) */}
-        <div className="lg:col-span-5 flex flex-col gap-6">
-          <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-surface-container-high sticky top-20 flex flex-col gap-5">
-            {/* Score Aggregate Header */}
-            <div className="flex items-center justify-between p-4 bg-surface-container-low rounded-2xl border border-surface-container-high">
+        {/* Right Column: Weighted Scoring Matrix (5 cols) */}
+        <div className="lg:col-span-5 flex flex-col gap-5">
+          <div className="bg-white rounded-xl p-5 border border-[#E7DFD5] shadow-card flex flex-col gap-4">
+            {/* Score Banner */}
+            <div className="p-3.5 bg-[#FAF7F2] rounded-xl border border-[#E7DFD5] flex items-center justify-between">
               <div>
-                <span className="font-mono text-[10px] text-outline uppercase tracking-wider block font-semibold">
-                  Cumulative Composite Score
-                </span>
-                <div className="flex items-baseline gap-2 mt-0.5">
-                  <span className="font-headline font-extrabold text-3xl text-primary">
-                    {compositeScore}
-                  </span>
-                  <span className="font-headline font-semibold text-base text-on-surface-variant">
-                    / 100
-                  </span>
+                <span className="font-mono text-[10px] text-[#73645A] uppercase block">Weighted Composite Score</span>
+                <div className="flex items-baseline gap-1.5 mt-0.5">
+                  <span className="font-serif font-bold text-3xl text-[#1F1916]">{compositeScore}</span>
+                  <span className="text-xs text-[#73645A]">/ 100</span>
                 </div>
               </div>
-
               <div className="text-right">
-                <span className="font-mono text-xs bg-primary-fixed text-primary px-3 py-1 rounded-full font-bold inline-block mb-1">
-                  {currentProject.tier || "Top 5% Tier"}
+                <span className="font-mono text-xs bg-[#EFF5F1] text-[#2F5B3C] font-semibold px-2 py-0.5 rounded">
+                  Top 5% Tier
                 </span>
-                <span className="font-mono text-[10px] text-outline block">
-                  Median in Track: {currentProject.median_track_score || 74.2}
-                </span>
+                <span className="text-[10px] text-[#73645A] block mt-1 font-mono">Track Median: 74.2</span>
               </div>
             </div>
 
-            {/* Rubric Sliders Form */}
-            <form className="flex flex-col gap-4">
-              {/* Criterion 1: Technical Rigor */}
-              <div className="flex flex-col gap-1 pb-2 border-b border-surface-container">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-mono text-xs font-bold text-on-surface">
-                      1. Technical Rigor & Code Quality
-                    </span>
-                    <span className="font-mono text-[10px] text-outline">[W: 30%]</span>
-                  </div>
-                  <span className="font-mono text-xs font-bold text-primary bg-surface-container px-2 py-0.5 rounded">
-                    {scores.technical_rigor} / 10
-                  </span>
+            {/* Rubric Sliders */}
+            <div className="flex flex-col gap-3 text-xs">
+              {/* Criterion 1 */}
+              <div className="pb-2 border-b border-[#F0EAE1]">
+                <div className="flex justify-between font-medium">
+                  <span>1. Technical Rigor & Code Depth <span className="text-[#73645A] text-[10px] font-mono">[30%]</span></span>
+                  <span className="font-mono font-bold text-[#2F5B3C]">{scores.technical_rigor}/10</span>
                 </div>
-                <p className="text-[11px] text-on-surface-variant">
-                  Architectural complexity, clean modular C++, low-level efficiency, thread safety.
-                </p>
                 <input
                   type="range"
                   min="1"
                   max="10"
-                  step="1"
                   value={scores.technical_rigor}
                   onChange={(e) => setScores({ ...scores, technical_rigor: parseInt(e.target.value) })}
-                  className="w-full h-2 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary mt-1"
+                  className="w-full h-1.5 bg-[#E7DFD5] rounded appearance-none cursor-pointer accent-[#2F5B3C] mt-1.5"
                 />
               </div>
 
-              {/* Criterion 2: Algorithmic Novelty */}
-              <div className="flex flex-col gap-1 pb-2 border-b border-surface-container">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-mono text-xs font-bold text-on-surface">
-                      2. Algorithmic Novelty & Innovation
-                    </span>
-                    <span className="font-mono text-[10px] text-outline">[W: 25%]</span>
-                  </div>
-                  <span className="font-mono text-xs font-bold text-primary bg-surface-container px-2 py-0.5 rounded">
-                    {scores.algorithmic_novelty} / 10
-                  </span>
+              {/* Criterion 2 */}
+              <div className="pb-2 border-b border-[#F0EAE1]">
+                <div className="flex justify-between font-medium">
+                  <span>2. Algorithmic Novelty <span className="text-[#73645A] text-[10px] font-mono">[25%]</span></span>
+                  <span className="font-mono font-bold text-[#2F5B3C]">{scores.algorithmic_novelty}/10</span>
                 </div>
-                <p className="text-[11px] text-on-surface-variant">
-                  Original approach to distributed pose-graph optimization and low-bandwidth telemetry.
-                </p>
                 <input
                   type="range"
                   min="1"
                   max="10"
-                  step="1"
                   value={scores.algorithmic_novelty}
                   onChange={(e) => setScores({ ...scores, algorithmic_novelty: parseInt(e.target.value) })}
-                  className="w-full h-2 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary mt-1"
+                  className="w-full h-1.5 bg-[#E7DFD5] rounded appearance-none cursor-pointer accent-[#2F5B3C] mt-1.5"
                 />
               </div>
 
-              {/* Criterion 3: Real-World Edge Performance */}
-              <div className="flex flex-col gap-1 pb-2 border-b border-surface-container">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-mono text-xs font-bold text-on-surface">
-                      3. Real-World Edge Performance
-                    </span>
-                    <span className="font-mono text-[10px] text-outline">[W: 20%]</span>
-                  </div>
-                  <span className="font-mono text-xs font-bold text-primary bg-surface-container px-2 py-0.5 rounded">
-                    {scores.edge_performance} / 10
-                  </span>
+              {/* Criterion 3 */}
+              <div className="pb-2 border-b border-[#F0EAE1]">
+                <div className="flex justify-between font-medium">
+                  <span>3. Real-World Edge Performance <span className="text-[#73645A] text-[10px] font-mono">[20%]</span></span>
+                  <span className="font-mono font-bold text-[#2F5B3C]">{scores.edge_performance}/10</span>
                 </div>
-                <p className="text-[11px] text-on-surface-variant">
-                  Meets sub-15ms SLA on physical Jetson Orin with sustainable thermal dissipation.
-                </p>
                 <input
                   type="range"
                   min="1"
                   max="10"
-                  step="1"
                   value={scores.edge_performance}
                   onChange={(e) => setScores({ ...scores, edge_performance: parseInt(e.target.value) })}
-                  className="w-full h-2 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary mt-1"
+                  className="w-full h-1.5 bg-[#E7DFD5] rounded appearance-none cursor-pointer accent-[#2F5B3C] mt-1.5"
                 />
               </div>
 
-              {/* Criterion 4: Documentation */}
-              <div className="flex flex-col gap-1 pb-2 border-b border-surface-container">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-mono text-xs font-bold text-on-surface">
-                      4. Documentation & Presentation
-                    </span>
-                    <span className="font-mono text-[10px] text-outline">[W: 15%]</span>
-                  </div>
-                  <span className="font-mono text-xs font-bold text-primary bg-surface-container px-2 py-0.5 rounded">
-                    {scores.documentation} / 10
-                  </span>
+              {/* Criterion 4 */}
+              <div className="pb-2 border-b border-[#F0EAE1]">
+                <div className="flex justify-between font-medium">
+                  <span>4. Documentation & Verification <span className="text-[#73645A] text-[10px] font-mono">[15%]</span></span>
+                  <span className="font-mono font-bold text-[#2F5B3C]">{scores.documentation}/10</span>
                 </div>
-                <p className="text-[11px] text-on-surface-variant">
-                  Exemplary README, clear ROSbag playback scripts, concise visual exposition.
-                </p>
                 <input
                   type="range"
                   min="1"
                   max="10"
-                  step="1"
                   value={scores.documentation}
                   onChange={(e) => setScores({ ...scores, documentation: parseInt(e.target.value) })}
-                  className="w-full h-2 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary mt-1"
+                  className="w-full h-1.5 bg-[#E7DFD5] rounded appearance-none cursor-pointer accent-[#2F5B3C] mt-1.5"
                 />
               </div>
 
-              {/* Criterion 5: Track Alignment */}
-              <div className="flex flex-col gap-1 pb-2 border-b border-surface-container">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-mono text-xs font-bold text-on-surface">
-                      5. Track Challenge Alignment
-                    </span>
-                    <span className="font-mono text-[10px] text-outline">[W: 10%]</span>
-                  </div>
-                  <span className="font-mono text-xs font-bold text-primary bg-surface-container px-2 py-0.5 rounded">
-                    {scores.track_alignment} / 10
-                  </span>
+              {/* Criterion 5 */}
+              <div className="pb-2 border-b border-[#F0EAE1]">
+                <div className="flex justify-between font-medium">
+                  <span>5. Track Mandate Fit <span className="text-[#73645A] text-[10px] font-mono">[10%]</span></span>
+                  <span className="font-mono font-bold text-[#2F5B3C]">{scores.track_alignment}/10</span>
                 </div>
-                <p className="text-[11px] text-on-surface-variant">
-                  Direct fulfillment of low-light multi-agent autonomous perimeter mapping mandates.
-                </p>
                 <input
                   type="range"
                   min="1"
                   max="10"
-                  step="1"
                   value={scores.track_alignment}
                   onChange={(e) => setScores({ ...scores, track_alignment: parseInt(e.target.value) })}
-                  className="w-full h-2 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary mt-1"
+                  className="w-full h-1.5 bg-[#E7DFD5] rounded appearance-none cursor-pointer accent-[#2F5B3C] mt-1.5"
                 />
               </div>
+            </div>
 
-              {/* Qualitative Feedback Sections */}
-              <div className="flex flex-col gap-3 pt-1">
-                {/* Private Jury Notes */}
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center justify-between">
-                    <label className="font-mono text-[11px] text-on-surface-variant uppercase font-semibold flex items-center gap-1">
-                      <span className="material-symbols-outlined text-xs text-secondary">lock</span>
-                      Private Jury Deliberation Notes
-                    </label>
-                    <span className="font-mono text-[10px] text-outline">Internal Only</span>
-                  </div>
-                  <textarea
-                    rows={2}
-                    value={privateNotes}
-                    onChange={(e) => setPrivateNotes(e.target.value)}
-                    placeholder="Remark on hardware validity, edge claims vs actual benchmark latency..."
-                    className="w-full bg-surface-container-low text-on-surface text-xs p-3 rounded-xl border border-surface-container-high focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary transition-colors"
-                  ></textarea>
-                </div>
-
-                {/* Team Feedback */}
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center justify-between">
-                    <label className="font-mono text-[11px] text-on-surface-variant uppercase font-semibold flex items-center gap-1">
-                      <span className="material-symbols-outlined text-xs text-primary">forum</span>
-                      Feedback for Submitting Team
-                    </label>
-                    <span className="font-mono text-[10px] text-outline">Disclosed Post-Sprint</span>
-                  </div>
-                  <textarea
-                    rows={3}
-                    value={feedback}
-                    onChange={(e) => setFeedback(e.target.value)}
-                    placeholder="Constructive feedback for the engineering team..."
-                    className="w-full bg-surface-container-low text-on-surface text-xs p-3 rounded-xl border border-surface-container-high focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary transition-colors"
-                  ></textarea>
-                </div>
+            {/* Notes */}
+            <div className="flex flex-col gap-2.5 text-xs">
+              <div>
+                <label className="text-[11px] font-semibold text-[#1F1916] block mb-1">
+                  Private Juror Deliberation Notes (Internal)
+                </label>
+                <textarea
+                  rows={2}
+                  value={privateNotes}
+                  onChange={(e) => setPrivateNotes(e.target.value)}
+                  placeholder="Notes for final jury deliberation round..."
+                  className="w-full bg-[#FAF7F2] p-2.5 rounded-lg border border-[#E7DFD5] text-xs focus:outline-none focus:bg-white"
+                ></textarea>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col gap-2 pt-2">
+              <div>
+                <label className="text-[11px] font-semibold text-[#1F1916] block mb-1">
+                  Feedback for Submitting Team (Disclosed Post-Sprint)
+                </label>
+                <textarea
+                  rows={2}
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
+                  className="w-full bg-[#FAF7F2] p-2.5 rounded-lg border border-[#E7DFD5] text-xs focus:outline-none focus:bg-white"
+                ></textarea>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => onSubmitEvaluation({
+                  projectId: currentProject.id,
+                  scores,
+                  privateNotes,
+                  feedback,
+                  compositeScore
+                })}
+                className="w-full py-2.5 rounded-lg bg-[#2F5B3C] hover:bg-[#254B31] text-white font-semibold text-xs transition-colors shadow-subtle cursor-pointer"
+              >
+                Submit Score ({compositeScore}/100) & Next
+              </button>
+
+              <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={handleSubmit}
-                  className="w-full py-3 px-4 rounded-xl bg-primary hover:bg-primary-container text-white font-mono text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95 cursor-pointer"
+                  onClick={() => onSaveDraft && onSaveDraft({
+                    projectId: currentProject.id,
+                    scores,
+                    privateNotes,
+                    feedback
+                  })}
+                  className="flex-1 py-1.5 rounded-lg bg-white hover:bg-[#FAF7F2] text-[#1F1916] font-medium text-xs border border-[#E7DFD5] transition-colors cursor-pointer"
                 >
-                  <span>Submit Evaluation & Advance to Next Project</span>
-                  <span className="material-symbols-outlined text-base">arrow_forward</span>
+                  Save Draft
                 </button>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleDraft}
-                    className="flex-1 py-2 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-mono text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 border border-surface-container-high cursor-pointer"
-                  >
-                    <span className="material-symbols-outlined text-sm">bookmark</span>
-                    <span>Save Draft</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      // Skip to next project
-                      const idx = submissions.findIndex(s => s.id === selectedProjectId);
-                      const next = submissions[(idx + 1) % submissions.length];
-                      if (next) setSelectedProjectId(next.id);
-                    }}
-                    className="py-2 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-mono text-xs font-semibold transition-colors flex items-center justify-center gap-1 border border-surface-container-high cursor-pointer"
-                  >
-                    <span>Skip</span>
-                    <span className="material-symbols-outlined text-sm">redo</span>
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const idx = submissions.findIndex(s => s.id === selectedProjectId);
+                    const next = submissions[(idx + 1) % submissions.length];
+                    if (next) setSelectedProjectId(next.id);
+                  }}
+                  className="py-1.5 px-3 rounded-lg bg-white hover:bg-[#FAF7F2] text-[#73645A] font-medium text-xs border border-[#E7DFD5] transition-colors cursor-pointer"
+                >
+                  Skip
+                </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Log Stream Modal */}
+      {/* Log Modal */}
       {showLogModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-surface-container-lowest rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-surface-container-high flex flex-col gap-4">
-            <div className="flex items-center justify-between border-b border-surface-container pb-3">
-              <div className="flex items-center gap-2 font-mono text-xs font-bold text-primary">
-                <span className="material-symbols-outlined text-base">terminal</span>
-                <span>Deterministic Replay Stream // Graviton3-Build-#d9e14a</span>
-              </div>
-              <button
-                onClick={() => setShowLogModal(false)}
-                className="material-symbols-outlined text-on-surface-variant hover:text-on-surface cursor-pointer"
-              >
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-xl w-full p-5 shadow-dropdown border border-[#E7DFD5] flex flex-col gap-3">
+            <div className="flex items-center justify-between pb-2 border-b border-[#F0EAE1]">
+              <span className="font-mono text-xs font-semibold text-[#1F1916]">
+                Benchmark Runner Log // #d9e14a
+              </span>
+              <button onClick={() => setShowLogModal(false)} className="material-symbols-outlined text-sm cursor-pointer">
                 close
               </button>
             </div>
-            <pre className="bg-surface-container-highest p-4 rounded-xl font-mono text-xs text-on-surface max-h-80 overflow-y-auto leading-relaxed">
-{`[0.001s] [INFO] ROS2 Humble daemon initialized in ad-hoc namespace
-[0.014s] [INFO] Zenoh P2P mesh established with 4 rover peers
-[0.089s] [INFO] Livox Mid-360 point cloud stream: 200,000 pts/sec
-[0.104s] [INFO] CUDA Deskew kernel executed: 2.14ms
-[0.116s] [INFO] Fast-LIO2 odometry pose state estimation: 11.4ms (SLA target < 15ms: PASS)
-[0.240s] [INFO] Loop closure candidate detected (score: 0.94)
-[0.280s] [INFO] Pose graph optimized across 4 ground units. Drift: 2.8cm.
-[0.312s] [BENCHMARK] Replay completed with 0 errors. Exit Code: 0.`}
+            <pre className="bg-[#FAF7F2] p-3 rounded-lg font-mono text-[11px] text-[#2F5B3C] max-h-60 overflow-y-auto leading-relaxed">
+{`[0.014s] Zenoh P2P mesh established with 4 rover peers
+[0.089s] Livox Mid-360 point cloud stream: 200,000 pts/sec
+[0.104s] CUDA Deskew kernel executed: 2.14ms
+[0.116s] Fast-LIO2 odometry pose estimation: 11.4ms (SLA < 15ms: PASS)
+[0.280s] Pose graph optimized across 4 ground units. Drift: 2.8cm.
+[0.312s] Replay completed with 0 errors. Exit Code: 0.`}
             </pre>
             <div className="flex justify-end">
-              <button
-                onClick={() => setShowLogModal(false)}
-                className="px-4 py-2 bg-primary text-white text-xs font-mono font-semibold rounded-xl"
-              >
-                Close Stream
+              <button onClick={() => setShowLogModal(false)} className="px-3 py-1.5 bg-[#2F5B3C] text-white text-xs font-medium rounded-lg">
+                Close
               </button>
             </div>
           </div>
@@ -755,4 +542,3 @@ export default function JudgeConsole({
     </div>
   );
 }
-

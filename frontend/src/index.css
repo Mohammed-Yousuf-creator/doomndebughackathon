@@ -6,26 +6,33 @@
   body {
     margin: 0;
     padding: 0;
-    background-color: #fafaf3;
-    color: #1a1c18;
-    overscroll-behavior: none;
+    background-color: #F8F5F0;
+    color: #1F1916;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-/* Custom Sleek Scrollbar */
+/* Crisp hairline border utility */
+.border-hairline {
+  border: 1px solid rgba(213, 201, 186, 0.65);
+}
+
+/* Subtle editorial scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #c0c9c2;
+  background: #D8CEC0;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #717973;
+  background: #B6A99A;
 }
 
 /* Material Symbols formatting helper */
@@ -40,13 +47,4 @@
   word-wrap: normal;
   white-space: nowrap;
   direction: ltr;
-}
-
-/* Subtle glowing pulse */
-@keyframes softPulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.05); }
-}
-.animate-soft-pulse {
-  animation: softPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

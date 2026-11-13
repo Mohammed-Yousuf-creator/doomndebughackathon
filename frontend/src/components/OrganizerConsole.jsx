@@ -10,9 +10,8 @@ export default function OrganizerConsole({
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [masterClock, setMasterClock] = useState('');
-  const [selectedGate, setSelectedGate] = useState('ALL');
 
-  // Master live clock update
+  // Real-time clock update
   useEffect(() => {
     const updateClock = () => {
       const now = new Date();
@@ -34,369 +33,279 @@ export default function OrganizerConsole({
   const mentorQueue = data?.mentor_queue || [];
   const telemetry = data?.telemetry || {};
 
-  // Filter check-in stream based on search query
   const filteredCheckins = checkinStream.filter((item) => {
     const q = searchQuery.toLowerCase();
-    const matchesQuery = (
+    return (
       item.attendee.toLowerCase().includes(q) ||
       item.affiliation.toLowerCase().includes(q) ||
       item.badge_uuid.toLowerCase().includes(q) ||
       item.checkpoint.toLowerCase().includes(q)
     );
-    return matchesQuery;
   });
 
   return (
-    <div className="flex flex-col w-full pb-16 animate-fadeIn">
-      {/* Top Operational Context Banner */}
-      <div className="bg-surface-container-low py-2.5 px-4 mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-surface-container-high">
-        <div className="flex items-center gap-3 text-xs">
-          <span className="font-mono text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">
-            Cluster Node:
-          </span>
-          <span className="font-mono font-bold text-primary bg-primary-fixed/40 px-2 py-0.5 rounded">
-            {data?.sprint?.cluster_node || "MIT-CSAIL-RBL-04"}
-          </span>
-          <span className="text-outline">/</span>
-          <span className="text-on-surface-variant font-medium">
-            {data?.sprint?.auth_level || "Auth: Lead Organizer Level 4"}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-4 text-xs font-mono">
-          <div className="flex items-center gap-1.5 text-primary">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-            <span className="font-bold uppercase tracking-wider">
-              Telemetry Synced ({data?.sprint?.latency || "0.14s"})
-            </span>
+    <div className="flex flex-col w-full pb-12">
+      {/* Event Header Banner */}
+      <div className="bg-white rounded-xl p-5 mb-5 border border-[#E7DFD5] shadow-card">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="font-mono text-[11px] text-[#2F5B3C] font-semibold bg-[#EFF5F1] px-2 py-0.5 rounded border border-[#DEEBE1]">
+                MIT CSAIL & Robotics Guild
+              </span>
+              <span className="text-[#A89C92] text-xs">•</span>
+              <span className="font-mono text-xs text-[#73645A]">
+                Venue: Stata Center 4th Fl + Global Remote
+              </span>
+            </div>
+            <h1 className="font-serif text-2xl lg:text-3xl font-medium tracking-tight text-[#1F1916]">
+              Autonomous Systems Hackathon 2025
+            </h1>
+            <div className="flex items-center gap-3 mt-1.5 text-xs text-[#73645A] flex-wrap">
+              <span className="flex items-center gap-1.5 font-medium text-[#2F5B3C]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2F5B3C] animate-pulse"></span>
+                Day 2 Checkpoint
+              </span>
+              <span className="text-[#DDD2C5]">•</span>
+              <span className="font-mono text-[#1F1916] font-medium">{masterClock}</span>
+              <span className="text-[#DDD2C5]">•</span>
+              <span>348 Active Teams</span>
+              <span className="text-[#DDD2C5]">•</span>
+              <span className="text-[#2F5B3C] font-medium">Telemetry Synced (0.14s)</span>
+            </div>
           </div>
-          <span className="text-outline">|</span>
-          <span className="text-on-surface-variant font-semibold">
-            Session {data?.sprint?.session || "#908-OPS"}
-          </span>
+
+          {/* Quick Actions */}
+          <div className="flex items-center gap-2 self-start lg:self-auto flex-wrap">
+            <button
+              onClick={onBroadcastClick}
+              className="inline-flex items-center gap-1.5 bg-[#C2542D] hover:bg-[#A8431F] text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors shadow-subtle cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[16px]">campaign</span>
+              <span>Send Announcement</span>
+            </button>
+
+            <button
+              onClick={onExportCsv}
+              className="inline-flex items-center gap-1.5 bg-white hover:bg-[#F8F5F0] text-[#1F1916] text-xs font-medium px-3.5 py-2 rounded-lg border border-[#E7DFD5] transition-colors shadow-subtle cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[16px] text-[#73645A]">download</span>
+              <span>Export Roll Call (CSV)</span>
+            </button>
+
+            <button
+              onClick={onEmergencyClick}
+              className="inline-flex items-center gap-1.5 bg-white hover:bg-[#FDF2F2] text-[#B83A3A] text-xs font-medium px-3 py-2 rounded-lg border border-[#F0D5D5] transition-colors cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[16px]">warning</span>
+              <span>Alert</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* 1. Operations Command Bar */}
-      <div className="bg-surface-container-lowest p-6 rounded-2xl mb-6 shadow-sm border border-surface-container-high flex flex-col xl:flex-row xl:items-center justify-between gap-6">
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="bg-primary text-white font-mono text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">
-              Sprint Ops Core
-            </span>
-            <span className="text-xs text-on-surface-variant font-medium">
-              MIT CSAIL & Robotics Guild
-            </span>
-            <span className="font-mono text-xs bg-surface-container-high text-on-surface px-2 py-0.5 rounded border border-surface-container-highest">
-              ID: {data?.sprint?.id || "MIT-2025-AUTONOMY"}
-            </span>
-          </div>
-
-          <h1 className="font-headline font-extrabold text-2xl lg:text-3xl text-on-surface tracking-tight mt-1">
-            {data?.sprint?.name || "Autonomous Systems Hackathon 2025"}
-          </h1>
-
-          <div className="flex items-center gap-3 flex-wrap pt-1">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-low rounded-full border border-surface-container-high">
-              <span className="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
-              <span className="font-mono text-xs text-secondary font-bold">
-                Day 2 — Mid-Sprint Checkpoint
+      {/* 4 Sleek KPI Metric Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 mb-5">
+        {/* Attendance */}
+        <div className="bg-white p-4 rounded-xl border border-[#E7DFD5] shadow-subtle flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between text-xs text-[#73645A] font-medium">
+              <span>Turnout & Check-in</span>
+              <span className="font-mono text-[11px] text-[#2F5B3C] font-semibold bg-[#EFF5F1] px-1.5 py-0.5 rounded">
+                +8.4% vs T-12h
               </span>
             </div>
-
-            <div className="flex items-center gap-1.5 bg-surface-container px-3 py-1 rounded-lg border border-surface-container-high">
-              <span className="material-symbols-outlined text-sm text-primary">timer</span>
-              <span className="font-mono text-xs text-primary font-bold">
-                {masterClock || "14:32:08 EST"}
+            <div className="flex items-baseline gap-1.5 mt-2">
+              <span className="font-sans font-bold text-2xl text-[#1F1916]">
+                {turnout.checked_in?.toLocaleString()}
+              </span>
+              <span className="text-xs text-[#73645A]">
+                / {turnout.total?.toLocaleString()} registered
               </span>
             </div>
-
-            <div className="flex items-center gap-1.5 text-primary text-xs font-semibold">
-              <span className="material-symbols-outlined text-sm text-primary">verified</span>
-              <span>All Systems Operational</span>
-            </div>
           </div>
-        </div>
-
-        {/* Quick Action Buttons */}
-        <div className="flex flex-wrap items-center gap-2.5 self-start xl:self-auto">
-          <button
-            onClick={onBroadcastClick}
-            className="inline-flex items-center gap-2 bg-primary hover:bg-primary-container text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm active:scale-95 cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-base">campaign</span>
-            <span>Broadcast Announcement</span>
-          </button>
-
-          <button
-            onClick={onExportCsv}
-            className="inline-flex items-center gap-2 bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold px-4 py-2.5 rounded-xl transition-all border border-surface-container-high active:scale-95 cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-base text-primary">download</span>
-            <span>Export Roll Call (CSV)</span>
-          </button>
-
-          <button
-            onClick={onEmergencyClick}
-            className="inline-flex items-center gap-2 bg-error/10 hover:bg-error hover:text-white text-error text-xs font-semibold px-4 py-2.5 rounded-xl transition-all border border-error/20 active:scale-95 cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-base">warning</span>
-            <span>Emergency Alert</span>
-          </button>
-        </div>
-      </div>
-
-      {/* 2. Operational Metrics Bar (4 Key KPI Cards) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-        {/* Card 1: Check-in Turnout */}
-        <div className="bg-surface-container-lowest p-5 rounded-2xl shadow-sm border border-surface-container-high flex flex-col justify-between hover:shadow-md transition-shadow">
-          <div className="flex items-start justify-between">
-            <div>
-              <span className="font-mono text-[11px] text-on-surface-variant uppercase tracking-wider block font-semibold">
-                Attendance & Turnout
-              </span>
-              <div className="flex items-baseline gap-1.5 mt-1.5">
-                <span className="font-headline font-extrabold text-2xl text-primary">
-                  {turnout.checked_in?.toLocaleString()}
-                </span>
-                <span className="font-mono text-xs text-on-surface-variant font-medium">
-                  / {turnout.total?.toLocaleString()} Checked in
-                </span>
-              </div>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-primary-fixed/30 flex items-center justify-center text-primary">
-              <span className="material-symbols-outlined text-xl">how_to_reg</span>
-            </div>
-          </div>
-
-          <div className="mt-4">
-            <div className="flex justify-between items-center text-xs mb-1.5">
-              <span className="font-semibold text-on-surface">{turnout.percentage}% Turnout</span>
-              <span className="font-mono font-bold text-primary">{turnout.trend || "+8.4% vs T-12h"}</span>
-            </div>
-            <div className="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+          <div className="mt-3">
+            <div className="w-full bg-[#F3EFEA] h-1.5 rounded-full overflow-hidden">
               <div
-                className="bg-primary h-full rounded-full transition-all duration-700"
-                style={{ width: `${Math.min(100, turnout.percentage)}%` }}
+                className="bg-[#2F5B3C] h-full rounded-full transition-all duration-500"
+                style={{ width: `${turnout.percentage}%` }}
               ></div>
             </div>
-            <div className="flex items-center gap-1.5 mt-2.5 text-on-surface-variant text-[11px] font-mono">
-              <span className="material-symbols-outlined text-xs text-primary">speed</span>
-              <span>{turnout.throughput || "QR throughput: ~38 scans/min avg"}</span>
+            <div className="flex justify-between items-center text-[11px] text-[#73645A] mt-1.5 font-mono">
+              <span>{turnout.percentage}% checked in</span>
+              <span>~38 scans/min</span>
             </div>
           </div>
         </div>
 
-        {/* Card 2: Teams & Repositories */}
-        <div className="bg-surface-container-lowest p-5 rounded-2xl shadow-sm border border-surface-container-high flex flex-col justify-between hover:shadow-md transition-shadow">
-          <div className="flex items-start justify-between">
-            <div>
-              <span className="font-mono text-[11px] text-on-surface-variant uppercase tracking-wider block font-semibold">
-                Teams & Repositories
+        {/* Repositories */}
+        <div className="bg-white p-4 rounded-xl border border-[#E7DFD5] shadow-subtle flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between text-xs text-[#73645A] font-medium">
+              <span>Connected Repos</span>
+              <span className="font-mono text-[11px] text-[#C47D1C] font-semibold bg-[#FDF6EA] px-1.5 py-0.5 rounded">
+                {teams.missing_first_commit} missing commit
               </span>
-              <div className="flex items-baseline gap-1.5 mt-1.5">
-                <span className="font-headline font-extrabold text-2xl text-on-surface">
-                  {teams.active}
-                </span>
-                <span className="font-mono text-xs text-on-surface-variant font-medium">
-                  Active Teams
-                </span>
-              </div>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-secondary-fixed/40 flex items-center justify-center text-secondary">
-              <span className="material-symbols-outlined text-xl">lan</span>
+            <div className="flex items-baseline gap-1.5 mt-2">
+              <span className="font-sans font-bold text-2xl text-[#1F1916]">
+                {teams.synchronized_repos}
+              </span>
+              <span className="text-xs text-[#73645A]">
+                / {teams.active} teams
+              </span>
             </div>
           </div>
-
-          <div className="mt-4">
-            <div className="flex justify-between items-center text-xs mb-1.5">
-              <span className="font-semibold text-on-surface">{teams.synchronized_repos} Repos Synced</span>
-              <span className="font-mono text-xs text-on-surface-variant">{teams.sync_percentage}%</span>
-            </div>
-            <div className="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+          <div className="mt-3">
+            <div className="w-full bg-[#F3EFEA] h-1.5 rounded-full overflow-hidden">
               <div
-                className="bg-secondary h-full rounded-full transition-all duration-700"
+                className="bg-[#C47D1C] h-full rounded-full transition-all duration-500"
                 style={{ width: `${teams.sync_percentage}%` }}
               ></div>
             </div>
-            <div className="flex items-center justify-between mt-2.5 text-[11px] font-mono">
-              <span className="text-on-surface-variant">{teams.missing_first_commit} Missing first commit</span>
-              <span className="text-secondary font-bold">Action Needed</span>
+            <div className="flex justify-between items-center text-[11px] text-[#73645A] mt-1.5 font-mono">
+              <span>{teams.sync_percentage}% synchronized</span>
+              <span>GitHub Webhooks Active</span>
             </div>
           </div>
         </div>
 
-        {/* Card 3: Volunteer & Mentor Fleet */}
-        <div className="bg-surface-container-lowest p-5 rounded-2xl shadow-sm border border-surface-container-high flex flex-col justify-between hover:shadow-md transition-shadow">
-          <div className="flex items-start justify-between">
-            <div>
-              <span className="font-mono text-[11px] text-on-surface-variant uppercase tracking-wider block font-semibold">
-                Staff & Mentorship
+        {/* Mentors */}
+        <div className="bg-white p-4 rounded-xl border border-[#E7DFD5] shadow-subtle flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between text-xs text-[#73645A] font-medium">
+              <span>Mentorship & Helpdesk</span>
+              <span className="font-mono text-[11px] text-[#2F5B3C] font-semibold bg-[#EFF5F1] px-1.5 py-0.5 rounded">
+                4.2m avg response
               </span>
-              <div className="flex items-baseline gap-1.5 mt-1.5">
-                <span className="font-headline font-extrabold text-2xl text-on-surface">
-                  {staff.volunteers_on_duty}
-                </span>
-                <span className="font-mono text-xs text-on-surface-variant font-medium">
-                  Volunteers on Duty
-                </span>
-              </div>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-primary-fixed/30 flex items-center justify-center text-primary">
-              <span className="material-symbols-outlined text-xl">support_agent</span>
+            <div className="flex items-baseline gap-1.5 mt-2">
+              <span className="font-sans font-bold text-2xl text-[#1F1916]">
+                {staff.active_dispatches}
+              </span>
+              <span className="text-xs text-[#73645A]">
+                active / {staff.volunteers_on_duty} on duty
+              </span>
             </div>
           </div>
-
-          <div className="mt-4 bg-surface-container-low p-2.5 rounded-xl border border-surface-container-high flex items-center justify-between">
-            <div className="flex flex-col">
-              <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">
-                Active Dispatches
-              </span>
-              <span className="text-xs font-bold text-on-surface">
-                {staff.active_dispatches} Mentors in field
-              </span>
-            </div>
-            <div className="flex flex-col items-end">
-              <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">
-                Response Velocity
-              </span>
-              <span className="font-mono text-xs font-bold text-primary">
-                {staff.avg_response_velocity}
-              </span>
+          <div className="mt-3">
+            <div className="flex items-center justify-between text-[11px] bg-[#FAF7F2] p-1.5 rounded-md border border-[#F0EAE1]">
+              <span className="text-[#73645A]">Active Help Tickets:</span>
+              <span className="font-bold text-[#1F1916]">4 Pending Dispatch</span>
             </div>
           </div>
         </div>
 
-        {/* Card 4: Hardware & Compute Allocation */}
-        <div className="bg-surface-container-lowest p-5 rounded-2xl shadow-sm border border-surface-container-high flex flex-col justify-between hover:shadow-md transition-shadow">
-          <div className="flex items-start justify-between">
-            <div>
-              <span className="font-mono text-[11px] text-on-surface-variant uppercase tracking-wider block font-semibold">
-                Compute & Gear Reserves
+        {/* Hardware & Compute */}
+        <div className="bg-white p-4 rounded-xl border border-[#E7DFD5] shadow-subtle flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between text-xs text-[#73645A] font-medium">
+              <span>Jetson AGX Kit Loans</span>
+              <span className="font-mono text-[11px] text-[#C2542D] font-semibold bg-[#FBEFEA] px-1.5 py-0.5 rounded">
+                {compute.kits_remaining} left in stock
               </span>
-              <div className="flex items-baseline gap-1.5 mt-1.5">
-                <span className="font-headline font-extrabold text-2xl text-primary">
-                  {compute.jetson_kits_allocated}
-                </span>
-                <span className="font-mono text-xs text-on-surface-variant font-medium">
-                  / {compute.jetson_kits_total} Jetson Kits
-                </span>
-              </div>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-primary-fixed/30 flex items-center justify-center text-primary">
-              <span className="material-symbols-outlined text-xl">developer_board</span>
+            <div className="flex items-baseline gap-1.5 mt-2">
+              <span className="font-sans font-bold text-2xl text-[#1F1916]">
+                {compute.jetson_kits_allocated}
+              </span>
+              <span className="text-xs text-[#73645A]">
+                / {compute.jetson_kits_total} kits issued
+              </span>
             </div>
           </div>
-
-          <div className="mt-4">
-            <div className="flex items-center justify-between text-xs mb-1.5">
-              <span className="font-semibold text-on-surface">Jetson Orin AGX Checkouts</span>
-              <span className="font-mono font-bold text-secondary">{compute.kits_remaining} Kits Left</span>
-            </div>
-            <div className="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+          <div className="mt-3">
+            <div className="w-full bg-[#F3EFEA] h-1.5 rounded-full overflow-hidden">
               <div
-                className="bg-primary h-full rounded-full transition-all duration-700"
+                className="bg-[#C2542D] h-full rounded-full transition-all duration-500"
                 style={{ width: `${(compute.jetson_kits_allocated / compute.jetson_kits_total) * 100}%` }}
               ></div>
             </div>
-            <div className="flex items-center justify-between mt-2.5 text-[11px] font-mono">
-              <span className="text-on-surface-variant">Cloud: {compute.cloud_compute_allocated} Activated</span>
-              <span className="text-primary font-bold">AWS / Lambda Labs</span>
+            <div className="flex justify-between items-center text-[11px] text-[#73645A] mt-1.5 font-mono">
+              <span>Cloud: {compute.cloud_compute_allocated} Activated</span>
+              <span>AWS / Lambda</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 3. Live Operations Grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-        {/* Left Column: Timeline & Integrity Telemetry (4 cols) */}
-        <div className="xl:col-span-4 flex flex-col gap-6">
-          {/* Section A: Event Run-of-Show Timeline */}
-          <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-surface-container-high flex flex-col">
-            <div className="flex items-center justify-between pb-3 mb-4 border-b border-surface-container">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-xl">schedule</span>
-                <h2 className="font-headline font-bold text-base text-on-surface">Event Run-of-Show</h2>
+      {/* Main 2-Column Operational Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        {/* Left Column: Timeline & Integrity (5 cols) */}
+        <div className="lg:col-span-5 flex flex-col gap-5">
+          {/* Timeline */}
+          <div className="bg-white rounded-xl p-4 border border-[#E7DFD5] shadow-card">
+            <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-[#F0EAE1]">
+              <div className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[17px] text-[#73645A]">schedule</span>
+                <h2 className="font-sans font-bold text-sm text-[#1F1916]">Run-of-Show Milestones</h2>
               </div>
-              <span className="font-mono text-[10px] bg-primary-fixed text-primary px-2 py-0.5 rounded font-bold uppercase tracking-wider">
-                Live Flow
+              <span className="font-mono text-[10px] text-[#2F5B3C] bg-[#EFF5F1] px-2 py-0.5 rounded font-semibold">
+                Live State
               </span>
             </div>
 
-            <div className="flex flex-col gap-4 relative pl-4">
-              <div className="absolute left-1.5 top-2 bottom-4 w-0.5 bg-surface-container-highest"></div>
+            <div className="flex flex-col gap-3 relative pl-3">
+              <div className="absolute left-1 top-2 bottom-3 w-px bg-[#E7DFD5]"></div>
 
               {timeline.map((item, idx) => {
                 const isRunning = item.status === "RUNNING NOW";
                 const isDone = item.status === "COMPLETED";
 
                 return (
-                  <div key={item.id || idx} className="relative flex items-start gap-3">
+                  <div key={item.id || idx} className="relative flex items-start gap-2.5">
                     <div
-                      className={`w-3.5 h-3.5 rounded-full -ml-[23px] mt-1 flex items-center justify-center ${
+                      className={`w-2.5 h-2.5 rounded-full -ml-[17px] mt-1.5 shrink-0 ${
                         isRunning
-                          ? 'bg-primary shadow-sm'
+                          ? 'bg-[#C2542D] ring-4 ring-[#C2542D]/20'
                           : isDone
-                          ? 'bg-surface-container-highest'
-                          : 'bg-surface-container-highest'
+                          ? 'bg-[#A89C92]'
+                          : 'bg-[#DDD2C5]'
                       }`}
-                    >
-                      {isRunning ? (
-                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
-                      ) : isDone ? (
-                        <span className="w-1.5 h-1.5 rounded-full bg-outline"></span>
-                      ) : (
-                        <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-                      )}
-                    </div>
+                    ></div>
 
                     <div
-                      className={`flex flex-col flex-1 p-3.5 rounded-xl border transition-all ${
+                      className={`flex-1 p-2.5 rounded-lg border text-xs transition-all ${
                         isRunning
-                          ? 'bg-surface-container-lowest border-primary/30 shadow-sm'
-                          : 'bg-surface-container-low border-surface-container-high opacity-85'
+                          ? 'bg-[#FAF7F2] border-[#C2542D]/30 shadow-subtle'
+                          : 'bg-white border-[#E7DFD5]'
                       }`}
                     >
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-mono text-xs text-on-surface-variant font-semibold">
-                          {item.time}
-                        </span>
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-[11px] text-[#73645A]">{item.time}</span>
                         <span
-                          className={`font-mono text-[10px] px-2 py-0.5 rounded font-bold uppercase ${
+                          className={`font-mono text-[10px] px-1.5 py-0.5 rounded font-semibold ${
                             isRunning
-                              ? 'bg-secondary-fixed text-on-secondary-fixed animate-pulse'
+                              ? 'bg-[#C2542D] text-white'
                               : isDone
-                              ? 'bg-surface-container text-outline'
-                              : 'bg-surface-container text-secondary'
+                              ? 'bg-[#F3EFEA] text-[#73645A]'
+                              : 'bg-[#F3EFEA] text-[#73645A]'
                           }`}
                         >
                           {item.status}
                         </span>
                       </div>
 
-                      <span className="font-semibold text-sm text-on-surface leading-tight">
+                      <h3 className="font-semibold text-xs text-[#1F1916] mt-1 leading-snug">
                         {item.title}
-                      </span>
+                      </h3>
 
                       {item.speaker && (
-                        <span className="text-xs text-primary font-medium mt-1">
+                        <p className="text-[11px] text-[#2F5B3C] font-medium mt-0.5">
                           Speaker: {item.speaker}
-                        </span>
+                        </p>
                       )}
 
                       {item.location && (
-                        <span className="text-xs text-on-surface-variant mt-0.5">
+                        <p className="text-[11px] text-[#73645A] mt-0.5">
                           {item.location}
-                        </span>
+                        </p>
                       )}
 
                       {item.attendees && (
-                        <div className="mt-2 pt-2 border-t border-surface-container flex items-center justify-between text-xs font-mono text-primary">
-                          <span>{item.elapsed || "Elapsed: 34m"}</span>
-                          <span className="flex items-center gap-1 font-semibold">
-                            <span className="material-symbols-outlined text-xs">group</span>
-                            {item.attendees}
-                          </span>
+                        <div className="mt-1.5 pt-1.5 border-t border-[#F0EAE1] flex items-center justify-between text-[11px] font-mono text-[#73645A]">
+                          <span>{item.elapsed || "Running"}</span>
+                          <span className="text-[#2F5B3C] font-medium">{item.attendees}</span>
                         </div>
                       )}
                     </div>
@@ -406,176 +315,148 @@ export default function OrganizerConsole({
             </div>
           </div>
 
-          {/* Section D: Automated Code & Integrity Telemetry */}
-          <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-surface-container-high flex flex-col">
-            <div className="flex items-center justify-between pb-3 mb-3 border-b border-surface-container">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-xl">security</span>
-                <h2 className="font-headline font-bold text-base text-on-surface">Code & Integrity Telemetry</h2>
+          {/* Code & Integrity Telemetry */}
+          <div className="bg-white rounded-xl p-4 border border-[#E7DFD5] shadow-card">
+            <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-[#F0EAE1]">
+              <div className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[17px] text-[#73645A]">verified_user</span>
+                <h2 className="font-sans font-bold text-sm text-[#1F1916]">Code & Integrity Telemetry</h2>
               </div>
-              <span className="w-2.5 h-2.5 rounded-full bg-primary animate-ping"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2F5B3C]"></span>
             </div>
 
-            <div className="flex flex-col gap-3">
-              <div className="bg-surface-container-low p-3 rounded-xl border border-surface-container-high flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <span className="material-symbols-outlined text-primary text-xl">hub</span>
-                  <div>
-                    <span className="text-xs font-semibold text-on-surface block">
-                      {telemetry.github_sync?.name || "GitHub Enterprise Webhook Sync"}
-                    </span>
-                    <span className="text-[11px] text-on-surface-variant font-mono">
-                      Push events processed: {telemetry.github_sync?.push_events?.toLocaleString() || "2,491"}
-                    </span>
-                  </div>
+            <div className="flex flex-col gap-2.5 text-xs">
+              <div className="p-2.5 rounded-lg bg-[#FAF7F2] border border-[#E7DFD5] flex items-center justify-between">
+                <div>
+                  <span className="font-semibold text-[#1F1916] block">
+                    {telemetry.github_sync?.name || "GitHub Enterprise Webhook Sync"}
+                  </span>
+                  <span className="font-mono text-[11px] text-[#73645A]">
+                    {telemetry.github_sync?.push_events?.toLocaleString() || "2,491"} push commits tracked
+                  </span>
                 </div>
-                <span className="font-mono text-[10px] bg-primary-fixed text-primary px-2 py-0.5 rounded font-bold">
-                  {telemetry.github_sync?.status || "STABLE"}
+                <span className="font-mono text-[10px] bg-[#EFF5F1] text-[#2F5B3C] px-2 py-0.5 rounded font-semibold">
+                  STABLE
                 </span>
               </div>
 
-              <div className="bg-surface-container-low p-3 rounded-xl border border-surface-container-high flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <span className="material-symbols-outlined text-primary text-xl">policy</span>
-                  <div>
-                    <span className="text-xs font-semibold text-on-surface block">
-                      {telemetry.ast_scanner?.name || "AST Plagiarism & Origin Scanner"}
-                    </span>
-                    <span className="text-[11px] text-on-surface-variant">
-                      Pre-existing open source base check
-                    </span>
-                  </div>
+              <div className="p-2.5 rounded-lg bg-[#FAF7F2] border border-[#E7DFD5] flex items-center justify-between">
+                <div>
+                  <span className="font-semibold text-[#1F1916] block">
+                    AST Pre-Build Plagiarism Scanner
+                  </span>
+                  <span className="text-[11px] text-[#73645A]">
+                    Origin verified across active repos
+                  </span>
                 </div>
-                <span className="font-mono text-[10px] bg-surface-container text-primary px-2 py-0.5 rounded font-bold">
-                  {telemetry.ast_scanner?.status || "0 FLAGS DETECTED"}
+                <span className="font-mono text-[10px] bg-[#EFF5F1] text-[#2F5B3C] px-2 py-0.5 rounded font-semibold">
+                  0 FLAGS
                 </span>
               </div>
 
-              <div className="bg-surface-container-low p-3 rounded-xl border border-surface-container-high flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <span className="material-symbols-outlined text-primary text-xl">deployed_code</span>
-                  <div>
-                    <span className="text-xs font-semibold text-on-surface block">
-                      {telemetry.docker_runners?.name || "Docker Build Runners (AWS ECS)"}
-                    </span>
-                    <span className="text-[11px] text-on-surface-variant font-mono">
-                      {telemetry.docker_runners?.healthy_workers || "32/32 worker instances healthy"}
-                    </span>
-                  </div>
+              <div className="p-2.5 rounded-lg bg-[#FAF7F2] border border-[#E7DFD5] flex items-center justify-between">
+                <div>
+                  <span className="font-semibold text-[#1F1916] block">
+                    Docker Build Runners (AWS ECS)
+                  </span>
+                  <span className="font-mono text-[11px] text-[#73645A]">
+                    32/32 worker instances healthy
+                  </span>
                 </div>
-                <span className="font-mono text-xs font-bold text-primary">
-                  {telemetry.docker_runners?.status || "100% PASS"}
+                <span className="font-mono text-[10px] bg-[#EFF5F1] text-[#2F5B3C] px-2 py-0.5 rounded font-semibold">
+                  100% PASS
                 </span>
               </div>
-            </div>
-
-            <div className="mt-4 p-3 bg-surface-container rounded-xl flex items-center justify-between text-xs font-mono">
-              <div className="flex items-center gap-1.5 text-on-surface-variant">
-                <span className="material-symbols-outlined text-sm">memory</span>
-                <span>
-                  CPU: {telemetry.cluster_metrics?.cpu_utilization || "41.2%"} · RAM: {telemetry.cluster_metrics?.ram_usage || "64.8GB / 128GB"}
-                </span>
-              </div>
-              <span className="text-primary font-bold">Cluster Live</span>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Live Check-in & Mentor Dispatch Queue (8 cols) */}
-        <div className="xl:col-span-8 flex flex-col gap-6">
-          {/* Section B: Live QR Check-in & Station Throughput */}
-          <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-surface-container-high flex flex-col">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 mb-4 border-b border-surface-container">
+        {/* Right Column: Check-in Desk & Mentor Queue (7 cols) */}
+        <div className="lg:col-span-7 flex flex-col gap-5">
+          {/* Check-in Desk */}
+          <div className="bg-white rounded-xl p-4 border border-[#E7DFD5] shadow-card">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 mb-3 border-b border-[#F0EAE1]">
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-primary text-xl">qr_code_scanner</span>
-                  <h2 className="font-headline font-bold text-base text-on-surface">
-                    Live Check-in & Gear Distribution Node
+                <div className="flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[17px] text-[#73645A]">qr_code_scanner</span>
+                  <h2 className="font-sans font-bold text-sm text-[#1F1916]">
+                    Participant QR Check-in & Hardware Desk
                   </h2>
                 </div>
-                <p className="text-xs text-on-surface-variant mt-0.5">
-                  Real-time NFC/QR credentials validation across 4 building access gateways.
+                <p className="text-[11px] text-[#73645A] mt-0.5">
+                  Live access validation across Gate A, B, C and Stata Concourse.
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 font-mono text-xs">
-                <span className="text-on-surface-variant uppercase">Gate Status:</span>
-                <span className="bg-primary-fixed text-primary px-2 py-0.5 rounded font-bold">
-                  4 Active Gates
-                </span>
-              </div>
+              <span className="font-mono text-[10px] bg-[#EFF5F1] text-[#2F5B3C] px-2 py-0.5 rounded font-semibold self-start sm:self-auto">
+                4 Gates Operational
+              </span>
             </div>
 
-            {/* Checkin Search Input & Manual Scan Button */}
-            <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 mb-4">
-              <div className="sm:col-span-8 relative">
-                <span className="material-symbols-outlined absolute left-3 top-2.5 text-outline text-lg">search</span>
+            {/* Search & Fast Manual Scan */}
+            <div className="flex gap-2 mb-3">
+              <div className="relative flex-1">
+                <span className="material-symbols-outlined absolute left-2.5 top-2 text-[#73645A] text-[17px]">search</span>
                 <input
                   type="text"
-                  placeholder="Search by participant name, university email, team, or UUID badge..."
+                  placeholder="Search attendee name, team, affiliation, or UUID..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-10 pl-10 pr-4 bg-surface-container-low rounded-xl text-xs text-on-surface placeholder:text-outline border border-surface-container-high focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary transition-all"
+                  className="w-full h-8 pl-8 pr-3 bg-[#FAF7F2] rounded-lg text-xs text-[#1F1916] placeholder:text-[#A89C92] border border-[#E7DFD5] focus:outline-none focus:bg-white focus:border-[#C2542D] transition-colors"
                 />
               </div>
-
-              <div className="sm:col-span-4">
-                <button
-                  onClick={onCheckinClick}
-                  className="w-full h-10 bg-primary-container hover:bg-primary text-white font-mono text-xs font-semibold rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95 cursor-pointer"
-                >
-                  <span className="material-symbols-outlined text-base">barcode_reader</span>
-                  <span>Fast Manual Scan</span>
-                </button>
-              </div>
+              <button
+                onClick={onCheckinClick}
+                className="h-8 px-3 bg-[#2F5B3C] hover:bg-[#254B31] text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer shrink-0"
+              >
+                <span className="material-symbols-outlined text-[15px]">add_circle</span>
+                <span>Fast Scan</span>
+              </button>
             </div>
 
-            {/* Live Attendee Feed Table */}
-            <div className="overflow-x-auto rounded-xl border border-surface-container-high">
+            {/* Checkin Stream Table */}
+            <div className="overflow-x-auto rounded-lg border border-[#E7DFD5]">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="bg-surface-container-low font-mono text-[11px] text-on-surface-variant uppercase border-b border-surface-container-high">
-                    <th className="py-2.5 px-3">Time</th>
-                    <th className="py-2.5 px-3">Attendee</th>
-                    <th className="py-2.5 px-3">Affiliation / Team</th>
-                    <th className="py-2.5 px-3">Checkpoint / Event</th>
-                    <th className="py-2.5 px-3 text-right">Badge UUID</th>
+                  <tr className="bg-[#FAF7F2] font-mono text-[10px] text-[#73645A] uppercase border-b border-[#E7DFD5]">
+                    <th className="py-2 px-3">Time</th>
+                    <th className="py-2 px-3">Attendee</th>
+                    <th className="py-2 px-3">Team / Affiliation</th>
+                    <th className="py-2 px-3">Checkpoint</th>
+                    <th className="py-2 px-3 text-right">Badge UUID</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-surface-container-high">
-                  {filteredCheckins.slice(0, 8).map((chk) => (
-                    <tr key={chk.id} className="hover:bg-surface-container-low/70 transition-colors">
-                      <td className="py-2.5 px-3 font-mono font-bold text-primary">
+                <tbody className="divide-y divide-[#F0EAE1]">
+                  {filteredCheckins.slice(0, 7).map((chk) => (
+                    <tr key={chk.id} className="hover:bg-[#FAF7F2] transition-colors">
+                      <td className="py-2 px-3 font-mono text-[11px] text-[#73645A]">
                         {chk.time}
                       </td>
-                      <td className="py-2.5 px-3 font-semibold text-on-surface">
+                      <td className="py-2 px-3 font-semibold text-[#1F1916]">
                         {chk.attendee}
                       </td>
-                      <td className="py-2.5 px-3 text-on-surface-variant">
+                      <td className="py-2 px-3 text-[#73645A]">
                         {chk.affiliation}
                       </td>
-                      <td className="py-2.5 px-3">
+                      <td className="py-2 px-3">
                         <span
-                          className={`inline-flex items-center gap-1 font-mono text-[10px] px-2 py-0.5 rounded font-semibold ${
+                          className={`inline-flex items-center gap-1 font-mono text-[10px] px-1.5 py-0.5 rounded font-medium ${
                             chk.type === 'hardware'
-                              ? 'bg-secondary-fixed text-on-secondary-fixed'
-                              : 'bg-surface-container text-on-surface'
+                              ? 'bg-[#FBEFEA] text-[#C2542D]'
+                              : 'bg-[#F3EFEA] text-[#1F1916]'
                           }`}
                         >
-                          <span className="material-symbols-outlined text-xs">
-                            {chk.type === 'hardware' ? 'memory' : 'door_front'}
-                          </span>
                           {chk.checkpoint}
                         </span>
                       </td>
-                      <td className="py-2.5 px-3 text-right font-mono text-outline">
+                      <td className="py-2 px-3 text-right font-mono text-[11px] text-[#A89C92]">
                         {chk.badge_uuid}
                       </td>
                     </tr>
                   ))}
                   {filteredCheckins.length === 0 && (
                     <tr>
-                      <td colSpan={5} className="py-6 text-center text-outline">
+                      <td colSpan={5} className="py-5 text-center text-[#A89C92] text-xs">
                         No check-in entries found matching "{searchQuery}"
                       </td>
                     </tr>
@@ -585,105 +466,73 @@ export default function OrganizerConsole({
             </div>
           </div>
 
-          {/* Section C: Mentor & Help Queue Dispatch Console */}
-          <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-surface-container-high flex flex-col">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 mb-4 border-b border-surface-container">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-secondary text-xl">psychology</span>
-                  <h2 className="font-headline font-bold text-base text-on-surface">
-                    Mentor & Help Queue Dispatch Console
-                  </h2>
-                </div>
-                <p className="text-xs text-on-surface-variant mt-0.5">
-                  Real-time technical assistance tickets submitted by participating engineering teams.
-                </p>
+          {/* Mentor Helpdesk Queue */}
+          <div className="bg-white rounded-xl p-4 border border-[#E7DFD5] shadow-card">
+            <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-[#F0EAE1]">
+              <div className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[17px] text-[#C47D1C]">contact_support</span>
+                <h2 className="font-sans font-bold text-sm text-[#1F1916]">
+                  Mentor & Technical Helpdesk Queue
+                </h2>
               </div>
-
-              <div className="flex items-center gap-2 font-mono text-xs">
-                <span className="bg-surface-container-high px-2 py-0.5 rounded text-on-surface-variant font-medium">
-                  {mentorQueue.filter(m => m.status === 'Queued').length} Queued
-                </span>
-                <span className="bg-primary-fixed text-primary px-2 py-0.5 rounded font-bold">
-                  14 Resolved This Hour
-                </span>
-              </div>
+              <span className="font-mono text-[10px] text-[#73645A]">
+                {mentorQueue.filter(m => m.status === 'Queued').length} pending dispatch
+              </span>
             </div>
 
-            {/* Help Queue Table */}
-            <div className="overflow-x-auto rounded-xl border border-surface-container-high">
+            <div className="overflow-x-auto rounded-lg border border-[#E7DFD5]">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="bg-surface-container-low font-mono text-[11px] text-on-surface-variant uppercase border-b border-surface-container-high">
-                    <th className="py-2.5 px-3">Team & Location</th>
-                    <th className="py-2.5 px-3">Category & Issue</th>
-                    <th className="py-2.5 px-3">Urgency</th>
-                    <th className="py-2.5 px-3">Wait Time</th>
-                    <th className="py-2.5 px-3">Mentor Assigned</th>
-                    <th className="py-2.5 px-3 text-right">Action</th>
+                  <tr className="bg-[#FAF7F2] font-mono text-[10px] text-[#73645A] uppercase border-b border-[#E7DFD5]">
+                    <th className="py-2 px-3">Team</th>
+                    <th className="py-2 px-3">Subsystem / Issue</th>
+                    <th className="py-2 px-3">Urgency</th>
+                    <th className="py-2 px-3">Wait</th>
+                    <th className="py-2 px-3 text-right">Mentor Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-surface-container-high">
+                <tbody className="divide-y divide-[#F0EAE1]">
                   {mentorQueue.map((ticket) => (
-                    <tr key={ticket.id} className="hover:bg-surface-container-low/70 transition-colors">
-                      <td className="py-3 px-3">
-                        <span className="font-semibold text-on-surface block leading-tight">
-                          {ticket.team}
-                        </span>
-                        <span className="font-mono text-[10px] text-outline">
-                          {ticket.location}
-                        </span>
+                    <tr key={ticket.id} className="hover:bg-[#FAF7F2] transition-colors">
+                      <td className="py-2.5 px-3">
+                        <span className="font-semibold text-[#1F1916] block">{ticket.team}</span>
+                        <span className="font-mono text-[10px] text-[#73645A]">{ticket.location}</span>
                       </td>
 
-                      <td className="py-3 px-3">
-                        <span className="font-mono text-[11px] text-primary font-semibold block">
-                          {ticket.category}
-                        </span>
-                        <p className="text-[11px] text-on-surface-variant line-clamp-1 max-w-xs">
-                          {ticket.issue}
-                        </p>
+                      <td className="py-2.5 px-3">
+                        <span className="font-semibold text-[#2F5B3C] block">{ticket.category}</span>
+                        <p className="text-[11px] text-[#73645A] line-clamp-1 max-w-xs">{ticket.issue}</p>
                       </td>
 
-                      <td className="py-3 px-3">
+                      <td className="py-2.5 px-3">
                         <span
-                          className={`font-mono text-[10px] px-2 py-0.5 rounded font-bold uppercase ${
+                          className={`font-mono text-[10px] px-1.5 py-0.5 rounded font-semibold ${
                             ticket.urgency === 'Urgent'
-                              ? 'bg-error/15 text-error animate-pulse'
+                              ? 'bg-[#FDF2F2] text-[#B83A3A]'
                               : ticket.urgency === 'High'
-                              ? 'bg-secondary-fixed text-on-secondary-fixed'
-                              : 'bg-surface-container text-on-surface-variant'
+                              ? 'bg-[#FBEFEA] text-[#C2542D]'
+                              : 'bg-[#F3EFEA] text-[#73645A]'
                           }`}
                         >
                           {ticket.urgency}
                         </span>
                       </td>
 
-                      <td className="py-3 px-3 font-mono text-outline">
+                      <td className="py-2.5 px-3 font-mono text-[11px] text-[#73645A]">
                         {ticket.wait_time}
                       </td>
 
-                      <td className="py-3 px-3">
-                        {ticket.assigned_mentor !== "Unassigned" ? (
-                          <div className="flex items-center gap-1.5 text-primary font-semibold">
-                            <span className="material-symbols-outlined text-xs">person</span>
-                            <span>{ticket.assigned_mentor}</span>
-                          </div>
-                        ) : (
-                          <span className="text-outline font-mono italic">Unassigned</span>
-                        )}
-                      </td>
-
-                      <td className="py-3 px-3 text-right">
+                      <td className="py-2.5 px-3 text-right">
                         {ticket.status === 'Queued' ? (
                           <button
                             onClick={() => onDispatchMentor && onDispatchMentor(ticket.id, "Dr. Sarah Lin")}
-                            className="bg-primary hover:bg-primary-container text-white text-[11px] font-semibold px-2.5 py-1 rounded-lg transition-colors shadow-sm"
+                            className="bg-[#2F5B3C] hover:bg-[#254B31] text-white text-[11px] font-semibold px-2.5 py-1 rounded-md transition-colors cursor-pointer"
                           >
-                            Dispatch Mentor
+                            Dispatch
                           </button>
                         ) : (
-                          <span className="font-mono text-[10px] bg-primary-fixed text-primary px-2 py-0.5 rounded font-bold">
-                            {ticket.status}
+                          <span className="font-mono text-[10px] text-[#2F5B3C] font-semibold bg-[#EFF5F1] px-2 py-0.5 rounded">
+                            {ticket.assigned_mentor}
                           </span>
                         )}
                       </td>
@@ -698,4 +547,3 @@ export default function OrganizerConsole({
     </div>
   );
 }
-

@@ -11,7 +11,7 @@ export function CheckinModal({ isOpen, onClose, onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!attendee.trim()) return;
-    const finalCheckpoint = isHardwareKit ? `Collected Jetson AGX Kit #${Math.floor(Math.random() * 90 + 10)}` : checkpoint;
+    const finalCheckpoint = isHardwareKit ? `Jetson AGX Kit #${Math.floor(Math.random() * 90 + 10)}` : checkpoint;
     onSubmit({
       attendee,
       affiliation: affiliation || 'Independent Builder',
@@ -25,54 +25,51 @@ export function CheckinModal({ isOpen, onClose, onSubmit }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-      <div className="bg-surface-container-lowest rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-container-high flex flex-col gap-4">
-        <div className="flex items-center justify-between border-b border-surface-container pb-3">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-xl">barcode_reader</span>
-            <h3 className="font-headline font-bold text-base text-on-surface">Fast Manual Check-in</h3>
-          </div>
-          <button onClick={onClose} className="material-symbols-outlined text-outline hover:text-on-surface">
+    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl max-w-sm w-full p-5 shadow-dropdown border border-[#E7DFD5] flex flex-col gap-3.5 animate-fadeIn">
+        <div className="flex items-center justify-between pb-2 border-b border-[#F0EAE1]">
+          <h3 className="font-serif font-bold text-base text-[#1F1916]">Manual QR Check-in</h3>
+          <button onClick={onClose} className="material-symbols-outlined text-sm text-[#73645A] hover:text-[#1F1916] cursor-pointer">
             close
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 text-xs">
           <div>
-            <label className="font-mono text-[11px] text-on-surface-variant uppercase font-semibold block mb-1">
+            <label className="text-[11px] font-semibold text-[#1F1916] block mb-1">
               Participant Name *
             </label>
             <input
               type="text"
               required
-              placeholder="e.g. Kai Nakamura"
+              placeholder="e.g. Elena Rostova"
               value={attendee}
               onChange={(e) => setAttendee(e.target.value)}
-              className="w-full bg-surface-container-low p-2.5 rounded-xl border border-surface-container-high text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary"
+              className="w-full bg-[#FAF7F2] p-2 rounded-lg border border-[#E7DFD5] text-xs text-[#1F1916] focus:outline-none focus:bg-white focus:border-[#C2542D]"
             />
           </div>
 
           <div>
-            <label className="font-mono text-[11px] text-on-surface-variant uppercase font-semibold block mb-1">
-              Affiliation / University / Team
+            <label className="text-[11px] font-semibold text-[#1F1916] block mb-1">
+              University / Team
             </label>
             <input
               type="text"
-              placeholder="e.g. MIT CSAIL (Team Orbit)"
+              placeholder="e.g. Carnegie Mellon (Team V-SLAM)"
               value={affiliation}
               onChange={(e) => setAffiliation(e.target.value)}
-              className="w-full bg-surface-container-low p-2.5 rounded-xl border border-surface-container-high text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary"
+              className="w-full bg-[#FAF7F2] p-2 rounded-lg border border-[#E7DFD5] text-xs text-[#1F1916] focus:outline-none focus:bg-white focus:border-[#C2542D]"
             />
           </div>
 
           <div>
-            <label className="font-mono text-[11px] text-on-surface-variant uppercase font-semibold block mb-1">
-              Checkpoint Gateway
+            <label className="text-[11px] font-semibold text-[#1F1916] block mb-1">
+              Gate Gateway
             </label>
             <select
               value={checkpoint}
               onChange={(e) => setCheckpoint(e.target.value)}
-              className="w-full bg-surface-container-low p-2.5 rounded-xl border border-surface-container-high text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer font-mono"
+              className="w-full bg-[#FAF7F2] p-2 rounded-lg border border-[#E7DFD5] text-xs text-[#1F1916] cursor-pointer font-sans"
             >
               <option value="Gate A - Main Rotunda">Gate A - Main Rotunda</option>
               <option value="Gate B - Hardware Desk">Gate B - Hardware Desk</option>
@@ -81,27 +78,27 @@ export function CheckinModal({ isOpen, onClose, onSubmit }) {
             </select>
           </div>
 
-          <label className="flex items-center gap-2 mt-1 cursor-pointer">
+          <label className="flex items-center gap-2 cursor-pointer mt-0.5">
             <input
               type="checkbox"
               checked={isHardwareKit}
               onChange={(e) => setIsHardwareKit(e.target.checked)}
-              className="rounded text-primary focus:ring-primary h-4 w-4 accent-primary"
+              className="rounded text-[#2F5B3C] h-3.5 w-3.5 accent-[#2F5B3C]"
             />
-            <span className="font-medium text-on-surface">Distribute Jetson AGX Kit Loan Badge</span>
+            <span className="text-[11px] font-medium text-[#1F1916]">Issue Jetson AGX Developer Kit</span>
           </label>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-surface-container mt-2">
+          <div className="flex justify-end gap-2 pt-2 border-t border-[#F0EAE1]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-mono text-xs font-semibold"
+              className="px-3 py-1.5 rounded-lg bg-[#FAF7F2] hover:bg-[#F3EFEA] text-[#1F1916] font-medium text-xs cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-xl bg-primary hover:bg-primary-container text-white font-mono text-xs font-bold shadow-sm"
+              className="px-3 py-1.5 rounded-lg bg-[#2F5B3C] hover:bg-[#254B31] text-white font-semibold text-xs shadow-subtle cursor-pointer"
             >
               Confirm Scan
             </button>
@@ -129,82 +126,57 @@ export function BroadcastModal({ isOpen, onClose, onSubmit }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-      <div className="bg-surface-container-lowest rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-container-high flex flex-col gap-4">
-        <div className="flex items-center justify-between border-b border-surface-container pb-3">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-xl">campaign</span>
-            <h3 className="font-headline font-bold text-base text-on-surface">Broadcast Announcement</h3>
-          </div>
-          <button onClick={onClose} className="material-symbols-outlined text-outline hover:text-on-surface">
+    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl max-w-sm w-full p-5 shadow-dropdown border border-[#E7DFD5] flex flex-col gap-3.5 animate-fadeIn">
+        <div className="flex items-center justify-between pb-2 border-b border-[#F0EAE1]">
+          <h3 className="font-serif font-bold text-base text-[#1F1916]">Event Announcement</h3>
+          <button onClick={onClose} className="material-symbols-outlined text-sm text-[#73645A] hover:text-[#1F1916] cursor-pointer">
             close
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 text-xs">
           <div>
-            <label className="font-mono text-[11px] text-on-surface-variant uppercase font-semibold block mb-1">
-              Announcement Title *
+            <label className="text-[11px] font-semibold text-[#1F1916] block mb-1">
+              Title *
             </label>
             <input
               type="text"
               required
-              placeholder="e.g. Dinner Served in Central Atrium"
+              placeholder="e.g. NVIDIA ROS2 Workshop Starting"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-surface-container-low p-2.5 rounded-xl border border-surface-container-high text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary"
+              className="w-full bg-[#FAF7F2] p-2 rounded-lg border border-[#E7DFD5] text-xs text-[#1F1916] focus:outline-none focus:bg-white focus:border-[#C2542D]"
             />
           </div>
 
           <div>
-            <label className="font-mono text-[11px] text-on-surface-variant uppercase font-semibold block mb-1">
-              Broadcast Message *
+            <label className="text-[11px] font-semibold text-[#1F1916] block mb-1">
+              Message Body *
             </label>
             <textarea
               required
               rows={3}
-              placeholder="Full dispatch message to all participant screens and mobile telemetry..."
+              placeholder="Full announcement to all participant consoles and mobile passes..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full bg-surface-container-low p-2.5 rounded-xl border border-surface-container-high text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary"
+              className="w-full bg-[#FAF7F2] p-2 rounded-lg border border-[#E7DFD5] text-xs text-[#1F1916] focus:outline-none focus:bg-white focus:border-[#C2542D]"
             ></textarea>
           </div>
 
-          <div>
-            <label className="font-mono text-[11px] text-on-surface-variant uppercase font-semibold block mb-1">
-              Broadcast Priority Level
-            </label>
-            <div className="flex gap-2">
-              {['info', 'urgent', 'alert'].map((lvl) => (
-                <button
-                  key={lvl}
-                  type="button"
-                  onClick={() => setType(lvl)}
-                  className={`flex-1 py-1.5 rounded-lg font-mono text-xs font-semibold capitalize border ${
-                    type === lvl
-                      ? 'bg-primary text-white border-primary'
-                      : 'bg-surface-container text-on-surface-variant border-surface-container-high'
-                  }`}
-                >
-                  {lvl}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-2 pt-3 border-t border-surface-container mt-2">
+          <div className="flex justify-end gap-2 pt-2 border-t border-[#F0EAE1]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-mono text-xs font-semibold"
+              className="px-3 py-1.5 rounded-lg bg-[#FAF7F2] hover:bg-[#F3EFEA] text-[#1F1916] font-medium text-xs cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-xl bg-primary hover:bg-primary-container text-white font-mono text-xs font-bold shadow-sm"
+              className="px-3 py-1.5 rounded-lg bg-[#C2542D] hover:bg-[#A8431F] text-white font-semibold text-xs shadow-subtle cursor-pointer"
             >
-              Send Broadcast
+              Broadcast
             </button>
           </div>
         </form>
@@ -217,26 +189,21 @@ export function EmergencyModal({ isOpen, onClose, onConfirm }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-      <div className="bg-surface-container-lowest rounded-2xl max-w-md w-full p-6 shadow-2xl border border-error/30 flex flex-col gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-error/15 text-error flex items-center justify-center">
-            <span className="material-symbols-outlined text-2xl">warning</span>
-          </div>
-          <div>
-            <h3 className="font-headline font-bold text-base text-error">Emergency Alert Dispatch</h3>
-            <p className="text-xs text-on-surface-variant">Protocol Lock & Facility Wide Notification</p>
-          </div>
+    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl max-w-sm w-full p-5 shadow-dropdown border border-[#F0D5D5] flex flex-col gap-3 animate-fadeIn">
+        <div className="flex items-center gap-2.5">
+          <span className="material-symbols-outlined text-[#B83A3A] text-xl">warning</span>
+          <h3 className="font-serif font-bold text-base text-[#B83A3A]">Dispatch Facility Alert</h3>
         </div>
 
-        <p className="text-xs text-on-surface leading-relaxed bg-error/5 p-3 rounded-xl border border-error/20">
-          This will trigger a high-priority audible and visual warning across all 348 teams, mentor desks, and judge consoles. Use only for hardware safety, facility egress, or critical security alerts.
+        <p className="text-xs text-[#73645A] leading-relaxed bg-[#FDF2F2] p-3 rounded-lg border border-[#F0D5D5]">
+          This will trigger a high-priority banner across all 348 teams, mentor desks, and judge consoles.
         </p>
 
-        <div className="flex justify-end gap-2 pt-2 border-t border-surface-container">
+        <div className="flex justify-end gap-2 pt-2 border-t border-[#F0EAE1]">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-mono text-xs font-semibold"
+            className="px-3 py-1.5 rounded-lg bg-[#FAF7F2] text-xs font-medium cursor-pointer"
           >
             Cancel
           </button>
@@ -245,9 +212,9 @@ export function EmergencyModal({ isOpen, onClose, onConfirm }) {
               onConfirm();
               onClose();
             }}
-            className="px-4 py-2 rounded-xl bg-error hover:bg-error/90 text-white font-mono text-xs font-bold shadow-sm"
+            className="px-3 py-1.5 rounded-lg bg-[#B83A3A] hover:bg-[#9E2E2E] text-white text-xs font-semibold cursor-pointer"
           >
-            Dispatch Alert
+            Confirm Alert
           </button>
         </div>
       </div>
@@ -257,8 +224,8 @@ export function EmergencyModal({ isOpen, onClose, onConfirm }) {
 
 export function TaskModal({ isOpen, onClose, onSubmit }) {
   const [title, setTitle] = useState('');
-  const [project, setProject] = useState('Swarm Sim Harness');
-  const [priority, setPriority] = useState('P2 Normal');
+  const [project, setProject] = useState('LiDAR Odometry');
+  const [priority, setPriority] = useState('Normal');
   const [column, setColumn] = useState('backlog');
   const [assignee, setAssignee] = useState('M. Chen');
 
@@ -279,106 +246,94 @@ export function TaskModal({ isOpen, onClose, onSubmit }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-      <div className="bg-surface-container-lowest rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-container-high flex flex-col gap-4">
-        <div className="flex items-center justify-between border-b border-surface-container pb-3">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-xl">add_task</span>
-            <h3 className="font-headline font-bold text-base text-on-surface">New Sprint Task</h3>
-          </div>
-          <button onClick={onClose} className="material-symbols-outlined text-outline hover:text-on-surface">
+    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl max-w-sm w-full p-5 shadow-dropdown border border-[#E7DFD5] flex flex-col gap-3.5 animate-fadeIn">
+        <div className="flex items-center justify-between pb-2 border-b border-[#F0EAE1]">
+          <h3 className="font-serif font-bold text-base text-[#1F1916]">Add Sprint Task</h3>
+          <button onClick={onClose} className="material-symbols-outlined text-sm text-[#73645A] hover:text-[#1F1916] cursor-pointer">
             close
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 text-xs">
           <div>
-            <label className="font-mono text-[11px] text-on-surface-variant uppercase font-semibold block mb-1">
-              Task Title *
+            <label className="text-[11px] font-semibold text-[#1F1916] block mb-1">
+              Task Name *
             </label>
             <input
               type="text"
               required
-              placeholder="e.g. Integrate PointCloud2 ROS2 filter"
+              placeholder="e.g. Calibrate EKF timestamp offsets"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-surface-container-low p-2.5 rounded-xl border border-surface-container-high text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary"
+              className="w-full bg-[#FAF7F2] p-2 rounded-lg border border-[#E7DFD5] text-xs text-[#1F1916] focus:outline-none focus:bg-white focus:border-[#2F5B3C]"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="font-mono text-[11px] text-on-surface-variant uppercase font-semibold block mb-1">
-                Subsystem Project
-              </label>
+              <label className="text-[11px] font-semibold text-[#1F1916] block mb-1">Project</label>
               <input
                 type="text"
                 value={project}
                 onChange={(e) => setProject(e.target.value)}
-                className="w-full bg-surface-container-low p-2.5 rounded-xl border border-surface-container-high text-xs text-on-surface"
+                className="w-full bg-[#FAF7F2] p-2 rounded-lg border border-[#E7DFD5] text-xs text-[#1F1916]"
               />
             </div>
             <div>
-              <label className="font-mono text-[11px] text-on-surface-variant uppercase font-semibold block mb-1">
-                Priority
-              </label>
+              <label className="text-[11px] font-semibold text-[#1F1916] block mb-1">Priority</label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                className="w-full bg-surface-container-low p-2.5 rounded-xl border border-surface-container-high text-xs text-on-surface font-mono cursor-pointer"
+                className="w-full bg-[#FAF7F2] p-2 rounded-lg border border-[#E7DFD5] text-xs text-[#1F1916] cursor-pointer"
               >
-                <option value="P1 Urgent">P1 Urgent</option>
-                <option value="P2 Normal">P2 Normal</option>
-                <option value="P3 Backlog">P3 Backlog</option>
+                <option value="NORMAL">Normal</option>
+                <option value="HIGH">High</option>
+                <option value="URGENT">Urgent</option>
               </select>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="font-mono text-[11px] text-on-surface-variant uppercase font-semibold block mb-1">
-                Target Column
-              </label>
+              <label className="text-[11px] font-semibold text-[#1F1916] block mb-1">Column</label>
               <select
                 value={column}
                 onChange={(e) => setColumn(e.target.value)}
-                className="w-full bg-surface-container-low p-2.5 rounded-xl border border-surface-container-high text-xs text-on-surface font-mono cursor-pointer"
+                className="w-full bg-[#FAF7F2] p-2 rounded-lg border border-[#E7DFD5] text-xs text-[#1F1916] cursor-pointer"
               >
                 <option value="backlog">Backlog</option>
                 <option value="in_progress">In Progress</option>
                 <option value="under_review">Under Review</option>
-                <option value="deployed">Deployed / Done</option>
+                <option value="deployed">Deployed</option>
               </select>
             </div>
             <div>
-              <label className="font-mono text-[11px] text-on-surface-variant uppercase font-semibold block mb-1">
-                Assignee
-              </label>
+              <label className="text-[11px] font-semibold text-[#1F1916] block mb-1">Assignee</label>
               <select
                 value={assignee}
                 onChange={(e) => setAssignee(e.target.value)}
-                className="w-full bg-surface-container-low p-2.5 rounded-xl border border-surface-container-high text-xs text-on-surface font-mono cursor-pointer"
+                className="w-full bg-[#FAF7F2] p-2 rounded-lg border border-[#E7DFD5] text-xs text-[#1F1916] cursor-pointer"
               >
-                <option value="M. Chen">Marcus Chen</option>
-                <option value="S. Ramos">Sofia Ramos</option>
-                <option value="D. Kulkarni">Devansh Kulkarni</option>
-                <option value="A. Patel">Ananya Patel</option>
-                <option value="Unassigned">Unassigned</option>
+                <option value="M. Chen">M. Chen</option>
+                <option value="S. Ramos">S. Ramos</option>
+                <option value="D. Kulkarni">D. Kulkarni</option>
+                <option value="A. Patel">A. Patel</option>
               </select>
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-surface-container mt-2">
+          <div className="flex justify-end gap-2 pt-2 border-t border-[#F0EAE1]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-mono text-xs font-semibold"
+              className="px-3 py-1.5 rounded-lg bg-[#FAF7F2] hover:bg-[#F3EFEA] text-[#1F1916] font-medium text-xs cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-xl bg-primary hover:bg-primary-container text-white font-mono text-xs font-bold shadow-sm"
+              className="px-3 py-1.5 rounded-lg bg-[#2F5B3C] hover:bg-[#254B31] text-white font-semibold text-xs shadow-subtle cursor-pointer"
             >
               Add Task
             </button>
@@ -390,44 +345,44 @@ export function TaskModal({ isOpen, onClose, onSubmit }) {
 }
 
 export function InterviewModal({ candidate, isOpen, onClose, onSubmit }) {
-  const [notes, setNotes] = useState('Flagged for Deep Learning Perception & Embedded CUDA track.');
+  const [notes, setNotes] = useState('Flagged for Embedded CUDA & Perception track.');
 
   if (!isOpen || !candidate) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-      <div className="bg-surface-container-lowest rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-container-high flex flex-col gap-4">
-        <div className="flex items-center justify-between border-b border-surface-container pb-3">
-          <div className="flex items-center gap-3">
-            <img src={candidate.avatar} alt={candidate.name} className="w-10 h-10 rounded-full object-cover ring-1 ring-primary" />
+    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl max-w-sm w-full p-5 shadow-dropdown border border-[#E7DFD5] flex flex-col gap-3 animate-fadeIn">
+        <div className="flex items-center justify-between pb-2 border-b border-[#F0EAE1]">
+          <div className="flex items-center gap-2">
+            <img src={candidate.avatar} alt={candidate.name} className="w-8 h-8 rounded-full object-cover" />
             <div>
-              <h3 className="font-headline font-bold text-base text-on-surface">
-                Interview Invitation: {candidate.name}
+              <h3 className="font-serif font-bold text-sm text-[#1F1916]">
+                Interview Invitation
               </h3>
-              <p className="text-xs text-on-surface-variant">{candidate.school}</p>
+              <p className="text-[11px] text-[#73645A]">{candidate.name} • {candidate.school}</p>
             </div>
           </div>
-          <button onClick={onClose} className="material-symbols-outlined text-outline hover:text-on-surface">
+          <button onClick={onClose} className="material-symbols-outlined text-sm cursor-pointer">
             close
           </button>
         </div>
 
         <div className="text-xs flex flex-col gap-2">
-          <p className="text-on-surface leading-relaxed">
-            Send an expedited recruitment interview request to <strong>{candidate.name}</strong> for the <strong>{candidate.project_name}</strong> candidate dossier.
+          <p className="text-[#382F2A]">
+            Dispatch recruitment invitation to <strong>{candidate.name}</strong> for <strong>{candidate.project_name}</strong>.
           </p>
           <textarea
-            rows={3}
+            rows={2}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="w-full bg-surface-container-low p-2.5 rounded-xl border border-surface-container-high text-xs text-on-surface"
+            className="w-full bg-[#FAF7F2] p-2 rounded-lg border border-[#E7DFD5] text-xs text-[#1F1916]"
           ></textarea>
         </div>
 
-        <div className="flex justify-end gap-2 pt-2 border-t border-surface-container">
+        <div className="flex justify-end gap-2 pt-2 border-t border-[#F0EAE1]">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-mono text-xs font-semibold"
+            className="px-3 py-1.5 rounded-lg bg-[#FAF7F2] text-xs font-medium cursor-pointer"
           >
             Cancel
           </button>
@@ -436,9 +391,9 @@ export function InterviewModal({ candidate, isOpen, onClose, onSubmit }) {
               onSubmit(candidate.id, notes);
               onClose();
             }}
-            className="px-4 py-2 rounded-xl bg-primary hover:bg-primary-container text-white font-mono text-xs font-bold"
+            className="px-3 py-1.5 rounded-lg bg-[#2F5B3C] text-white text-xs font-semibold cursor-pointer"
           >
-            Send Invitation
+            Dispatch Invitation
           </button>
         </div>
       </div>
@@ -450,13 +405,12 @@ export function Toast({ message, icon = 'check_circle', onClose }) {
   if (!message) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 bg-surface-container-lowest text-on-surface px-4 py-3 rounded-2xl shadow-xl border border-surface-container-high flex items-center gap-3 animate-slideUp">
-      <span className="material-symbols-outlined text-primary text-xl">{icon}</span>
-      <span className="text-xs font-semibold text-on-surface">{message}</span>
-      <button onClick={onClose} className="material-symbols-outlined text-outline hover:text-on-surface text-sm ml-2">
+    <div className="fixed bottom-5 right-5 z-50 bg-white text-[#1F1916] px-3.5 py-2.5 rounded-xl shadow-dropdown border border-[#E7DFD5] flex items-center gap-2.5 animate-fadeIn">
+      <span className="material-symbols-outlined text-[#2F5B3C] text-base">{icon}</span>
+      <span className="text-xs font-semibold">{message}</span>
+      <button onClick={onClose} className="material-symbols-outlined text-[#A89C92] hover:text-[#1F1916] text-sm ml-2 cursor-pointer">
         close
       </button>
     </div>
   );
 }
-
