@@ -40,9 +40,66 @@ export default function OrganiserDashboard() {
   const [quickAffiliation, setQuickAffiliation] = useState('');
   const [quickCheckpoint, setQuickCheckpoint] = useState('Main Welcome Gate (Desk 01)');
 
+  // Create Opportunity State
+  const [isCreateEventOpen, setIsCreateEventOpen] = useState(false);
+  const [creatingEvent, setCreatingEvent] = useState(false);
+  const [newEventForm, setNewEventForm] = useState({
+    title: '',
+    category: 'AI & Developer Tools',
+    mode: 'Online (Virtual + Discord)',
+    location: 'Global / Remote',
+    dates: 'Nov 15 - 17, 2026',
+    deadline: 'Nov 14, 2026 23:59 IST',
+    prizes: '$50,000 Prize Pool',
+    tracks: 'AI Defense, Sponsor SDK Radar, Autonomous Agents',
+    sponsors: 'NVIDIA, Google Cloud, Supabase',
+    description: ''
+  });
+
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(''), 3500);
+  };
+
+  const handleCreateOpportunity = async (e) => {
+    e.preventDefault();
+    if (!newEventForm.title.trim()) {
+      showToast('Please provide an opportunity title');
+      return;
+    }
+    setCreatingEvent(true);
+    try {
+      const res = await api.createOpportunity(newEventForm);
+      showToast(`Opportunity "${res.event.title}" published successfully!`);
+      setIsCreateEventOpen(false);
+      setNewEventForm({
+        title: '',
+        category: 'AI & Developer Tools',
+        mode: 'Online (Virtual + Discord)',
+        location: 'Global / Remote',
+        dates: 'Nov 15 - 17, 2026',
+        deadline: 'Nov 14, 2026 23:59 IST',
+        prizes: '$50,000 Prize Pool',
+        tracks: 'AI Defense, Sponsor SDK Radar, Autonomous Agents',
+        sponsors: 'NVIDIA, Google Cloud, Supabase',
+        description: ''
+      });
+      await loadAllOrganizerData();
+    } catch (err) {
+      showToast(err.message || 'Failed to create opportunity');
+    } finally {
+      setCreatingEvent(false);
+    }
+  };
+
+  const handleResetData = async (mode) => {
+    try {
+      const res = await api.resetSystemData(mode);
+      showToast(res.message || 'System data updated');
+      await loadAllOrganizerData();
+    } catch (err) {
+      showToast(err.message || 'Failed to update system data');
+    }
   };
 
   const loadAllOrganizerData = async () => {
@@ -228,15 +285,30 @@ export default function OrganiserDashboard() {
 
           {/* Event Selector Pill */}
           <div className="px-2.5 py-2 rounded-xl bg-gray-50 border border-gray-200">
-            <span className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Active Hackathon</span>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] uppercase font-bold text-gray-400">Active Hackathon</span>
+              <button
+                type="button"
+                onClick={() => setIsCreateEventOpen(true)}
+                className="text-[10px] text-[#943C1D] font-bold hover:underline cursor-pointer flex items-center gap-0.5"
+                title="Create New Hackathon"
+              >
+                <span className="material-symbols-outlined text-xs">add</span>
+                <span>New</span>
+              </button>
+            </div>
             <select
-              value={sprintStatus?.active_event || "Autonomous Systems Hackathon 2025"}
+              value={sprintStatus?.active_event || (sprintStatus?.event_options?.[0] || "")}
               onChange={(e) => handleSwitchEvent(e.target.value)}
               className="w-full text-xs font-semibold text-gray-800 bg-white border border-gray-200 rounded-lg p-1.5 focus:outline-none cursor-pointer truncate"
             >
-              {(sprintStatus?.event_options || ["Autonomous Systems Hackathon 2025", "DeepTech BioInnovation Summit", "Quantum Leap Climate Challenge"]).map((opt) => (
-                <option key={opt} value={opt}>{opt}</option>
-              ))}
+              {(sprintStatus?.event_options || []).length === 0 ? (
+                <option value="">No Active Event (Click +New)</option>
+              ) : (
+                sprintStatus.event_options.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))
+              )}
             </select>
           </div>
 
@@ -276,8 +348,31 @@ export default function OrganiserDashboard() {
           </nav>
         </div>
 
-        {/* Bottom Section: Sign Out */}
+        {/* Bottom Section: Data Controls & Sign Out */}
         <div className="p-4 border-t border-[#E5E7EB] space-y-2">
+          {/* Real Data Controls */}
+          <div className="pb-2 border-b border-gray-100">
+            <span className="text-[10px] uppercase font-bold text-gray-400 block mb-1.5">State Manager</span>
+            <div className="grid grid-cols-2 gap-1.5">
+              <button
+                type="button"
+                onClick={() => handleResetData('clean')}
+                className="py-1 px-2 text-[10px] font-semibold text-gray-600 bg-gray-100 hover:bg-red-50 hover:text-red-700 rounded-md transition-colors cursor-pointer text-center"
+                title="Wipe events to start completely fresh"
+              >
+                Clear All
+              </button>
+              <button
+                type="button"
+                onClick={() => handleResetData('sample')}
+                className="py-1 px-2 text-[10px] font-semibold text-[#24422D] bg-emerald-50 hover:bg-emerald-100 rounded-md transition-colors cursor-pointer text-center"
+                title="Load sample opportunity"
+              >
+                Sample Data
+              </button>
+            </div>
+          </div>
+
           <button
             onClick={() => {
               switchRole('participant');
@@ -332,11 +427,20 @@ export default function OrganiserDashboard() {
           </div>
 
           {/* Right Action Buttons & Avatar */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* "+ Create Opportunity" Button */}
+            <button
+              onClick={() => setIsCreateEventOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#943C1D] hover:bg-[#7D3218] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-sm">add_circle</span>
+              <span>+ Create Opportunity</span>
+            </button>
+
             {/* Quick Check-in Button */}
             <button
               onClick={() => setIsCheckinOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-sm text-[#2F5B3C]">qr_code_scanner</span>
               <span>Check In Student</span>
@@ -802,6 +906,211 @@ export default function OrganiserDashboard() {
           )}
         </main>
       </div>
+
+      {/* CREATE OPPORTUNITY MODAL */}
+      {isCreateEventOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-2xs p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-[#E7DFD5] space-y-4 my-8 animate-fadeIn">
+            <div className="flex items-center justify-between pb-3 border-b border-[#F0EAE1]">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-[#FBEFEA] text-[#943C1D] flex items-center justify-center">
+                  <span className="material-symbols-outlined text-lg">campaign</span>
+                </div>
+                <div>
+                  <h3 className="font-serif font-bold text-base text-[#1F1916]">
+                    Create New Opportunity / Hackathon
+                  </h3>
+                  <p className="text-[11px] text-[#73645A]">
+                    Publish challenge tracks, rules, and rubric guidelines to all builders
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsCreateEventOpen(false)}
+                className="text-gray-400 hover:text-gray-600 cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-lg">close</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateOpportunity} className="space-y-3.5">
+              <div>
+                <label className="block text-xs font-semibold text-[#1F1916] mb-1">
+                  Opportunity Title / Hackathon Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Doomsday Defense Hackathon 2026"
+                  value={newEventForm.title}
+                  onChange={(e) => setNewEventForm({ ...newEventForm, title: e.target.value })}
+                  className="w-full px-3 py-2 text-xs bg-[#FAF7F2] border border-[#E7DFD5] rounded-xl focus:bg-white focus:outline-none focus:border-[#943C1D] text-[#1F1916]"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-[#1F1916] mb-1">
+                    Category / Domain
+                  </label>
+                  <select
+                    value={newEventForm.category}
+                    onChange={(e) => setNewEventForm({ ...newEventForm, category: e.target.value })}
+                    className="w-full px-3 py-2 text-xs bg-[#FAF7F2] border border-[#E7DFD5] rounded-xl focus:bg-white focus:outline-none focus:border-[#943C1D] text-[#1F1916] cursor-pointer"
+                  >
+                    <option value="AI & Developer Tools">AI & Developer Tools</option>
+                    <option value="Edge Robotics & Autonomous Systems">Edge Robotics & Autonomous Systems</option>
+                    <option value="Cybersecurity & Defense">Cybersecurity & Defense</option>
+                    <option value="BioTech & Synthetic Biology">BioTech & Synthetic Biology</option>
+                    <option value="Climate & Clean Energy">Climate & Clean Energy</option>
+                    <option value="Open Innovation">Open Innovation</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1F1916] mb-1">
+                    Mode
+                  </label>
+                  <select
+                    value={newEventForm.mode}
+                    onChange={(e) => setNewEventForm({ ...newEventForm, mode: e.target.value })}
+                    className="w-full px-3 py-2 text-xs bg-[#FAF7F2] border border-[#E7DFD5] rounded-xl focus:bg-white focus:outline-none focus:border-[#943C1D] text-[#1F1916] cursor-pointer"
+                  >
+                    <option value="Online (Virtual + Discord)">Online (Virtual + Discord)</option>
+                    <option value="Hybrid (Campus + Virtual)">Hybrid (Campus + Virtual)</option>
+                    <option value="In-Person (On-Site Only)">In-Person (On-Site Only)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-[#1F1916] mb-1">
+                    Event Dates
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Nov 15 - 17, 2026"
+                    value={newEventForm.dates}
+                    onChange={(e) => setNewEventForm({ ...newEventForm, dates: e.target.value })}
+                    className="w-full px-3 py-2 text-xs bg-[#FAF7F2] border border-[#E7DFD5] rounded-xl focus:bg-white focus:outline-none focus:border-[#943C1D] text-[#1F1916]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1F1916] mb-1">
+                    Registration Deadline
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Nov 14, 2026 23:59 IST"
+                    value={newEventForm.deadline}
+                    onChange={(e) => setNewEventForm({ ...newEventForm, deadline: e.target.value })}
+                    className="w-full px-3 py-2 text-xs bg-[#FAF7F2] border border-[#E7DFD5] rounded-xl focus:bg-white focus:outline-none focus:border-[#943C1D] text-[#1F1916]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-[#1F1916] mb-1">
+                    Prize Pool
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. $50,000 Prize Pool"
+                    value={newEventForm.prizes}
+                    onChange={(e) => setNewEventForm({ ...newEventForm, prizes: e.target.value })}
+                    className="w-full px-3 py-2 text-xs bg-[#FAF7F2] border border-[#E7DFD5] rounded-xl focus:bg-white focus:outline-none focus:border-[#943C1D] text-[#1F1916]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1F1916] mb-1">
+                    Location / Venue
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Bangalore / Global"
+                    value={newEventForm.location}
+                    onChange={(e) => setNewEventForm({ ...newEventForm, location: e.target.value })}
+                    className="w-full px-3 py-2 text-xs bg-[#FAF7F2] border border-[#E7DFD5] rounded-xl focus:bg-white focus:outline-none focus:border-[#943C1D] text-[#1F1916]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#1F1916] mb-1">
+                  Tracks (Comma separated)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. AI Defense, Sponsor SDK Radar, Autonomous Agents"
+                  value={newEventForm.tracks}
+                  onChange={(e) => setNewEventForm({ ...newEventForm, tracks: e.target.value })}
+                  className="w-full px-3 py-2 text-xs bg-[#FAF7F2] border border-[#E7DFD5] rounded-xl focus:bg-white focus:outline-none focus:border-[#943C1D] text-[#1F1916]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#1F1916] mb-1">
+                  Sponsors / Tech Partners (Comma separated)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. NVIDIA, Supabase, Google Cloud"
+                  value={newEventForm.sponsors}
+                  onChange={(e) => setNewEventForm({ ...newEventForm, sponsors: e.target.value })}
+                  className="w-full px-3 py-2 text-xs bg-[#FAF7F2] border border-[#E7DFD5] rounded-xl focus:bg-white focus:outline-none focus:border-[#943C1D] text-[#1F1916]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#1F1916] mb-1">
+                  Overview & Problem Statement
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="Describe the challenge goals, rubric criteria, and submission guidelines..."
+                  value={newEventForm.description}
+                  onChange={(e) => setNewEventForm({ ...newEventForm, description: e.target.value })}
+                  className="w-full px-3 py-2 text-xs bg-[#FAF7F2] border border-[#E7DFD5] rounded-xl focus:bg-white focus:outline-none focus:border-[#943C1D] text-[#1F1916]"
+                />
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-2 border-t border-[#F0EAE1]">
+                <button
+                  type="button"
+                  onClick={() => setIsCreateEventOpen(false)}
+                  className="px-3.5 py-2 text-xs text-[#73645A] hover:bg-[#FAF7F2] rounded-xl cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={creatingEvent}
+                  className="px-4 py-2 bg-[#943C1D] hover:bg-[#7D3218] text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer flex items-center gap-1.5 disabled:opacity-60"
+                >
+                  {creatingEvent ? (
+                    <>
+                      <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                      <span>Publishing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined text-sm">rocket_launch</span>
+                      <span>Launch Opportunity</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Modals */}
       <CheckinModal

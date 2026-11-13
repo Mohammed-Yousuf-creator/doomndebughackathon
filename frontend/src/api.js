@@ -180,6 +180,27 @@ export async function switchSprintEvent(eventName) {
   return res.json();
 }
 
+export async function createOpportunity(data) {
+  const res = await fetch(`${API_BASE}/organizer/create-opportunity`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || "Failed to create opportunity");
+  }
+  return res.json();
+}
+
+export async function resetSystemData(mode = "clean") {
+  const res = await fetch(`${API_BASE}/organizer/reset-data?mode=${mode}`, {
+    method: "POST"
+  });
+  if (!res.ok) throw new Error("Failed to reset system data");
+  return res.json();
+}
+
 export async function fetchOrganizerData() {
   const res = await fetch(`${API_BASE}/organizer`);
   if (!res.ok) throw new Error("Failed to fetch organizer data");

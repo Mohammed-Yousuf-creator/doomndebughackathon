@@ -137,6 +137,19 @@ class ProjectSubmitRequest(BaseModel):
     deck_url: Optional[str] = ""
     abstract: Optional[str] = ""
 
+class CreateOpportunityRequest(BaseModel):
+    title: str
+    category: Optional[str] = "AI & Developer Tools"
+    mode: Optional[str] = "Online (Virtual + Discord)"
+    dates: Optional[str] = "Nov 15 - 17, 2026"
+    deadline: Optional[str] = "Nov 14, 2026 23:59 IST"
+    location: Optional[str] = "Global / Remote"
+    team_size: Optional[str] = "1 - 4 Members"
+    prizes: Optional[str] = "$50,000 Prize Pool"
+    tracks: Optional[Any] = None
+    sponsors: Optional[Any] = None
+    description: Optional[str] = ""
+
 class EventRegisterRequest(BaseModel):
     event_id: str
     user_id: Optional[str] = "u-part-1"
@@ -281,59 +294,30 @@ def get_participant_overview(user_id: Optional[str] = "u-part-1"):
     if not user:
         user = next((u for u in db.users if u["id"] == user_id), db.users[0])
     
-    # Enrich discovery_events with user registration status
-    user_reg_events = user.get("registered_events", [])
+    # Merge registrations and dynamic team state from db
+    user_reg_events = db.user_registrations.get(user["id"], user.get("registered_events", []))
+    user["registered_events"] = user_reg_events
+    if user["id"] in db.user_teams:
+        user.update(db.user_teams[user["id"]])
+    
     enriched_events = []
     for evt in db.discovery_events:
         evt_copy = dict(evt)
-        is_reg = evt["id"] in user_reg_events or evt.get("registered", False)
+        is_reg = evt["id"] in user_reg_events
         evt_copy["registered"] = is_reg
         if is_reg and user.get("team_name"):
             evt_copy["team"] = user.get("team_name")
         enriched_events.append(evt_copy)
 
-    # Active team war room or solo project workspace
+    # Active team war room: active whenever user has registered for an event
     team_data = None
-    if user.get("team_name") and not user.get("is_solo"):
+    if user_reg_events:
         team_data = dict(db.team_war_room)
-        team_data["team_name"] = user["team_name"]
+        team_data["team_name"] = user.get("team_name") or f"{user['name']} (Solo)"
         if user.get("track"):
             team_data["track"] = user["track"]
         if user.get("team_code"):
             team_data["workspace_id"] = user["team_code"]
-    elif user.get("team_status") == "Competing Solo":
-        team_data = {
-            "team_name": user.get("team_name", f"{user['name']} (Solo)"),
-            "track": user.get("track") or "Track 04 // Swarm Intelligence",
-            "workspace_id": user.get("team_code", f"SOLO-{user['id'][-4:].upper()}"),
-            "status": "SOLO WORKSPACE ACTIVE",
-            "tagline": "Solo Builder Submission & Bench Workspace",
-            "countdown_seconds": db.team_war_room.get("countdown_seconds", 67330),
-            "evaluation_wave": "WAVE 03 // 22:00 UTC",
-            "repository": {
-                "url": user.get("github") or "https://github.com/marcuschen/aegis-solo-project",
-                "branch": "main",
-                "commit": "#1a0b3f",
-                "ci_status": "CI Passing"
-            },
-            "members": [
-                {
-                    "id": user["id"],
-                    "name": user["name"],
-                    "short_name": user["name"].split()[0],
-                    "role": "Solo Creator",
-                    "avatar": "/assets/asset_12_94c367ea26.png",
-                    "status": "online"
-                }
-            ],
-            "kanban_columns": db.team_war_room.get("kanban_columns", {}),
-            "orin_telemetry": db.team_war_room.get("orin_telemetry", {}),
-            "adr_pinned": db.team_war_room.get("adr_pinned", {}),
-            "mission_log": db.team_war_room.get("mission_log", [])
-        }
-    else:
-        # User is not in any team yet (solo builder)
-        team_data = None
 
     return {
         "user": user,
@@ -356,21 +340,61 @@ def submit_participant_project(req: ProjectSubmitRequest):
         db.team_war_room["demo_url"] = req.demo_url
     if req.deck_url:
         db.team_war_room["deck_url"] = req.deck_url
-    return {"status": "submitted", "team": db.team_war_room}
+        
+    sub_id = f"PRJ-{random.randint(1000, 9999)}"
+    team_name = db.team_war_room.get("team_name") or "Participant Project"
+    submission = {
+        "id": sub_id,
+        "title": req.project_name or req.tagline or f"{team_name} Submission",
+        "tag": "Live Submission",
+        "category": req.track or "General Track",
+        "description": req.tagline or "Project submitted via Aegis Submission Portal.",
+        "dataset": "Production-Bench-v1",
+        "caption": f"Repository: {req.repo_url}",
+        "video_url": req.demo_url or "/assets/asset_07_940ce03e1c.png",
+        "deck_slide_url": req.deck_url or "/assets/asset_18_11df169078.png",
+        "architecture_url": "/assets/asset_01_f6d18c8079.png",
+        "tech_stack": [
+            {"label": "Repo URL", "value": req.repo_url},
+            {"label": "Track", "value": req.track},
+            {"label": "Demo Link", "value": req.demo_url or "Live Link Available"},
+            {"label": "CI / CD", "value": "Passing"}
+        ],
+        "verification": {
+            "build_status": "SANDBOX-BUILD: PASS",
+            "commit": "#head01",
+            "docker_sla": "9.8ms latency",
+            "unit_tests": "100% (Passed)",
+            "replay_target": "AWS Graviton edge sandbox"
+        },
+        "rubric": {
+            "technical_rigor": {"weight": 30, "score": 9, "desc": "Architectural complexity and execution."},
+            "algorithmic_novelty": {"weight": 25, "score": 8, "desc": "Original approach to the problem."},
+            "edge_performance": {"weight": 20, "score": 9, "desc": "Execution efficiency and SLA."},
+            "documentation": {"weight": 15, "score": 8, "desc": "Repository documentation and structure."},
+            "track_alignment": {"weight": 10, "score": 10, "desc": "Alignment with track guidelines."}
+        },
+        "composite_score": 88.0,
+        "tier": "Top 10% Tier",
+        "median_track_score": 75.0,
+        "private_notes": "",
+        "participant_feedback": "Awaiting initial judge evaluation."
+    }
+    db.submissions.insert(0, submission)
+    return {"status": "submitted", "team": db.team_war_room, "submission": submission}
 
 @app.post("/api/participant/register-event")
 def register_for_event(req: EventRegisterRequest):
-    user = next((u for u in db.users if u["id"] == req.user_id), db.users[0])
-    for evt in db.discovery_events:
-        if evt["id"] == req.event_id:
-            evt["registered"] = True
-            if req.event_id not in user.get("registered_events", []):
-                user.setdefault("registered_events", []).append(req.event_id)
-            if not user.get("track") and evt.get("tracks"):
-                user["track"] = evt["tracks"][0]
-            evt["participation_mode"] = req.mode or "Solo (Team Formation Open)"
-            return {"status": "registered", "event": evt, "user": user}
-    raise HTTPException(status_code=404, detail="Event not found")
+    try:
+        res = db.register_user_for_event(req.user_id, req.event_id, req.mode or "solo")
+        return {
+            "status": "registered",
+            "message": f"Successfully registered for {res['event']['title']}!",
+            "event": res["event"],
+            "user": res["user"]
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 @app.post("/api/participant/create-team")
 def create_participant_team(req: CreateTeamRequest):
@@ -547,6 +571,32 @@ def switch_sprint_event(req: EventSwitchRequest):
 
 
 # ---------------- ORGANIZER OPS CONSOLE ----------------
+@app.post("/api/organizer/create-opportunity")
+def create_opportunity_endpoint(req: CreateOpportunityRequest):
+    new_event = db.create_opportunity(req.dict())
+    return {
+        "status": "success",
+        "message": f"Opportunity '{new_event['title']}' created and published successfully.",
+        "event": new_event,
+        "sprint": db.sprint_info,
+        "events_catalog": db.discovery_events
+    }
+
+@app.post("/api/organizer/reset-data")
+def reset_data_endpoint(mode: Optional[str] = "clean"):
+    if mode == "sample":
+        db.load_sample_data()
+        msg = "Sample demo data restored."
+    else:
+        db.clear_all_data()
+        msg = "All dummy events, check-ins, and submissions cleared."
+    return {
+        "status": "success",
+        "message": msg,
+        "sprint": db.sprint_info,
+        "events_catalog": db.discovery_events
+    }
+
 @app.get("/api/organizer")
 def get_organizer_overview():
     return {

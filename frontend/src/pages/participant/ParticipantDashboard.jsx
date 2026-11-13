@@ -234,53 +234,33 @@ export default function ParticipantDashboard() {
     { key: 'profile', label: 'My Profile', icon: 'account_circle' },
   ];
 
-  // Featured Hackathons for top banner carousel (Unstop style)
-  const featuredHackathons = [
-    {
-      id: 'evt-ash-2025',
-      title: 'Autonomous Systems 2025',
-      organizer: 'MIT CSAIL',
-      category: 'Robotics & AI',
-      mode: 'Online',
+  // Derived active event & events catalog
+  const registeredEvent = data?.events_catalog?.find(e => e.registered);
+  const firstEvent = data?.events_catalog?.[0];
+  const activeEvtId = registeredEvent?.id || firstEvent?.id || null;
+  const activeEvent = registeredEvent || firstEvent || null;
+
+  // Featured Hackathons for top banner carousel - fully dynamic from real opportunities catalog
+  const featuredHackathons = (data?.events_catalog || []).map((evt, idx) => {
+    const gradients = [
+      'from-[#2F5B3C] to-[#1E3F20]',
+      'from-[#8C3D1E] to-[#5C230F]',
+      'from-[#24422D] to-[#3B6B48]',
+      'from-[#705646] to-[#453429]'
+    ];
+    return {
+      id: evt.id,
+      title: evt.title,
+      organizer: evt.organizer || evt.affiliation || 'Aegis Partner',
+      category: evt.category || 'AI & Developer Tools',
+      mode: evt.mode || 'Online',
       cost: 'Free',
-      prize: '$125,000 Prizes',
-      gradient: 'from-[#2F5B3C] to-[#1E3F20]',
-      registered: data?.events_catalog?.find(e => e.id === 'evt-ash-2025')?.registered || false
-    },
-    {
-      id: 'evt-deeptech-berlin',
-      title: 'DeepTech Bio Challenge',
-      organizer: 'Berlin Innovation Hub',
-      category: 'BioTech & Health',
-      mode: 'Hybrid',
-      cost: 'Free',
-      prize: '€80,000 Grants',
-      gradient: 'from-[#8C3D1E] to-[#5C230F]',
-      registered: data?.events_catalog?.find(e => e.id === 'evt-deeptech-berlin')?.registered || false
-    },
-    {
-      id: 'evt-biodesign-singapore',
-      title: 'CleanTech Climate Sprint',
-      organizer: 'Singapore Tech Lab',
-      category: 'Climate & Clean Energy',
-      mode: 'Online',
-      cost: 'Free',
-      prize: '$150,000 Funding',
-      gradient: 'from-[#24422D] to-[#3B6B48]',
-      registered: data?.events_catalog?.find(e => e.id === 'evt-biodesign-singapore')?.registered || false
-    },
-    {
-      id: 'evt-vision-sf',
-      title: 'Autonomous Vision 2026',
-      organizer: 'SF AI Collective',
-      category: 'Computer Vision',
-      mode: 'In-Person',
-      cost: 'Free',
-      prize: '$60,000 Bounties',
-      gradient: 'from-[#705646] to-[#453429]',
-      registered: data?.events_catalog?.find(e => e.id === 'evt-vision-sf')?.registered || false
-    }
-  ];
+      prize: evt.prizes || '$50,000 Prizes',
+      gradient: gradients[idx % gradients.length],
+      registered: evt.registered || false,
+      tracks: evt.tracks || []
+    };
+  });
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] text-[#1F2937] flex font-sans selection:bg-[#EBDDCF] selection:text-[#943C1D]">
@@ -483,71 +463,91 @@ export default function ParticipantDashboard() {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {featuredHackathons.map((evt) => (
-                    <div
-                      key={evt.id}
-                      className="bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden shadow-2xs hover:shadow-sm hover:border-gray-300 transition-all flex flex-col justify-between"
+                {featuredHackathons.length === 0 ? (
+                  <div className="p-8 rounded-2xl bg-white border border-dashed border-[#E5E7EB] text-center space-y-2">
+                    <span className="material-symbols-outlined text-3xl text-gray-400">campaign</span>
+                    <h3 className="text-sm font-bold text-gray-800">No Opportunities Published Yet</h3>
+                    <p className="text-xs text-gray-500 max-w-sm mx-auto">
+                      Create a new hackathon or challenge in the Organiser Portal, or wait for one to launch!
+                    </p>
+                    <button
+                      onClick={() => {
+                        switchRole('organiser');
+                        navigate('/organiser/dashboard');
+                      }}
+                      className="mt-2 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#943C1D] text-white text-xs font-semibold hover:bg-[#7D3218] cursor-pointer"
                     >
-                      {/* Banner Visual */}
-                      <div className={`h-28 bg-gradient-to-r ${evt.gradient} p-3.5 flex flex-col justify-between text-white relative`}>
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-semibold bg-white/20 backdrop-blur-xs px-2 py-0.5 rounded-md">
-                            {evt.category}
-                          </span>
-                          <button
-                            onClick={() => showToast(`Added ${evt.title} to your watchlist.`)}
-                            className="text-white hover:text-red-200 cursor-pointer"
-                            title="Save to Watchlist"
-                          >
-                            <span className="material-symbols-outlined text-lg">favorite_border</span>
-                          </button>
+                      <span className="material-symbols-outlined text-sm">add_circle</span>
+                      <span>Switch to Organiser & Create Opportunity</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {featuredHackathons.map((evt) => (
+                      <div
+                        key={evt.id}
+                        className="bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden shadow-2xs hover:shadow-sm hover:border-gray-300 transition-all flex flex-col justify-between"
+                      >
+                        {/* Banner Visual */}
+                        <div className={`h-28 bg-gradient-to-r ${evt.gradient} p-3.5 flex flex-col justify-between text-white relative`}>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-semibold bg-white/20 backdrop-blur-xs px-2 py-0.5 rounded-md">
+                              {evt.category}
+                            </span>
+                            <button
+                              onClick={() => showToast(`Added ${evt.title} to your watchlist.`)}
+                              className="text-white hover:text-red-200 cursor-pointer"
+                              title="Save to Watchlist"
+                            >
+                              <span className="material-symbols-outlined text-lg">favorite_border</span>
+                            </button>
+                          </div>
+                          <div>
+                            <div className="text-[11px] font-mono opacity-80">{evt.organizer}</div>
+                            <div className="text-xs font-bold truncate">{evt.title}</div>
+                          </div>
                         </div>
-                        <div>
-                          <div className="text-[11px] font-mono opacity-80">{evt.organizer}</div>
-                          <div className="text-xs font-bold truncate">{evt.title}</div>
-                        </div>
-                      </div>
 
-                      {/* Card Body */}
-                      <div className="p-3.5 flex flex-col justify-between flex-1">
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-1.5 text-[11px]">
-                            <span className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-700 font-medium">{evt.mode}</span>
-                            <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-[#2F5B3C] font-semibold">{evt.cost}</span>
-                            <span className="text-gray-500 truncate">{evt.prize}</span>
+                        {/* Card Body */}
+                        <div className="p-3.5 flex flex-col justify-between flex-1">
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-1.5 text-[11px]">
+                              <span className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-700 font-medium">{evt.mode}</span>
+                              <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-[#2F5B3C] font-semibold">{evt.cost}</span>
+                              <span className="text-gray-500 truncate">{evt.prize}</span>
+                            </div>
+
+                            <h3 className="font-bold text-sm text-gray-900 leading-snug line-clamp-1">
+                              {evt.title}
+                            </h3>
                           </div>
 
-                          <h3 className="font-bold text-sm text-gray-900 leading-snug line-clamp-1">
-                            {evt.title}
-                          </h3>
-                        </div>
-
-                        {/* Button */}
-                        <div className="pt-3 mt-2 border-t border-gray-100">
-                          {evt.registered ? (
-                            <button
-                              onClick={() => {
-                                setActiveNav('teams');
-                                setActivityTab('teams');
-                              }}
-                              className="w-full py-1.5 rounded-lg bg-emerald-50 text-[#24422D] text-xs font-semibold hover:bg-emerald-100 transition-colors text-center cursor-pointer"
-                            >
-                              Registered &bull; View Team
-                            </button>
-                          ) : (
-                            <button
-                              onClick={() => handleRegisterEvent(evt.id, evt.title)}
-                              className="w-full py-1.5 rounded-lg bg-[#24422D] hover:bg-[#1A3322] text-white text-xs font-semibold transition-colors cursor-pointer text-center"
-                            >
-                              Register Solo
-                            </button>
-                          )}
+                          {/* Button */}
+                          <div className="pt-3 mt-2 border-t border-gray-100">
+                            {evt.registered ? (
+                              <button
+                                onClick={() => {
+                                  setActiveNav('teams');
+                                  setActivityTab('teams');
+                                }}
+                                className="w-full py-1.5 rounded-lg bg-emerald-50 text-[#24422D] text-xs font-semibold hover:bg-emerald-100 transition-colors text-center cursor-pointer"
+                              >
+                                Registered &bull; View Team
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => handleRegisterEvent(evt.id, evt.title)}
+                                className="w-full py-1.5 rounded-lg bg-[#24422D] hover:bg-[#1A3322] text-white text-xs font-semibold transition-colors cursor-pointer text-center"
+                              >
+                                Register Solo
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* TRUSTED BY INDUSTRY VETERANS (Exact Unstop Banner) */}
@@ -633,77 +633,70 @@ export default function ParticipantDashboard() {
                 {/* TAB CONTENT: 1. REGISTRATIONS */}
                 {activityTab === 'registrations' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    {/* Registered Hackathon 1 */}
-                    <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex items-start gap-3.5 hover:bg-white transition-colors">
-                      <div className="w-12 h-12 rounded-xl bg-[#2F5B3C] text-white flex items-center justify-center font-bold text-sm shrink-0">
-                        MIT
+                    {(!data?.events_catalog?.some(e => e.registered)) ? (
+                      <div className="col-span-2 p-8 rounded-xl border border-dashed border-gray-300 text-center bg-gray-50/50 space-y-2">
+                        <span className="material-symbols-outlined text-3xl text-gray-400">event_busy</span>
+                        <h4 className="text-sm font-bold text-gray-800">No Active Registrations</h4>
+                        <p className="text-xs text-gray-500 max-w-sm mx-auto">
+                          You haven't registered for any opportunities yet. Browse open competitions to join and unlock your team War Room!
+                        </p>
+                        <button
+                          onClick={() => setActiveNav('hackathons')}
+                          className="mt-2 inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#24422D] text-white text-xs font-semibold rounded-lg hover:bg-[#1A3322] cursor-pointer"
+                        >
+                          <span className="material-symbols-outlined text-sm">explore</span>
+                          <span>Browse Available Opportunities</span>
+                        </button>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <h4 className="text-sm font-bold text-gray-900 truncate">
-                            Autonomous Systems Hackathon 2025
-                          </h4>
-                          <span className="text-[10px] font-semibold bg-emerald-100 text-[#24422D] px-2 py-0.5 rounded-md">
-                            Active
-                          </span>
-                        </div>
-                        <p className="text-xs text-gray-500 mt-0.5">MIT CSAIL &bull; $125,000 Prize Pool</p>
-
-                        <div className="mt-3 flex items-center gap-2">
-                          {hasTeam ? (
-                            <span className="text-xs text-gray-700">
-                              Squad: <strong className="text-emerald-700">{currentUser.team_name}</strong>
-                            </span>
-                          ) : isCompetingSolo ? (
-                            <span className="text-xs text-gray-700">
-                              Status: <strong className="text-gray-900">Competing Solo</strong>
-                            </span>
-                          ) : (
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={() => setActivityTab('teams')}
-                                className="px-3 py-1 bg-[#24422D] text-white text-xs font-semibold rounded-lg hover:bg-[#1A3322] cursor-pointer"
-                              >
-                                Find Teammates
-                              </button>
-                              <button
-                                onClick={() => handleCompeteSolo('evt-ash-2025')}
-                                className="px-3 py-1 bg-white border border-gray-300 text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-50 cursor-pointer"
-                              >
-                                Compete Solo
-                              </button>
+                    ) : (
+                      data.events_catalog.filter(e => e.registered).map((evt) => (
+                        <div key={evt.id} className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex items-start gap-3.5 hover:bg-white transition-colors">
+                          <div className="w-12 h-12 rounded-xl bg-[#2F5B3C] text-white flex items-center justify-center font-bold text-sm shrink-0">
+                            {evt.title.substring(0, 3).toUpperCase()}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <h4 className="text-sm font-bold text-gray-900 truncate">
+                                {evt.title}
+                              </h4>
+                              <span className="text-[10px] font-semibold bg-emerald-100 text-[#24422D] px-2 py-0.5 rounded-md">
+                                Registered
+                              </span>
                             </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                            <p className="text-xs text-gray-500 mt-0.5">
+                              {evt.category} &bull; {evt.prizes}
+                            </p>
 
-                    {/* Registered Hackathon 2 / Recommendation */}
-                    <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex items-start gap-3.5 hover:bg-white transition-colors">
-                      <div className="w-12 h-12 rounded-xl bg-[#8C3D1E] text-white flex items-center justify-center font-bold text-sm shrink-0">
-                        BIO
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <h4 className="text-sm font-bold text-gray-900 truncate">
-                            DeepTech Bio Challenge
-                          </h4>
-                          <span className="text-[10px] font-semibold bg-gray-200 text-gray-700 px-2 py-0.5 rounded-md">
-                            Open
-                          </span>
+                            <div className="mt-3 flex items-center gap-2">
+                              {hasTeam ? (
+                                <span className="text-xs text-gray-700">
+                                  Squad: <strong className="text-emerald-700">{currentUser.team_name}</strong>
+                                </span>
+                              ) : isCompetingSolo ? (
+                                <span className="text-xs text-gray-700">
+                                  Status: <strong className="text-gray-900">Competing Solo</strong>
+                                </span>
+                              ) : (
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    onClick={() => setActivityTab('teams')}
+                                    className="px-3 py-1 bg-[#24422D] text-white text-xs font-semibold rounded-lg hover:bg-[#1A3322] cursor-pointer"
+                                  >
+                                    Find Teammates
+                                  </button>
+                                  <button
+                                    onClick={() => handleCompeteSolo(evt.id)}
+                                    className="px-3 py-1 bg-white border border-gray-300 text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-50 cursor-pointer"
+                                  >
+                                    Compete Solo
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                        <p className="text-xs text-gray-500 mt-0.5">Berlin Hub &bull; €80,000 Grants</p>
-
-                        <div className="mt-3">
-                          <button
-                            onClick={() => handleRegisterEvent('evt-deeptech-berlin', 'DeepTech Bio Challenge')}
-                            className="px-3 py-1 bg-white border border-gray-300 text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-50 cursor-pointer"
-                          >
-                            Register for Event
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                      ))
+                    )}
                   </div>
                 )}
 
@@ -895,45 +888,67 @@ export default function ParticipantDashboard() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-                {(data?.events_catalog || []).map((evt) => (
-                  <div key={evt.id} className="bg-white rounded-2xl border border-gray-200 p-5 shadow-2xs flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between gap-2 mb-2">
-                        <span className="text-[11px] font-medium bg-gray-100 text-gray-700 px-2 py-0.5 rounded-md">
-                          {evt.category}
-                        </span>
-                        <span className="text-[11px] font-semibold text-[#2F5B3C] bg-emerald-50 px-2 py-0.5 rounded-md">
-                          {evt.status}
-                        </span>
-                      </div>
-
-                      <h3 className="font-bold text-lg text-gray-900">{evt.title}</h3>
-                      <p className="text-xs text-gray-500 mt-1">{evt.dates} &bull; {evt.location}</p>
-
-                      <div className="mt-3 p-3 bg-gray-50 rounded-xl">
-                        <span className="text-[11px] font-bold text-[#8C3D1E] uppercase block">Prizes</span>
-                        <span className="text-sm font-bold text-gray-900">{evt.prizes}</span>
-                      </div>
-                    </div>
-
-                    <div className="mt-5 pt-3 border-t border-gray-100">
-                      {evt.registered ? (
-                        <div className="text-xs font-semibold text-[#2F5B3C] bg-emerald-50 p-2.5 rounded-lg text-center">
-                          Registered &bull; Ready to Build
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => handleRegisterEvent(evt.id, evt.title)}
-                          className="w-full py-2 bg-[#24422D] text-white text-xs font-semibold rounded-lg hover:bg-[#1A3322] cursor-pointer"
-                        >
-                          Register for Challenge
-                        </button>
-                      )}
-                    </div>
+              {(!data?.events_catalog || data.events_catalog.length === 0) ? (
+                <div className="p-12 bg-white rounded-2xl border border-dashed border-gray-300 text-center space-y-3">
+                  <div className="w-12 h-12 mx-auto rounded-full bg-[#FAF7F2] text-[#943C1D] flex items-center justify-center">
+                    <span className="material-symbols-outlined text-2xl">campaign</span>
                   </div>
-                ))}
-              </div>
+                  <h3 className="text-base font-bold text-gray-900">No Opportunities Active Yet</h3>
+                  <p className="text-xs text-gray-500 max-w-md mx-auto">
+                    No hackathons or competitions have been created yet. Switch to the Organiser Portal to create your first hackathon or competition!
+                  </p>
+                  <button
+                    onClick={() => {
+                      switchRole('organiser');
+                      navigate('/organiser/dashboard');
+                    }}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#943C1D] text-white text-xs font-semibold rounded-xl hover:bg-[#7D3218] cursor-pointer shadow-xs transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-sm">add_circle</span>
+                    <span>Create an Opportunity as Organiser</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+                  {data.events_catalog.map((evt) => (
+                    <div key={evt.id} className="bg-white rounded-2xl border border-gray-200 p-5 shadow-2xs flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center justify-between gap-2 mb-2">
+                          <span className="text-[11px] font-medium bg-gray-100 text-gray-700 px-2 py-0.5 rounded-md">
+                            {evt.category}
+                          </span>
+                          <span className="text-[11px] font-semibold text-[#2F5B3C] bg-emerald-50 px-2 py-0.5 rounded-md">
+                            {evt.status}
+                          </span>
+                        </div>
+
+                        <h3 className="font-bold text-lg text-gray-900">{evt.title}</h3>
+                        <p className="text-xs text-gray-500 mt-1">{evt.dates} &bull; {evt.location}</p>
+
+                        <div className="mt-3 p-3 bg-gray-50 rounded-xl">
+                          <span className="text-[11px] font-bold text-[#8C3D1E] uppercase block">Prizes</span>
+                          <span className="text-sm font-bold text-gray-900">{evt.prizes}</span>
+                        </div>
+                      </div>
+
+                      <div className="mt-5 pt-3 border-t border-gray-100">
+                        {evt.registered ? (
+                          <div className="text-xs font-semibold text-[#2F5B3C] bg-emerald-50 p-2.5 rounded-lg text-center">
+                            Registered &bull; Ready to Build
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => handleRegisterEvent(evt.id, evt.title)}
+                            className="w-full py-2 bg-[#24422D] text-white text-xs font-semibold rounded-lg hover:bg-[#1A3322] cursor-pointer"
+                          >
+                            Register for Challenge
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 

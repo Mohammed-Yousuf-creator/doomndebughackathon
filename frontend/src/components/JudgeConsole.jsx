@@ -72,6 +72,20 @@ export default function JudgeConsole({
     setTimeout(() => setCopiedCommit(false), 2000);
   };
 
+  if (!submissions || submissions.length === 0) {
+    return (
+      <div className="w-full bg-white rounded-2xl p-12 border border-[#E7DFD5] text-center shadow-card space-y-4 my-6">
+        <div className="w-16 h-16 mx-auto rounded-2xl bg-[#EFF5F1] text-[#2F5B3C] flex items-center justify-center">
+          <span className="material-symbols-outlined text-3xl">gavel</span>
+        </div>
+        <h3 className="font-serif text-xl font-bold text-[#1F1916]">Judging & Rubric Evaluation Console</h3>
+        <p className="text-xs text-[#73645A] max-w-md mx-auto leading-relaxed">
+          No participant projects have been submitted for this opportunity yet. Once participants submit their repositories via the Participant Portal, their automated rubrics, live demos, and pitch decks will appear here for grading.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col w-full pb-12">
       {/* Top Juror Control Bar */}
