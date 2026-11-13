@@ -1069,34 +1069,91 @@ export default function ParticipantDashboard() {
           {/* TAB 6: PROFILE */}
           {activeNav === 'profile' && (
             <div className="max-w-xl bg-white rounded-2xl p-6 border border-gray-200 shadow-2xs space-y-5">
-              <div className="flex items-center gap-4 pb-4 border-b border-gray-200">
-                <div className="w-14 h-14 rounded-full bg-[#2F5B3C] text-white flex items-center justify-center font-bold text-xl">
-                  {currentUser?.name ? currentUser.name[0] : 'M'}
+              <div className="flex items-center justify-between pb-4 border-b border-gray-200">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-full bg-[#2F5B3C] text-white flex items-center justify-center font-bold text-xl">
+                    {currentUser?.name ? currentUser.name[0] : 'M'}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900">{currentUser?.name}</h3>
+                    <p className="text-xs text-gray-500">
+                      {currentUser?.profile_type || 'College Student'} &bull; {currentUser?.college || currentUser?.affiliation || 'MIT CSAIL'}
+                    </p>
+                    <span className="text-[11px] text-emerald-800 font-medium">Badge: {currentUser?.badge_uuid}</span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => navigate('/participant/onboarding')}
+                  className="px-3 py-1.5 rounded-xl border border-gray-300 text-xs font-semibold text-gray-700 hover:bg-gray-50 flex items-center gap-1 cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-sm">edit</span>
+                  <span>Edit Profile</span>
+                </button>
+              </div>
+
+              {/* Education & Contact Details */}
+              <div className="grid grid-cols-2 gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200 text-xs">
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-gray-400 block">Degree / Major</span>
+                  <span className="font-semibold text-gray-800">{currentUser?.degree || 'B.Tech / B.S. CS'}</span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900">{currentUser?.name}</h3>
-                  <p className="text-xs text-gray-500">{currentUser?.role} &bull; {currentUser?.affiliation}</p>
-                  <span className="text-[11px] text-emerald-800 font-medium">Badge: {currentUser?.badge_uuid}</span>
+                  <span className="text-[10px] uppercase font-bold text-gray-400 block">Graduation Year</span>
+                  <span className="font-semibold text-gray-800">{currentUser?.graduation_year || '2026'}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-gray-400 block">City</span>
+                  <span className="font-semibold text-gray-800">{currentUser?.city || 'Bangalore'}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-gray-400 block">Contact Phone</span>
+                  <span className="font-semibold text-gray-800">{currentUser?.phone || '+91 98765 43210'}</span>
                 </div>
               </div>
 
               <div>
-                <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">About</h4>
-                <p className="text-xs text-gray-600 bg-gray-50 p-3 rounded-xl border border-gray-200">
-                  {currentUser?.bio || "Student developer interested in AI, robotics, and edge computing."}
+                <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">About & Elevator Pitch</h4>
+                <p className="text-xs text-gray-600 bg-gray-50 p-3 rounded-xl border border-gray-200 leading-relaxed">
+                  {currentUser?.bio || "Student developer interested in AI, robotics, and edge computing. Looking for teammates!"}
                 </p>
               </div>
 
               <div>
-                <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Skills</h4>
+                <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Technical Competencies</h4>
                 <div className="flex flex-wrap gap-1.5">
-                  {(currentUser?.skills || ["Python", "React", "AI"]).map(s => (
-                    <span key={s} className="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-800 text-xs font-medium">
+                  {(currentUser?.skills || ["Python", "React", "AI", "C++"]).map(s => (
+                    <span key={s} className="px-2.5 py-1 rounded-lg bg-emerald-50 text-[#24422D] border border-emerald-100 text-xs font-semibold">
                       {s}
                     </span>
                   ))}
                 </div>
               </div>
+
+              {(currentUser?.github || currentUser?.linkedin) && (
+                <div className="pt-2 flex items-center gap-3 text-xs">
+                  {currentUser?.github && (
+                    <a
+                      href={currentUser.github}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-gray-700 hover:text-black font-semibold flex items-center gap-1 underline"
+                    >
+                      GitHub Profile &rarr;
+                    </a>
+                  )}
+                  {currentUser?.linkedin && (
+                    <a
+                      href={currentUser.linkedin}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-blue-700 hover:underline font-semibold flex items-center gap-1"
+                    >
+                      LinkedIn Profile &rarr;
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </main>

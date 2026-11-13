@@ -4,16 +4,20 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 import ParticipantDashboard from './pages/participant/ParticipantDashboard';
+import ProfileOnboardingPage from './pages/participant/ProfileOnboardingPage';
 import OrganiserDashboard from './pages/organiser/OrganiserDashboard';
 
 function RootRedirect() {
-  const { isAuthenticated, role } = useAuth();
+  const { isAuthenticated, role, user } = useAuth();
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
   if (role === 'participant') {
+    if (!user?.onboarding_completed) {
+      return <Navigate to="/participant/onboarding" replace />;
+    }
     return <Navigate to="/participant/dashboard" replace />;
   }
 
@@ -31,6 +35,16 @@ export default function App() {
         <Routes>
           {/* Public Login Page */}
           <Route path="/login" element={<LoginPage />} />
+
+          {/* Participant Profile Setup Onboarding (Protected) */}
+          <Route
+            path="/participant/onboarding"
+            element={
+              <ProtectedRoute allowedRole="participant">
+                <ProfileOnboardingPage />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Participant Isolated Portal (Protected) */}
           <Route

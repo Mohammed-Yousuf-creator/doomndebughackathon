@@ -43,6 +43,52 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const register = async (email, password, name, roleType) => {
+    setLoading(true);
+    try {
+      const res = await api.registerUser(email, password, name, roleType);
+      setUser(res.user);
+      setToken(res.token);
+      return { success: true, user: res.user };
+    } catch (err) {
+      return { success: false, error: err.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const googleLogin = async (email, name, roleType, googleId, avatarUrl) => {
+    setLoading(true);
+    try {
+      const res = await api.googleAuthUser(email, name, roleType, googleId, avatarUrl);
+      setUser(res.user);
+      setToken(res.token);
+      return { success: true, user: res.user };
+    } catch (err) {
+      return { success: false, error: err.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const githubLogin = async (email, name, roleType, githubUsername, avatarUrl) => {
+    setLoading(true);
+    try {
+      const res = await api.githubAuthUser(email, name, roleType, githubUsername, avatarUrl);
+      setUser(res.user);
+      setToken(res.token);
+      return { success: true, user: res.user };
+    } catch (err) {
+      return { success: false, error: err.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+  };
+
   const logout = async () => {
     try {
       if (token) await api.logoutUser(token);
@@ -60,6 +106,10 @@ export function AuthProvider({ children }) {
     isAuthenticated: !!user && !!token,
     loading,
     login,
+    register,
+    googleLogin,
+    githubLogin,
+    updateUser,
     logout
   };
 

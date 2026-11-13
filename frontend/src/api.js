@@ -16,6 +16,58 @@ export async function loginUser(email, password, roleType) {
   return res.json();
 }
 
+export async function registerUser(email, password, name, roleType) {
+  const res = await fetch(`${API_BASE}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password, name, role_type: roleType })
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || "Registration failed.");
+  }
+  return res.json();
+}
+
+export async function googleAuthUser(email, name, roleType, googleId, avatarUrl) {
+  const res = await fetch(`${API_BASE}/auth/google`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, name, role_type: roleType, google_id: googleId, avatar_url: avatarUrl })
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || "Google authentication failed.");
+  }
+  return res.json();
+}
+
+export async function githubAuthUser(email, name, roleType, githubUsername, avatarUrl) {
+  const res = await fetch(`${API_BASE}/auth/github`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, name, role_type: roleType, github_username: githubUsername, avatar_url: avatarUrl })
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || "GitHub authentication failed.");
+  }
+  return res.json();
+}
+
+export async function saveOnboardingProfile(data) {
+  const res = await fetch(`${API_BASE}/auth/onboarding`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || "Failed to save profile.");
+  }
+  return res.json();
+}
+
 export async function fetchCurrentUser(token) {
   const res = await fetch(`${API_BASE}/auth/me?token=${encodeURIComponent(token || "")}`);
   if (!res.ok) return { authenticated: false, user: null };

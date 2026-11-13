@@ -12,6 +12,7 @@ from fastapi.responses import PlainTextResponse, FileResponse
 from pydantic import BaseModel
 
 from backend.data import db
+import backend.db as user_db
 
 app = FastAPI(
     title="AEGIS OS - Forge Innovation Network API",
@@ -88,6 +89,41 @@ class LoginRequest(BaseModel):
     password: str
     role_type: str  # 'participant' or 'organiser'
 
+class RegisterRequest(BaseModel):
+    email: str
+    password: str
+    name: str
+    role_type: str = "participant"
+
+class GoogleAuthRequest(BaseModel):
+    email: str
+    name: str
+    role_type: str = "participant"
+    google_id: Optional[str] = None
+    avatar_url: Optional[str] = None
+
+class GitHubAuthRequest(BaseModel):
+    email: str
+    name: str
+    role_type: str = "participant"
+    github_username: Optional[str] = None
+    avatar_url: Optional[str] = None
+
+class OnboardingRequest(BaseModel):
+    user_id: str
+    name: Optional[str] = None
+    profile_type: Optional[str] = "College Student"
+    gender: Optional[str] = "Prefer not to say"
+    phone: Optional[str] = ""
+    city: Optional[str] = ""
+    college: Optional[str] = ""
+    degree: Optional[str] = ""
+    graduation_year: Optional[str] = ""
+    skills: Optional[List[str]] = []
+    github: Optional[str] = ""
+    linkedin: Optional[str] = ""
+    bio: Optional[str] = ""
+
 class ProjectSubmitRequest(BaseModel):
     project_name: str
     tagline: str
@@ -131,13 +167,36 @@ class InviteTeammateRequest(BaseModel):
 
 
 # ---------------- AUTHENTICATION & ACCESS CONTROL ----------------
+@app.post("/api/auth/register")
+def register(req: RegisterRequest):
+    try:
+        user = user_db.register_user(
+            email=req.email,
+            password=req.password,
+            name=req.name,
+            role_type=req.role_type
+        )
+        token = f"tok_{user['id']}_{random.randint(100000, 999999)}"
+        db.sessions[token] = user
+        return {
+            "status": "success",
+            "token": token,
+            "user": user
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 @app.post("/api/auth/login")
 def login(req: LoginRequest):
-    user = db.authenticate(req.email, req.password, req.role_type)
+    # Try SQLite database authentication first
+    user = user_db.authenticate_user(req.email, req.password, req.role_type)
+    if not user:
+        # Fallback to in-memory db
+        user = db.authenticate(req.email, req.password, req.role_type)
     if not user:
         raise HTTPException(
             status_code=401,
-            detail=f"Invalid credentials for {req.role_type.capitalize()} Portal. Check your email, password, or role selection."
+            detail=f"Invalid email or password for {req.role_type.capitalize()} Portal."
         )
     token = f"tok_{user['id']}_{random.randint(100000, 999999)}"
     db.sessions[token] = user
@@ -147,10 +206,61 @@ def login(req: LoginRequest):
         "user": user
     }
 
+@app.post("/api/auth/google")
+def google_auth(req: GoogleAuthRequest):
+    user = user_db.google_authenticate(
+        email=req.email,
+        name=req.name,
+        role_type=req.role_type,
+        google_id=req.google_id,
+        avatar_url=req.avatar_url
+    )
+    token = f"tok_{user['id']}_{random.randint(100000, 999999)}"
+    db.sessions[token] = user
+    return {
+        "status": "success",
+        "token": token,
+        "user": user
+    }
+
+@app.post("/api/auth/github")
+def github_auth(req: GitHubAuthRequest):
+    user = user_db.github_authenticate(
+        email=req.email,
+        name=req.name,
+        role_type=req.role_type,
+        github_username=req.github_username,
+        avatar_url=req.avatar_url
+    )
+    token = f"tok_{user['id']}_{random.randint(100000, 999999)}"
+    db.sessions[token] = user
+    return {
+        "status": "success",
+        "token": token,
+        "user": user
+    }
+
+@app.post("/api/auth/onboarding")
+def complete_onboarding(req: OnboardingRequest):
+    updated_user = user_db.update_user_onboarding(req.user_id, req.dict())
+    if not updated_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    # Update active sessions
+    for tok, sess in list(db.sessions.items()):
+        if sess.get("id") == req.user_id:
+            db.sessions[tok] = updated_user
+    return {
+        "status": "success",
+        "user": updated_user
+    }
+
 @app.get("/api/auth/me")
 def get_current_user(token: Optional[str] = None):
     if token and token in db.sessions:
-        return {"authenticated": True, "user": db.sessions[token]}
+        sess_user = db.sessions[token]
+        fresh_user = user_db.get_user_by_id(sess_user["id"]) or sess_user
+        db.sessions[token] = fresh_user
+        return {"authenticated": True, "user": fresh_user}
     return {"authenticated": False, "user": None}
 
 @app.post("/api/auth/logout")
@@ -163,7 +273,9 @@ def logout(token: Optional[str] = None):
 # ---------------- PARTICIPANT DASHBOARD ----------------
 @app.get("/api/participant/overview")
 def get_participant_overview(user_id: Optional[str] = "u-part-1"):
-    user = next((u for u in db.users if u["id"] == user_id), db.users[0])
+    user = user_db.get_user_by_id(user_id)
+    if not user:
+        user = next((u for u in db.users if u["id"] == user_id), db.users[0])
     
     # Enrich discovery_events with user registration status
     user_reg_events = user.get("registered_events", [])
