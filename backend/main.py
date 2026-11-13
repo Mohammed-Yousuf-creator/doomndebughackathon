@@ -15,7 +15,7 @@ try:
     from backend.data import db
     import backend.db as user_db
 except ImportError:
-    import data as db
+    from data import db
     import db as user_db
 
 app = FastAPI(
