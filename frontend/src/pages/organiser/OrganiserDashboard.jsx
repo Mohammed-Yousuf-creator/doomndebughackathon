@@ -12,7 +12,7 @@ import JudgeConsole from '../../components/JudgeConsole';
 import SponsorPortal from '../../components/SponsorPortal';
 
 export default function OrganiserDashboard() {
-  const { user, logout } = useAuth();
+  const { user, logout, switchRole } = useAuth();
   const navigate = useNavigate();
 
   // Navigation & Tabs
@@ -279,7 +279,10 @@ export default function OrganiserDashboard() {
         {/* Bottom Section: Sign Out */}
         <div className="p-4 border-t border-[#E5E7EB] space-y-2">
           <button
-            onClick={() => navigate('/participant/dashboard')}
+            onClick={() => {
+              switchRole('participant');
+              navigate('/participant/dashboard');
+            }}
             className="w-full flex items-center justify-between text-xs text-gray-600 hover:text-gray-900 py-1.5 px-2 rounded-lg hover:bg-gray-50 cursor-pointer"
           >
             <span className="flex items-center gap-2">
@@ -341,7 +344,10 @@ export default function OrganiserDashboard() {
 
             {/* Switch to Student Portal */}
             <button
-              onClick={() => navigate('/participant/dashboard')}
+              onClick={() => {
+                switchRole('participant');
+                navigate('/participant/dashboard');
+              }}
               className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50 text-[#24422D] text-xs font-semibold hover:bg-emerald-100 transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-sm">school</span>

@@ -6,7 +6,7 @@ import WarRoom from '../../components/WarRoom';
 import { TaskModal } from '../../components/Modals';
 
 export default function ParticipantDashboard() {
-  const { user, logout } = useAuth();
+  const { user, logout, switchRole } = useAuth();
   const navigate = useNavigate();
   const [activeNav, setActiveNav] = useState('home'); // 'home', 'hackathons', 'teams', 'submissions', 'schedule', 'profile'
   const [activityTab, setActivityTab] = useState('registrations'); // 'registrations', 'teams', 'matchmaker', 'submissions'
@@ -435,7 +435,10 @@ export default function ParticipantDashboard() {
 
             {/* "For Organizers" Button */}
             <button
-              onClick={() => navigate('/organiser/dashboard')}
+              onClick={() => {
+                switchRole('organiser');
+                navigate('/organiser/dashboard');
+              }}
               className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50 text-[#24422D] text-xs font-semibold hover:bg-emerald-100 transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-sm">business_center</span>

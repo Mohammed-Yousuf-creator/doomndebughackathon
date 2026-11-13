@@ -29,13 +29,27 @@ export function AuthProvider({ children }) {
     }
   }, [user, token]);
 
+  const normalizeRole = (r) => {
+    if (!r) return 'participant';
+    const clean = String(r).toLowerCase().trim();
+    if (clean === 'organizer' || clean === 'organiser') return 'organiser';
+    return 'participant';
+  };
+
   const login = async (email, password, roleType) => {
     setLoading(true);
     try {
-      const res = await api.loginUser(email, password, roleType);
-      setUser(res.user);
+      const targetRole = normalizeRole(roleType);
+      const res = await api.loginUser(email, password, targetRole);
+      const cleanUser = {
+        ...res.user,
+        role_type: targetRole
+      };
+      setUser(cleanUser);
       setToken(res.token);
-      return { success: true, user: res.user };
+      localStorage.setItem('aegis_auth_user', JSON.stringify(cleanUser));
+      localStorage.setItem('aegis_auth_token', res.token);
+      return { success: true, user: cleanUser };
     } catch (err) {
       return { success: false, error: err.message };
     } finally {
@@ -46,10 +60,17 @@ export function AuthProvider({ children }) {
   const register = async (email, password, name, roleType) => {
     setLoading(true);
     try {
-      const res = await api.registerUser(email, password, name, roleType);
-      setUser(res.user);
+      const targetRole = normalizeRole(roleType);
+      const res = await api.registerUser(email, password, name, targetRole);
+      const cleanUser = {
+        ...res.user,
+        role_type: targetRole
+      };
+      setUser(cleanUser);
       setToken(res.token);
-      return { success: true, user: res.user };
+      localStorage.setItem('aegis_auth_user', JSON.stringify(cleanUser));
+      localStorage.setItem('aegis_auth_token', res.token);
+      return { success: true, user: cleanUser };
     } catch (err) {
       return { success: false, error: err.message };
     } finally {
@@ -60,10 +81,17 @@ export function AuthProvider({ children }) {
   const googleLogin = async (email, name, roleType, googleId, avatarUrl) => {
     setLoading(true);
     try {
-      const res = await api.googleAuthUser(email, name, roleType, googleId, avatarUrl);
-      setUser(res.user);
+      const targetRole = normalizeRole(roleType);
+      const res = await api.googleAuthUser(email, name, targetRole, googleId, avatarUrl);
+      const cleanUser = {
+        ...res.user,
+        role_type: targetRole
+      };
+      setUser(cleanUser);
       setToken(res.token);
-      return { success: true, user: res.user };
+      localStorage.setItem('aegis_auth_user', JSON.stringify(cleanUser));
+      localStorage.setItem('aegis_auth_token', res.token);
+      return { success: true, user: cleanUser };
     } catch (err) {
       return { success: false, error: err.message };
     } finally {
@@ -74,10 +102,17 @@ export function AuthProvider({ children }) {
   const githubLogin = async (email, name, roleType, githubUsername, avatarUrl) => {
     setLoading(true);
     try {
-      const res = await api.githubAuthUser(email, name, roleType, githubUsername, avatarUrl);
-      setUser(res.user);
+      const targetRole = normalizeRole(roleType);
+      const res = await api.githubAuthUser(email, name, targetRole, githubUsername, avatarUrl);
+      const cleanUser = {
+        ...res.user,
+        role_type: targetRole
+      };
+      setUser(cleanUser);
       setToken(res.token);
-      return { success: true, user: res.user };
+      localStorage.setItem('aegis_auth_user', JSON.stringify(cleanUser));
+      localStorage.setItem('aegis_auth_token', res.token);
+      return { success: true, user: cleanUser };
     } catch (err) {
       return { success: false, error: err.message };
     } finally {
@@ -85,8 +120,27 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const switchRole = (newRole) => {
+    const cleanRole = normalizeRole(newRole);
+    if (user) {
+      const updated = { ...user, role_type: cleanRole };
+      setUser(updated);
+      localStorage.setItem('aegis_auth_user', JSON.stringify(updated));
+    }
+  };
+
   const updateUser = (updatedUser) => {
-    setUser(updatedUser);
+    if (!updatedUser) {
+      setUser(null);
+      localStorage.removeItem('aegis_auth_user');
+      return;
+    }
+    const cleanUser = {
+      ...updatedUser,
+      role_type: normalizeRole(updatedUser.role_type)
+    };
+    setUser(cleanUser);
+    localStorage.setItem('aegis_auth_user', JSON.stringify(cleanUser));
   };
 
   const logout = async () => {
@@ -97,18 +151,23 @@ export function AuthProvider({ children }) {
     }
     setUser(null);
     setToken(null);
+    localStorage.removeItem('aegis_auth_user');
+    localStorage.removeItem('aegis_auth_token');
   };
+
+  const currentRole = user ? normalizeRole(user.role_type) : null;
 
   const value = {
     user,
     token,
-    role: user?.role_type || null,
+    role: currentRole,
     isAuthenticated: !!user && !!token,
     loading,
     login,
     register,
     googleLogin,
     githubLogin,
+    switchRole,
     updateUser,
     logout
   };
@@ -127,4 +186,3 @@ export function useAuth() {
   }
   return context;
 }
-

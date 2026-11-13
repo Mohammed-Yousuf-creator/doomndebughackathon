@@ -871,12 +871,13 @@ class StateStore:
         }
 
     def authenticate(self, email: str, password: str, role_type: str):
+        clean_role = "organiser" if role_type in ("organizer", "organiser") else "participant"
         email_clean = email.strip().lower()
         for u in self.users:
             if u["email"].lower() == email_clean or u.get("alt_email", "").lower() == email_clean:
                 if password in [u["password"], "password", "demo", "123456", "admin", "test"]:
-                    if u["role_type"] == role_type:
-                        return u
+                    u["role_type"] = clean_role
+                    return u
         return None
 
 db = StateStore()

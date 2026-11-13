@@ -14,14 +14,16 @@ function RootRedirect() {
     return <Navigate to="/login" replace />;
   }
 
-  if (role === 'participant') {
+  const cleanRole = (role === 'organizer' || role === 'organiser') ? 'organiser' : 'participant';
+
+  if (cleanRole === 'participant') {
     if (!user?.onboarding_completed) {
       return <Navigate to="/participant/onboarding" replace />;
     }
     return <Navigate to="/participant/dashboard" replace />;
   }
 
-  if (role === 'organiser') {
+  if (cleanRole === 'organiser') {
     return <Navigate to="/organiser/dashboard" replace />;
   }
 

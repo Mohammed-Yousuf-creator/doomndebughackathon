@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage() {
-  const { login, register, googleLogin, githubLogin, isAuthenticated, role, user, loading } = useAuth();
+  const { login, register, googleLogin, githubLogin, isAuthenticated, role, user, loading, logout } = useAuth();
   const navigate = useNavigate();
 
   // Role: 'participant' or 'organiser'
@@ -32,20 +32,12 @@ export default function LoginPage() {
   const [oauthName, setOauthName] = useState('Rohan Vernekar');
   const [githubUsername, setGithubUsername] = useState('rohanvernekar');
 
-  // Redirect if already authenticated
+  // Sync selectedRole with user role if authenticated
   useEffect(() => {
-    if (isAuthenticated) {
-      if (role === 'participant') {
-        if (!user?.onboarding_completed) {
-          navigate('/participant/onboarding', { replace: true });
-        } else {
-          navigate('/participant/dashboard', { replace: true });
-        }
-      } else if (role === 'organiser') {
-        navigate('/organiser/dashboard', { replace: true });
-      }
+    if (role && (role === 'organiser' || role === 'organizer')) {
+      setSelectedRole('organiser');
     }
-  }, [isAuthenticated, role, user, navigate]);
+  }, [role]);
 
   // Handle Role Change
   const handleRoleChange = (newRole) => {
@@ -262,6 +254,41 @@ export default function LoginPage() {
 
         {/* AUTH CARD (Structure matching reference, themed in Aegis Warm Stone & Editorial Typography) */}
         <div className="bg-white rounded-3xl border border-[#E7DFD5] shadow-card p-8 sm:p-10 w-full max-w-md transition-all">
+          {/* Active Session Notice Banner if user already has an active session */}
+          {isAuthenticated && (
+            <div className="mb-6 p-4 rounded-2xl bg-[#FAF7F2] border border-[#E7DFD5] text-left space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#73645A]">Active Session</span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+                  role === 'organiser' ? 'bg-[#FBEFEA] text-[#943C1D]' : 'bg-[#EFF5F1] text-[#2F5B3C]'
+                }`}>
+                  {role === 'organiser' ? 'Organiser' : 'Participant'}
+                </span>
+              </div>
+              <p className="text-xs text-[#1F1916]">
+                Signed in as <strong className="font-semibold">{user?.name || user?.email}</strong>
+              </p>
+              <div className="flex items-center gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => navigate(role === 'organiser' ? '/organiser/dashboard' : '/participant/dashboard')}
+                  className={`flex-1 text-xs font-semibold py-2 px-3 rounded-lg text-white transition-colors cursor-pointer text-center ${
+                    role === 'organiser' ? 'bg-[#943C1D] hover:bg-[#7D3218]' : 'bg-[#24422D] hover:bg-[#1A3322]'
+                  }`}
+                >
+                  Go to {role === 'organiser' ? 'Organiser' : 'Participant'} Portal &rarr;
+                </button>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="text-xs font-medium py-2 px-3 rounded-lg border border-[#D5C9BD] bg-white text-[#73645A] hover:text-[#943C1D] cursor-pointer"
+                >
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Card Header */}
           <div className="text-center mb-6">
             <h2 className="font-serif text-3xl font-semibold text-[#1F1916] tracking-tight">
@@ -470,6 +497,56 @@ export default function LoginPage() {
                 </button>
               </div>
             )}
+          </div>
+
+          {/* Quick Demo Accounts Helper */}
+          <div className="pt-4 mt-4 border-t border-[#F0EAE1]">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-[#73645A] mb-2 flex items-center justify-between">
+              <span>Quick Demo Accounts</span>
+              <span className="text-[#A89C92]">1-Click Fill</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedRole('organiser');
+                  setEmail('aris.vane@aegis.io');
+                  setPassword('password123');
+                  setError('');
+                }}
+                className={`p-2.5 rounded-xl border text-left text-xs transition-colors cursor-pointer ${
+                  !isParticipant
+                    ? 'bg-[#FBEFEA] border-[#943C1D]/40 text-[#943C1D] font-semibold'
+                    : 'bg-[#FAF7F2] border-[#E7DFD5] text-[#73645A] hover:border-[#D5C9BD]'
+                }`}
+              >
+                <div className="font-semibold text-[11px] flex items-center gap-1">
+                  <span className="material-symbols-outlined text-xs">shield_person</span>
+                  <span>Organiser Demo</span>
+                </div>
+                <div className="text-[10px] opacity-75 font-mono truncate">aris.vane@aegis.io</div>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedRole('participant');
+                  setEmail('marcus.chen@student.mit.edu');
+                  setPassword('password123');
+                  setError('');
+                }}
+                className={`p-2.5 rounded-xl border text-left text-xs transition-colors cursor-pointer ${
+                  isParticipant
+                    ? 'bg-[#EFF5F1] border-[#2F5B3C]/40 text-[#2F5B3C] font-semibold'
+                    : 'bg-[#FAF7F2] border-[#E7DFD5] text-[#73645A] hover:border-[#D5C9BD]'
+                }`}
+              >
+                <div className="font-semibold text-[11px] flex items-center gap-1">
+                  <span className="material-symbols-outlined text-xs">school</span>
+                  <span>Student Demo</span>
+                </div>
+                <div className="text-[10px] opacity-75 font-mono truncate">marcus.chen@mit...</div>
+              </button>
+            </div>
           </div>
         </div>
       </main>
