@@ -47,13 +47,66 @@ export async function submitParticipantProject(data) {
   return res.json();
 }
 
-export async function registerForEvent(eventId, teamName, role) {
+export async function registerForEvent(eventId, userId, mode = "solo") {
   const res = await fetch(`${API_BASE}/participant/register-event`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ event_id: eventId, team_name: teamName, role })
+    body: JSON.stringify({ event_id: eventId, user_id: userId, mode })
   });
   if (!res.ok) throw new Error("Failed to register for event");
+  return res.json();
+}
+
+export async function createTeam(data) {
+  const res = await fetch(`${API_BASE}/participant/create-team`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error("Failed to create team");
+  return res.json();
+}
+
+export async function joinTeam(data) {
+  const res = await fetch(`${API_BASE}/participant/join-team`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to join team");
+  }
+  return res.json();
+}
+
+export async function competeSolo(data) {
+  const res = await fetch(`${API_BASE}/participant/compete-solo`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error("Failed to set compete solo mode");
+  return res.json();
+}
+
+export async function leaveTeam(userId) {
+  const res = await fetch(`${API_BASE}/participant/leave-team`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: userId })
+  });
+  if (!res.ok) throw new Error("Failed to leave team");
+  return res.json();
+}
+
+export async function inviteTeammate(candidateId, userId) {
+  const res = await fetch(`${API_BASE}/participant/invite-teammate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ candidate_id: candidateId, user_id: userId })
+  });
+  if (!res.ok) throw new Error("Failed to send invitation");
   return res.json();
 }
 

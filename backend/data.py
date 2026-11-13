@@ -14,17 +14,22 @@ class StateStore:
                 "email": "marcus.chen@student.mit.edu",
                 "password": "password123",
                 "name": "Marcus Chen",
-                "role": "Team Lead & Embedded AI Architect",
+                "role": "Full-Stack & Robotics Builder",
                 "role_type": "participant",
-                "affiliation": "MIT CSAIL / Stanford Robotics",
-                "team_id": "VS-9920-ALPHA",
-                "team_name": "Team VectorSwarm",
+                "affiliation": "MIT CSAIL",
+                "team_id": None,
+                "team_name": None,
+                "is_solo": True,
+                "team_status": "Solo Builder (No Team)",
                 "badge_uuid": "0x4D1A7E",
-                "checkin_status": "Checked-in",
-                "track": "Track 04 // Swarm Intelligence",
-                "skills": ["C++20", "ROS2", "CUDA", "TensorRT", "Edge Robotics"],
+                "checkin_status": "Pre-Registered",
+                "track": None,
+                "skills": ["Python", "C++20", "ROS2", "React", "PyTorch"],
+                "bio": "CS & Robotics undergrad at MIT. Passionate about autonomous systems, edge AI, and distributed swarms.",
+                "github": "https://github.com/marcuschen",
                 "passport_score": "98.4 / 100",
-                "verified_badges": ["Jetson Orin Certified", "ROS2 Core Builder", "Midway Verified"]
+                "verified_badges": ["MIT Hack 2024 Winner", "ROS2 Certified", "Open Source Contributor"],
+                "registered_events": ["evt-ash-2025"]
             },
             {
                 "id": "u-part-2",
@@ -34,14 +39,19 @@ class StateStore:
                 "role": "Perception & V-SLAM Specialist",
                 "role_type": "participant",
                 "affiliation": "Carnegie Mellon University",
-                "team_id": "VS-9920-ALPHA",
-                "team_name": "Team VectorSwarm",
+                "team_id": None,
+                "team_name": None,
+                "is_solo": True,
+                "team_status": "Solo Builder (No Team)",
                 "badge_uuid": "0x8F9C2B",
-                "checkin_status": "Checked-in",
-                "track": "Track 04 // Swarm Intelligence",
+                "checkin_status": "Pre-Registered",
+                "track": None,
                 "skills": ["Python", "PyTorch", "C++", "OpenCV", "Gaussian Splatting"],
+                "bio": "M.S. Computer Vision candidate at CMU. Focus on real-time neural mapping and visual odometry.",
+                "github": "https://github.com/erostova",
                 "passport_score": "96.5 / 100",
-                "verified_badges": ["CVPR Participant", "SLAM Pipeline Champion"]
+                "verified_badges": ["CVPR Participant", "SLAM Pipeline Champion"],
+                "registered_events": []
             },
             {
                 "id": "u-org-1",
@@ -80,29 +90,111 @@ class StateStore:
         ]
         self.sessions = {}
 
-        # Participant Event Discovery & Status Catalog
+        # Open Teams Looking for Members (for Devfolio/Unstop Matchmaking)
+        self.open_teams = [
+            {
+                "id": "team-aeropulse",
+                "name": "Team AeroPulse",
+                "event_id": "evt-ash-2025",
+                "team_code": "AP-7741",
+                "track": "Track 02 // Embedded Jetson Edge",
+                "members_count": 3,
+                "max_members": 4,
+                "leader": "Julian Thorne",
+                "current_roles": ["Frontend Developer", "Hardware Prototyper", "Embedded Linux Dev"],
+                "looking_for": "1 ML / Perception Engineer (ROS2 / PyTorch)",
+                "match_reason": "98% Skill Match: Your ROS2 and PyTorch background perfectly fits their missing gap."
+            },
+            {
+                "id": "team-neuralmesh",
+                "name": "Team NeuralMesh",
+                "event_id": "evt-ash-2025",
+                "team_code": "NM-2089",
+                "track": "Track 04 // Swarm Intelligence",
+                "members_count": 2,
+                "max_members": 4,
+                "leader": "Amina Diallo",
+                "current_roles": ["Backend Go Dev", "Systems Architect"],
+                "looking_for": "1 C++ Robotics Engineer & 1 UI Designer",
+                "match_reason": "94% Track Fit: They need your C++ robotics systems expertise."
+            },
+            {
+                "id": "team-bioswarm",
+                "name": "Team BioSwarm",
+                "event_id": "evt-deeptech-berlin",
+                "team_code": "BS-4491",
+                "track": "Protein Folding AI",
+                "members_count": 2,
+                "max_members": 4,
+                "leader": "Lukas Weber",
+                "current_roles": ["Bioinformatics Specialist", "Data Scientist"],
+                "looking_for": "1 Full-Stack / React Engineer",
+                "match_reason": "High Relevance: Team needs your React & Full-Stack architecture skills."
+            }
+        ]
+
+        # Solo Builders Looking for Teams (Unstop Style "Find Teammates")
+        self.solo_builders = [
+            {
+                "id": "solo-1",
+                "name": "Elena Rostova",
+                "college": "Carnegie Mellon",
+                "skills": ["PyTorch", "OpenCV", "Gaussian Splatting", "V-SLAM"],
+                "preferred_track": "Track 01 // Perception & SLAM",
+                "bio": "M.S. Computer Vision candidate at CMU. Looking for a systems/firmware engineer to build an edge perception drone.",
+                "match_score": "98% Fit"
+            },
+            {
+                "id": "solo-2",
+                "name": "Liam Vance",
+                "college": "Stanford University",
+                "skills": ["React", "TypeScript", "Tailwind", "Three.js", "WebXR"],
+                "preferred_track": "Track 03 // Human-Robot Interaction",
+                "bio": "Frontend & 3D visualization specialist. Want to build real-time teleoperation cockpit dashboards.",
+                "match_score": "94% Fit"
+            },
+            {
+                "id": "solo-3",
+                "name": "Priya Nair",
+                "college": "UC Berkeley",
+                "skills": ["FPGA", "Verilog", "Embedded C", "Circuit Design"],
+                "preferred_track": "Track 02 // Embedded Jetson Edge",
+                "bio": "Hardware wizard. Bringing custom camera breakout boards and motor controllers.",
+                "match_score": "96% Fit"
+            }
+        ]
+
+        # Participant Event Discovery & Status Catalog (Devfolio / Unstop Style)
         self.discovery_events = [
             {
                 "id": "evt-ash-2025",
                 "title": "Autonomous Systems Hackathon 2025",
                 "category": "Edge Robotics & AI",
+                "mode": "Hybrid (MIT Stata Center + Virtual)",
                 "dates": "Nov 14 - 16, 2025",
-                "location": "Stata Center, MIT & Hybrid",
+                "deadline": "Nov 13, 23:59 EST",
+                "location": "Boston, MA",
+                "team_size": "1 - 4 Members",
                 "prizes": "$125,000 Prize Pool",
                 "status": "LIVE SPRINT ACTIVE",
                 "registered": True,
-                "team": "Team VectorSwarm",
+                "participation_mode": "Solo (Team Formation Open)",
+                "team": None,
                 "tracks": ["Swarm Intelligence", "Perception & SLAM", "Embedded Jetson Edge", "Human-Robot Interaction"]
             },
             {
                 "id": "evt-deeptech-berlin",
                 "title": "DeepTech BioInnovation Summit",
                 "category": "BioTech & Synthetic Biology",
+                "mode": "In-Person (Berlin Innovation Hub)",
                 "dates": "Dec 05 - 07, 2025",
-                "location": "Berlin Innovation Hub",
+                "deadline": "Nov 28, 2025",
+                "location": "Berlin, Germany",
+                "team_size": "1 - 5 Members",
                 "prizes": "€80,000 + Venture Incubator",
                 "status": "REGISTRATIONS OPEN",
                 "registered": False,
+                "participation_mode": None,
                 "team": None,
                 "tracks": ["Protein Folding AI", "Cryo-EM Automation", "Lab Automation"]
             },
@@ -110,13 +202,33 @@ class StateStore:
                 "id": "evt-biodesign-singapore",
                 "title": "Quantum Leap Climate Challenge",
                 "category": "CleanTech & Quantum Sim",
+                "mode": "Virtual / Online",
                 "dates": "Jan 18 - 20, 2026",
-                "location": "Marina Bay Sands / Virtual",
+                "deadline": "Jan 10, 2026",
+                "location": "Singapore / Global",
+                "team_size": "1 - 4 Members",
                 "prizes": "$150,000 Non-Dilutive Grant",
                 "status": "UPCOMING",
                 "registered": False,
+                "participation_mode": None,
                 "team": None,
                 "tracks": ["Carbon Sequestration AI", "Smart Grid Optimization", "Quantum Materials"]
+            },
+            {
+                "id": "evt-vision-sf",
+                "title": "Autonomous Vision Challenge 2026",
+                "category": "Spatial AI & Vision",
+                "mode": "In-Person (SF Pier 48)",
+                "dates": "Feb 22 - 24, 2026",
+                "deadline": "Feb 15, 2026",
+                "location": "San Francisco, CA",
+                "team_size": "1 - 3 Members",
+                "prizes": "$60,000 Seed Bounty",
+                "status": "REGISTRATIONS OPEN",
+                "registered": False,
+                "participation_mode": None,
+                "team": None,
+                "tracks": ["3D Gaussian Splatting", "Event Cameras", "NeRF Localization"]
             }
         ]
 

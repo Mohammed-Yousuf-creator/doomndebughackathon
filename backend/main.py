@@ -99,8 +99,35 @@ class ProjectSubmitRequest(BaseModel):
 
 class EventRegisterRequest(BaseModel):
     event_id: str
+    user_id: Optional[str] = "u-part-1"
     team_name: Optional[str] = None
     role: Optional[str] = None
+    mode: Optional[str] = "solo"
+
+class CreateTeamRequest(BaseModel):
+    user_id: Optional[str] = "u-part-1"
+    event_id: str
+    team_name: str
+    track: str
+    looking_for: Optional[str] = "Frontend / ML Specialist"
+
+class JoinTeamRequest(BaseModel):
+    user_id: Optional[str] = "u-part-1"
+    event_id: Optional[str] = None
+    team_code: Optional[str] = None
+    team_id: Optional[str] = None
+
+class CompeteSoloRequest(BaseModel):
+    user_id: Optional[str] = "u-part-1"
+    event_id: str
+    track: Optional[str] = "Track 04 // Swarm Intelligence"
+
+class LeaveTeamRequest(BaseModel):
+    user_id: Optional[str] = "u-part-1"
+
+class InviteTeammateRequest(BaseModel):
+    user_id: Optional[str] = "u-part-1"
+    candidate_id: str
 
 
 # ---------------- AUTHENTICATION & ACCESS CONTROL ----------------
@@ -137,14 +164,71 @@ def logout(token: Optional[str] = None):
 @app.get("/api/participant/overview")
 def get_participant_overview(user_id: Optional[str] = "u-part-1"):
     user = next((u for u in db.users if u["id"] == user_id), db.users[0])
+    
+    # Enrich discovery_events with user registration status
+    user_reg_events = user.get("registered_events", [])
+    enriched_events = []
+    for evt in db.discovery_events:
+        evt_copy = dict(evt)
+        is_reg = evt["id"] in user_reg_events or evt.get("registered", False)
+        evt_copy["registered"] = is_reg
+        if is_reg and user.get("team_name"):
+            evt_copy["team"] = user.get("team_name")
+        enriched_events.append(evt_copy)
+
+    # Active team war room or solo project workspace
+    team_data = None
+    if user.get("team_name") and not user.get("is_solo"):
+        team_data = dict(db.team_war_room)
+        team_data["team_name"] = user["team_name"]
+        if user.get("track"):
+            team_data["track"] = user["track"]
+        if user.get("team_code"):
+            team_data["workspace_id"] = user["team_code"]
+    elif user.get("team_status") == "Competing Solo":
+        team_data = {
+            "team_name": user.get("team_name", f"{user['name']} (Solo)"),
+            "track": user.get("track") or "Track 04 // Swarm Intelligence",
+            "workspace_id": user.get("team_code", f"SOLO-{user['id'][-4:].upper()}"),
+            "status": "SOLO WORKSPACE ACTIVE",
+            "tagline": "Solo Builder Submission & Bench Workspace",
+            "countdown_seconds": db.team_war_room.get("countdown_seconds", 67330),
+            "evaluation_wave": "WAVE 03 // 22:00 UTC",
+            "repository": {
+                "url": user.get("github") or "https://github.com/marcuschen/aegis-solo-project",
+                "branch": "main",
+                "commit": "#1a0b3f",
+                "ci_status": "CI Passing"
+            },
+            "members": [
+                {
+                    "id": user["id"],
+                    "name": user["name"],
+                    "short_name": user["name"].split()[0],
+                    "role": "Solo Creator",
+                    "avatar": "/assets/asset_12_94c367ea26.png",
+                    "status": "online"
+                }
+            ],
+            "kanban_columns": db.team_war_room.get("kanban_columns", {}),
+            "orin_telemetry": db.team_war_room.get("orin_telemetry", {}),
+            "adr_pinned": db.team_war_room.get("adr_pinned", {}),
+            "mission_log": db.team_war_room.get("mission_log", [])
+        }
+    else:
+        # User is not in any team yet (solo builder)
+        team_data = None
+
     return {
         "user": user,
         "active_event": db.sprint_info,
-        "events_catalog": db.discovery_events,
-        "team": db.team_war_room,
+        "events_catalog": enriched_events,
+        "open_teams": db.open_teams,
+        "solo_builders": db.solo_builders,
+        "team": team_data,
         "schedule": db.timeline_events,
         "broadcasts": db.broadcasts,
-        "mentor_queue": [m for m in db.mentor_queue if m["team"] == user.get("team_name", "Team VectorSwarm")]
+        "mentor_queue": [m for m in db.mentor_queue if m.get("team") == user.get("team_name")]
     }
 
 @app.post("/api/participant/submit-project")
@@ -160,12 +244,177 @@ def submit_participant_project(req: ProjectSubmitRequest):
 
 @app.post("/api/participant/register-event")
 def register_for_event(req: EventRegisterRequest):
+    user = next((u for u in db.users if u["id"] == req.user_id), db.users[0])
     for evt in db.discovery_events:
         if evt["id"] == req.event_id:
             evt["registered"] = True
-            evt["team"] = req.team_name or "New Team"
-            return {"status": "registered", "event": evt}
+            if req.event_id not in user.get("registered_events", []):
+                user.setdefault("registered_events", []).append(req.event_id)
+            if not user.get("track") and evt.get("tracks"):
+                user["track"] = evt["tracks"][0]
+            evt["participation_mode"] = req.mode or "Solo (Team Formation Open)"
+            return {"status": "registered", "event": evt, "user": user}
     raise HTTPException(status_code=404, detail="Event not found")
+
+@app.post("/api/participant/create-team")
+def create_participant_team(req: CreateTeamRequest):
+    user = next((u for u in db.users if u["id"] == req.user_id), db.users[0])
+    prefix = "".join([w[0].upper() for w in req.team_name.split() if w])[:3]
+    if len(prefix) < 2:
+        prefix = "TM"
+    team_code = f"{prefix}-{random.randint(1000, 9999)}"
+    team_id = f"team-{team_code.lower()}"
+    
+    # Update user state
+    user["team_id"] = team_id
+    user["team_name"] = req.team_name
+    user["team_code"] = team_code
+    user["is_solo"] = False
+    user["team_status"] = f"Team Leader"
+    user["track"] = req.track
+    if req.event_id not in user.get("registered_events", []):
+        user.setdefault("registered_events", []).append(req.event_id)
+
+    # Register in open_teams
+    new_team = {
+        "id": team_id,
+        "name": req.team_name,
+        "event_id": req.event_id,
+        "team_code": team_code,
+        "track": req.track,
+        "members_count": 1,
+        "max_members": 4,
+        "leader": user["name"],
+        "current_roles": [user["role"]],
+        "looking_for": req.looking_for or "Full-Stack / ML Specialists",
+        "match_reason": "Recently created by you."
+    }
+    db.open_teams.insert(0, new_team)
+
+    # Update team_war_room
+    db.team_war_room["team_name"] = req.team_name
+    db.team_war_room["track"] = req.track
+    db.team_war_room["workspace_id"] = team_code
+    db.team_war_room["members"] = [
+        {
+            "id": user["id"],
+            "name": user["name"],
+            "short_name": user["name"].split()[0],
+            "role": "Team Leader",
+            "avatar": "/assets/asset_12_94c367ea26.png",
+            "status": "online"
+        }
+    ]
+
+    # Update event
+    for evt in db.discovery_events:
+        if evt["id"] == req.event_id:
+            evt["registered"] = True
+            evt["team"] = req.team_name
+            evt["participation_mode"] = f"Team ({req.team_name})"
+
+    return {
+        "status": "team_created",
+        "team": new_team,
+        "user": user,
+        "team_code": team_code
+    }
+
+@app.post("/api/participant/join-team")
+def join_participant_team(req: JoinTeamRequest):
+    user = next((u for u in db.users if u["id"] == req.user_id), db.users[0])
+    target_team = None
+    if req.team_code:
+        code_clean = req.team_code.strip().upper()
+        target_team = next((t for t in db.open_teams if t.get("team_code", "").upper() == code_clean), None)
+    elif req.team_id:
+        target_team = next((t for t in db.open_teams if t.get("id") == req.team_id), None)
+
+    if not target_team:
+        if req.team_code:
+            target_team = {
+                "id": f"team-{random.randint(100, 999)}",
+                "name": f"Team {req.team_code.upper()}",
+                "event_id": req.event_id or "evt-ash-2025",
+                "team_code": req.team_code.upper(),
+                "track": "Track 04 // Swarm Intelligence",
+                "members_count": 2,
+                "max_members": 4,
+                "leader": "Sarah Connor",
+                "current_roles": ["Systems Engineer", "Robotics Dev"],
+                "looking_for": "Collaborator",
+                "match_reason": "Joined via code invite"
+            }
+            db.open_teams.append(target_team)
+        else:
+            raise HTTPException(status_code=404, detail="Team not found with the provided code or ID")
+
+    # Update user state
+    user["team_id"] = target_team["id"]
+    user["team_name"] = target_team["name"]
+    user["team_code"] = target_team.get("team_code")
+    user["is_solo"] = False
+    user["team_status"] = f"Team Member"
+    user["track"] = target_team.get("track")
+    if target_team.get("event_id") and target_team["event_id"] not in user.get("registered_events", []):
+        user.setdefault("registered_events", []).append(target_team["event_id"])
+
+    target_team["members_count"] = min(target_team.get("members_count", 1) + 1, target_team.get("max_members", 4))
+    if user["role"] not in target_team.get("current_roles", []):
+        target_team.setdefault("current_roles", []).append(user["role"])
+
+    # Update event
+    for evt in db.discovery_events:
+        if evt["id"] == target_team.get("event_id"):
+            evt["registered"] = True
+            evt["team"] = target_team["name"]
+            evt["participation_mode"] = f"Team ({target_team['name']})"
+
+    return {
+        "status": "team_joined",
+        "team": target_team,
+        "user": user
+    }
+
+@app.post("/api/participant/compete-solo")
+def compete_solo(req: CompeteSoloRequest):
+    user = next((u for u in db.users if u["id"] == req.user_id), db.users[0])
+    user["is_solo"] = True
+    user["team_id"] = f"solo-{user['id']}"
+    user["team_name"] = f"{user['name']} (Solo)"
+    user["team_code"] = f"SOLO-{user['id'][-4:].upper()}"
+    user["team_status"] = "Competing Solo"
+    user["track"] = req.track
+    if req.event_id not in user.get("registered_events", []):
+        user.setdefault("registered_events", []).append(req.event_id)
+
+    # Update event
+    for evt in db.discovery_events:
+        if evt["id"] == req.event_id:
+            evt["registered"] = True
+            evt["team"] = f"{user['name']} (Solo)"
+            evt["participation_mode"] = "Solo Competitor"
+
+    return {"status": "competing_solo", "user": user}
+
+@app.post("/api/participant/leave-team")
+def leave_participant_team(req: LeaveTeamRequest):
+    user = next((u for u in db.users if u["id"] == req.user_id), db.users[0])
+    user["team_id"] = None
+    user["team_name"] = None
+    user["team_code"] = None
+    user["is_solo"] = True
+    user["team_status"] = "Solo Builder (No Team)"
+    return {"status": "left_team", "user": user}
+
+@app.post("/api/participant/invite-teammate")
+def invite_teammate(req: InviteTeammateRequest):
+    candidate = next((s for s in db.solo_builders if s["id"] == req.candidate_id), None)
+    candidate_name = candidate["name"] if candidate else "Candidate"
+    return {
+        "status": "invitation_sent",
+        "message": f"Teammate invitation dispatched to {candidate_name} via Aegis SkillGraph."
+    }
 
 
 # ---------------- SPRINT & GENERAL ----------------
