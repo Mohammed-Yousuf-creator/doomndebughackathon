@@ -2,6 +2,63 @@
 
 const API_BASE = "http://localhost:8000/api";
 
+// ---------------- AUTHENTICATION ----------------
+export async function loginUser(email, password, roleType) {
+  const res = await fetch(`${API_BASE}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password, role_type: roleType })
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || "Authentication failed. Check your role & credentials.");
+  }
+  return res.json();
+}
+
+export async function fetchCurrentUser(token) {
+  const res = await fetch(`${API_BASE}/auth/me?token=${encodeURIComponent(token || "")}`);
+  if (!res.ok) return { authenticated: false, user: null };
+  return res.json();
+}
+
+export async function logoutUser(token) {
+  const res = await fetch(`${API_BASE}/auth/logout?token=${encodeURIComponent(token || "")}`, {
+    method: "POST"
+  });
+  return res.json();
+}
+
+// ---------------- PARTICIPANT API ----------------
+export async function fetchParticipantOverview(userId) {
+  const url = userId ? `${API_BASE}/participant/overview?user_id=${encodeURIComponent(userId)}` : `${API_BASE}/participant/overview`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Failed to fetch participant overview");
+  return res.json();
+}
+
+export async function submitParticipantProject(data) {
+  const res = await fetch(`${API_BASE}/participant/submit-project`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error("Failed to submit project");
+  return res.json();
+}
+
+export async function registerForEvent(eventId, teamName, role) {
+  const res = await fetch(`${API_BASE}/participant/register-event`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ event_id: eventId, team_name: teamName, role })
+  });
+  if (!res.ok) throw new Error("Failed to register for event");
+  return res.json();
+}
+
+// ---------------- SPRINT & GENERAL ----------------
+
 export async function fetchSprintStatus() {
   const res = await fetch(`${API_BASE}/sprint/status`);
   if (!res.ok) throw new Error("Failed to fetch sprint status");

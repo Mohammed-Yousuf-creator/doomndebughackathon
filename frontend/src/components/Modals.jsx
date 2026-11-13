@@ -143,7 +143,7 @@ export function BroadcastModal({ isOpen, onClose, onSubmit }) {
             <input
               type="text"
               required
-              placeholder="e.g. NVIDIA ROS2 Workshop Starting"
+              placeholder="e.g. NVIDIA ROS2dd Workshop Starting"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full bg-[#FAF7F2] p-2 rounded-lg border border-[#E7DFD5] text-xs text-[#1F1916] focus:outline-none focus:bg-white focus:border-[#C2542D]"

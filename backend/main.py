@@ -83,6 +83,90 @@ class ProposalRequest(BaseModel):
     contact_email: str
     custom_terms: Optional[str] = ""
 
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+    role_type: str  # 'participant' or 'organiser'
+
+class ProjectSubmitRequest(BaseModel):
+    project_name: str
+    tagline: str
+    track: str
+    repo_url: str
+    demo_url: Optional[str] = ""
+    deck_url: Optional[str] = ""
+    abstract: Optional[str] = ""
+
+class EventRegisterRequest(BaseModel):
+    event_id: str
+    team_name: Optional[str] = None
+    role: Optional[str] = None
+
+
+# ---------------- AUTHENTICATION & ACCESS CONTROL ----------------
+@app.post("/api/auth/login")
+def login(req: LoginRequest):
+    user = db.authenticate(req.email, req.password, req.role_type)
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail=f"Invalid credentials for {req.role_type.capitalize()} Portal. Check your email, password, or role selection."
+        )
+    token = f"tok_{user['id']}_{random.randint(100000, 999999)}"
+    db.sessions[token] = user
+    return {
+        "status": "success",
+        "token": token,
+        "user": user
+    }
+
+@app.get("/api/auth/me")
+def get_current_user(token: Optional[str] = None):
+    if token and token in db.sessions:
+        return {"authenticated": True, "user": db.sessions[token]}
+    return {"authenticated": False, "user": None}
+
+@app.post("/api/auth/logout")
+def logout(token: Optional[str] = None):
+    if token and token in db.sessions:
+        del db.sessions[token]
+    return {"status": "logged_out"}
+
+
+# ---------------- PARTICIPANT DASHBOARD ----------------
+@app.get("/api/participant/overview")
+def get_participant_overview(user_id: Optional[str] = "u-part-1"):
+    user = next((u for u in db.users if u["id"] == user_id), db.users[0])
+    return {
+        "user": user,
+        "active_event": db.sprint_info,
+        "events_catalog": db.discovery_events,
+        "team": db.team_war_room,
+        "schedule": db.timeline_events,
+        "broadcasts": db.broadcasts,
+        "mentor_queue": [m for m in db.mentor_queue if m["team"] == user.get("team_name", "Team VectorSwarm")]
+    }
+
+@app.post("/api/participant/submit-project")
+def submit_participant_project(req: ProjectSubmitRequest):
+    db.team_war_room["tagline"] = req.tagline
+    db.team_war_room["track"] = req.track
+    db.team_war_room["repository"]["url"] = req.repo_url
+    if req.demo_url:
+        db.team_war_room["demo_url"] = req.demo_url
+    if req.deck_url:
+        db.team_war_room["deck_url"] = req.deck_url
+    return {"status": "submitted", "team": db.team_war_room}
+
+@app.post("/api/participant/register-event")
+def register_for_event(req: EventRegisterRequest):
+    for evt in db.discovery_events:
+        if evt["id"] == req.event_id:
+            evt["registered"] = True
+            evt["team"] = req.team_name or "New Team"
+            return {"status": "registered", "event": evt}
+    raise HTTPException(status_code=404, detail="Event not found")
+
 
 # ---------------- SPRINT & GENERAL ----------------
 @app.get("/api/sprint/status")

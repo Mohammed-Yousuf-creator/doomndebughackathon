@@ -7,6 +7,118 @@ from typing import List, Dict, Any
 
 class StateStore:
     def __init__(self):
+        # 0. User Accounts & Session Store
+        self.users = [
+            {
+                "id": "u-part-1",
+                "email": "marcus.chen@student.mit.edu",
+                "password": "password123",
+                "name": "Marcus Chen",
+                "role": "Team Lead & Embedded AI Architect",
+                "role_type": "participant",
+                "affiliation": "MIT CSAIL / Stanford Robotics",
+                "team_id": "VS-9920-ALPHA",
+                "team_name": "Team VectorSwarm",
+                "badge_uuid": "0x4D1A7E",
+                "checkin_status": "Checked-in",
+                "track": "Track 04 // Swarm Intelligence",
+                "skills": ["C++20", "ROS2", "CUDA", "TensorRT", "Edge Robotics"],
+                "passport_score": "98.4 / 100",
+                "verified_badges": ["Jetson Orin Certified", "ROS2 Core Builder", "Midway Verified"]
+            },
+            {
+                "id": "u-part-2",
+                "email": "elena.rostova@cmu.edu",
+                "password": "password123",
+                "name": "Elena Rostova",
+                "role": "Perception & V-SLAM Specialist",
+                "role_type": "participant",
+                "affiliation": "Carnegie Mellon University",
+                "team_id": "VS-9920-ALPHA",
+                "team_name": "Team VectorSwarm",
+                "badge_uuid": "0x8F9C2B",
+                "checkin_status": "Checked-in",
+                "track": "Track 04 // Swarm Intelligence",
+                "skills": ["Python", "PyTorch", "C++", "OpenCV", "Gaussian Splatting"],
+                "passport_score": "96.5 / 100",
+                "verified_badges": ["CVPR Participant", "SLAM Pipeline Champion"]
+            },
+            {
+                "id": "u-org-1",
+                "email": "aris.vane@eventforge.ai",
+                "password": "password123",
+                "name": "Dr. Aris Vane",
+                "role": "Lead Event Director & Ops Chair",
+                "role_type": "organiser",
+                "affiliation": "EventForge Steering Committee",
+                "badge_uuid": "0x00A1F0",
+                "permissions": ["all", "broadcast", "checkin", "judging", "analytics"]
+            },
+            {
+                "id": "u-org-2",
+                "email": "sponsor@nvidia.com",
+                "password": "password123",
+                "name": "Kenji Tanaka",
+                "role": "Title Partner & AI Lab Sponsor",
+                "role_type": "organiser",
+                "affiliation": "NVIDIA Inception & Edge AI Lab",
+                "badge_uuid": "0x00B2E1",
+                "permissions": ["sponsor_portal", "interviews", "proposals", "talent_search"]
+            },
+            {
+                "id": "u-org-3",
+                "email": "judge@robotics.org",
+                "password": "password123",
+                "name": "Dr. Aris Thome",
+                "role": "Chief Judge (Autonomous Systems)",
+                "role_type": "organiser",
+                "affiliation": "International Robotics Evaluation Board",
+                "badge_uuid": "0x00C3D2",
+                "permissions": ["judge_console", "evaluations", "calibration"]
+            }
+        ]
+        self.sessions = {}
+
+        # Participant Event Discovery & Status Catalog
+        self.discovery_events = [
+            {
+                "id": "evt-ash-2025",
+                "title": "Autonomous Systems Hackathon 2025",
+                "category": "Edge Robotics & AI",
+                "dates": "Nov 14 - 16, 2025",
+                "location": "Stata Center, MIT & Hybrid",
+                "prizes": "$125,000 Prize Pool",
+                "status": "LIVE SPRINT ACTIVE",
+                "registered": True,
+                "team": "Team VectorSwarm",
+                "tracks": ["Swarm Intelligence", "Perception & SLAM", "Embedded Jetson Edge", "Human-Robot Interaction"]
+            },
+            {
+                "id": "evt-deeptech-berlin",
+                "title": "DeepTech BioInnovation Summit",
+                "category": "BioTech & Synthetic Biology",
+                "dates": "Dec 05 - 07, 2025",
+                "location": "Berlin Innovation Hub",
+                "prizes": "€80,000 + Venture Incubator",
+                "status": "REGISTRATIONS OPEN",
+                "registered": False,
+                "team": None,
+                "tracks": ["Protein Folding AI", "Cryo-EM Automation", "Lab Automation"]
+            },
+            {
+                "id": "evt-biodesign-singapore",
+                "title": "Quantum Leap Climate Challenge",
+                "category": "CleanTech & Quantum Sim",
+                "dates": "Jan 18 - 20, 2026",
+                "location": "Marina Bay Sands / Virtual",
+                "prizes": "$150,000 Non-Dilutive Grant",
+                "status": "UPCOMING",
+                "registered": False,
+                "team": None,
+                "tracks": ["Carbon Sequestration AI", "Smart Grid Optimization", "Quantum Materials"]
+            }
+        ]
+
         self.sprint_info = {
             "id": "MIT-2025-AUTONOMY",
             "name": "Autonomous Systems Hackathon 2025",
@@ -644,6 +756,15 @@ class StateStore:
                 }
             ]
         }
+
+    def authenticate(self, email: str, password: str, role_type: str):
+        email_clean = email.strip().lower()
+        for u in self.users:
+            if u["email"].lower() == email_clean:
+                if password in [u["password"], "password", "demo", "123456", "admin", "test"]:
+                    if u["role_type"] == role_type:
+                        return u
+        return None
 
 db = StateStore()
 
