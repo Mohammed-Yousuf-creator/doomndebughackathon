@@ -107,9 +107,9 @@ export default function JudgeConsole({
                   {judgeProfile.completed_count} of {judgeProfile.total_quota} Projects
                 </span>
               </div>
-              <div className="w-40 bg-[#E7DFD5] h-1.5 rounded-full overflow-hidden">
+              <div className="w-40 bg-[#E7DFD5] h-1.5 rounded-md overflow-hidden">
                 <div
-                  className="bg-[#2F5B3C] h-full rounded-full transition-all duration-300"
+                  className="bg-[#2F5B3C] h-full rounded-md transition-all duration-300"
                   style={{ width: `${(judgeProfile.completed_count / judgeProfile.total_quota) * 100}%` }}
                 ></div>
               </div>
@@ -167,15 +167,15 @@ export default function JudgeConsole({
             <div className="flex items-center gap-1 bg-[#FAF7F2] p-1 rounded-lg mb-3 border border-[#E7DFD5] text-xs">
               <button
                 onClick={() => setActiveMediaTab('video')}
-                className={`flex-1 py-1.5 px-3 rounded-md font-medium transition-colors cursor-pointer ${
+                className={`flex-1 py-1.5 px-2.5 rounded-md font-medium transition-colors cursor-pointer ${
                   activeMediaTab === 'video' ? 'bg-white text-[#1F1916] font-semibold shadow-subtle' : 'text-[#73645A] hover:text-[#1F1916]'
                 }`}
               >
-                Video Demonstration
+                Video Demo
               </button>
               <button
                 onClick={() => setActiveMediaTab('deck')}
-                className={`flex-1 py-1.5 px-3 rounded-md font-medium transition-colors cursor-pointer ${
+                className={`flex-1 py-1.5 px-2.5 rounded-md font-medium transition-colors cursor-pointer ${
                   activeMediaTab === 'deck' ? 'bg-white text-[#1F1916] font-semibold shadow-subtle' : 'text-[#73645A] hover:text-[#1F1916]'
                 }`}
               >
@@ -183,11 +183,20 @@ export default function JudgeConsole({
               </button>
               <button
                 onClick={() => setActiveMediaTab('arch')}
-                className={`flex-1 py-1.5 px-3 rounded-md font-medium transition-colors cursor-pointer ${
+                className={`flex-1 py-1.5 px-2.5 rounded-md font-medium transition-colors cursor-pointer ${
                   activeMediaTab === 'arch' ? 'bg-white text-[#1F1916] font-semibold shadow-subtle' : 'text-[#73645A] hover:text-[#1F1916]'
                 }`}
               >
-                Architecture & Stack
+                Architecture
+              </button>
+              <button
+                onClick={() => setActiveMediaTab('audit')}
+                className={`flex-1 py-1.5 px-2.5 rounded-md font-medium transition-colors cursor-pointer flex items-center justify-center gap-1 ${
+                  activeMediaTab === 'audit' ? 'bg-white text-[#2F5B3C] font-semibold shadow-subtle' : 'text-[#73645A] hover:text-[#1F1916]'
+                }`}
+              >
+                <span className="material-symbols-outlined text-[13px] text-[#2F5B3C]">history_toggle_off</span>
+                <span>Git Time-Machine</span>
               </button>
             </div>
 
@@ -207,7 +216,7 @@ export default function JudgeConsole({
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/40 p-3.5 flex flex-col justify-between pointer-events-none">
                     <div className="flex items-center justify-between text-white text-xs font-mono">
                       <span className="bg-black/70 px-2.5 py-1 rounded-md text-[11px] flex items-center gap-1.5 border border-white/10">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#C2542D] animate-pulse"></span>
+                        <span className="w-1.5 h-1.5 rounded-sm bg-[#C2542D] animate-pulse"></span>
                         4K / 60 FPS Telemetry
                       </span>
                       <span className="text-[11px] font-mono text-white/70">03:42 / 05:00</span>
@@ -218,8 +227,8 @@ export default function JudgeConsole({
                         <span className="bg-white/10 px-2 py-0.5 rounded border border-white/10">01:15 Live Hardware Test</span>
                         <span className="bg-white/10 px-2 py-0.5 rounded border border-white/10">03:20 Edge Latency Benchmark</span>
                       </div>
-                      <div className="w-full bg-white/20 h-1.5 rounded-full relative overflow-hidden">
-                        <div className="bg-[#82E6A1] h-full rounded-full w-3/4"></div>
+                      <div className="w-full bg-white/20 h-1.5 rounded-md relative overflow-hidden">
+                        <div className="bg-[#82E6A1] h-full rounded-md w-3/4"></div>
                       </div>
                       <div className="flex items-center justify-between text-white text-xs pt-0.5">
                         <span className="font-mono text-[10px] text-white/80">Jetson Orin: 48°C • 11.4ms EKF Estimation</span>
@@ -322,6 +331,104 @@ export default function JudgeConsole({
                       <span className="font-semibold text-[#1F1916] mt-0.5 block">{t.value}</span>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* Tab 4: AI Git Time-Machine & Proof-of-Fresh-Code */}
+            {activeMediaTab === 'audit' && (
+              <div className="flex flex-col gap-3">
+                {/* Score & Verdict Card */}
+                <div className="p-4 rounded-xl bg-white border border-[#E7DFD5] shadow-xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#F0EAE1]">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-sm bg-[#2F5B3C]"></span>
+                      <span className="font-semibold text-xs text-[#1F1916]">Proof-of-Fresh-Code Audit</span>
+                      <span className="font-mono text-[10px] bg-[#EFF5F1] text-[#2F5B3C] px-2 py-0.5 rounded-md font-bold border border-[#DEEBE1]">
+                        94.8% ORGANIC
+                      </span>
+                    </div>
+                    <span className="text-[11px] font-mono text-[#73645A]">
+                      28 Commits • 4 Authors • 0 Bulk Dumps
+                    </span>
+                  </div>
+
+                  {/* Commit Velocity Timeline Chart */}
+                  <div className="pt-3">
+                    <div className="flex items-center justify-between text-[11px] text-[#73645A] font-mono mb-2">
+                      <span>Commit Velocity (36-Hour Hackathon Window)</span>
+                      <span className="text-[#2F5B3C] font-semibold">Continuous Evolution</span>
+                    </div>
+                    
+                    {/* Visual 6-Stage Timeline */}
+                    <div className="grid grid-cols-6 gap-1.5 h-16 items-end bg-[#FAF7F2] p-2 rounded-lg border border-[#E7DFD5]">
+                      {[
+                        { time: '0-6h', commits: 3, h: '35%', label: 'Scaffold' },
+                        { time: '6-12h', commits: 5, h: '55%', label: 'Core EKF' },
+                        { time: '12-18h', commits: 8, h: '95%', label: 'Sensors' },
+                        { time: '18-24h', commits: 6, h: '70%', label: 'Mesh Sync' },
+                        { time: '24-30h', commits: 4, h: '45%', label: 'Docker' },
+                        { time: '30-36h', commits: 2, h: '25%', label: 'Docs/Bench' },
+                      ].map((slot, i) => (
+                        <div key={i} className="flex flex-col items-center h-full justify-end group relative">
+                          <div
+                            className="w-full bg-[#2F5B3C] hover:bg-[#C2542D] rounded-sm transition-all duration-300 relative"
+                            style={{ height: slot.h }}
+                          >
+                            <span className="absolute -top-5 left-1/2 -translate-x-1/2 text-[9px] font-mono font-bold text-[#1F1916] opacity-0 group-hover:opacity-100 transition-opacity bg-white px-1 rounded shadow-xs border border-gray-200 pointer-events-none">
+                              {slot.commits}c
+                            </span>
+                          </div>
+                          <span className="text-[9px] font-mono text-[#73645A] mt-1">{slot.time}</span>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="flex items-center justify-between text-[10px] text-[#73645A] font-mono mt-1.5 px-0.5">
+                      <span>Hour 0: Clean Repo Init</span>
+                      <span className="text-[#2F5B3C] font-medium">Peak Sprint: Hour 12–18 (Perception Loop)</span>
+                      <span>Hour 36: Submission Locked</span>
+                    </div>
+                  </div>
+
+                  {/* AST Origin Split */}
+                  <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-[#F0EAE1]">
+                    <div className="p-2.5 rounded-lg bg-[#FAF7F2] border border-[#E7DFD5] text-center">
+                      <span className="text-[10px] font-mono text-[#73645A] uppercase block">Original Code</span>
+                      <span className="text-sm font-bold text-[#2F5B3C] mt-0.5 block">3,420 lines (82%)</span>
+                    </div>
+                    <div className="p-2.5 rounded-lg bg-[#FAF7F2] border border-[#E7DFD5] text-center">
+                      <span className="text-[10px] font-mono text-[#73645A] uppercase block">OSS Libraries</span>
+                      <span className="text-sm font-bold text-[#1F1916] mt-0.5 block">680 lines (18%)</span>
+                    </div>
+                    <div className="p-2.5 rounded-lg bg-[#FAF7F2] border border-[#E7DFD5] text-center">
+                      <span className="text-[10px] font-mono text-[#73645A] uppercase block">Plagiarism / Clones</span>
+                      <span className="text-sm font-bold text-[#2F5B3C] mt-0.5 block">0% Detected</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* AI Tough Questions for Judges */}
+                <div className="p-4 rounded-xl bg-[#FBF9F5] border border-[#E7DFD5]">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="material-symbols-outlined text-sm text-[#C2542D]">psychology</span>
+                    <span className="text-xs font-bold text-[#1F1916]">AI-Generated Verification Questions</span>
+                    <span className="text-[10px] font-mono text-[#73645A] ml-auto">Ask during team demo</span>
+                  </div>
+                  <div className="space-y-2 text-xs">
+                    <div className="p-2.5 rounded-lg bg-white border border-[#E7DFD5] text-[#382F2A]">
+                      <span className="font-semibold text-[#C2542D] mr-1.5 font-mono">Q1:</span>
+                      How does your loop closure algorithm handle covariance divergence when operating across asymmetric radio packet loss?
+                    </div>
+                    <div className="p-2.5 rounded-lg bg-white border border-[#E7DFD5] text-[#382F2A]">
+                      <span className="font-semibold text-[#C2542D] mr-1.5 font-mono">Q2:</span>
+                      Why did you opt for an Extended Kalman Filter over a factor-graph optimization in the sensor fusion pipeline?
+                    </div>
+                    <div className="p-2.5 rounded-lg bg-white border border-[#E7DFD5] text-[#382F2A]">
+                      <span className="font-semibold text-[#C2542D] mr-1.5 font-mono">Q3:</span>
+                      Where are the edge latency bottlenecks if the point cloud exceeds 100k points/sec on the Jetson Orin?
+                    </div>
+                  </div>
                 </div>
               </div>
             )}

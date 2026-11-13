@@ -125,9 +125,9 @@ export default function OrganizerConsole({
             </div>
           </div>
           <div className="mt-3">
-            <div className="w-full bg-[#F3EFEA] h-1.5 rounded-full overflow-hidden">
+            <div className="w-full bg-[#F3EFEA] h-1.5 rounded-md overflow-hidden">
               <div
-                className="bg-[#2F5B3C] h-full rounded-full transition-all duration-500"
+                className="bg-[#2F5B3C] h-full rounded-md transition-all duration-500"
                 style={{ width: `${turnout.percentage}%` }}
               ></div>
             </div>
@@ -157,9 +157,9 @@ export default function OrganizerConsole({
             </div>
           </div>
           <div className="mt-3">
-            <div className="w-full bg-[#F3EFEA] h-1.5 rounded-full overflow-hidden">
+            <div className="w-full bg-[#F3EFEA] h-1.5 rounded-md overflow-hidden">
               <div
-                className="bg-[#C47D1C] h-full rounded-full transition-all duration-500"
+                className="bg-[#C47D1C] h-full rounded-md transition-all duration-500"
                 style={{ width: `${teams.sync_percentage}%` }}
               ></div>
             </div>
@@ -215,9 +215,9 @@ export default function OrganizerConsole({
             </div>
           </div>
           <div className="mt-3">
-            <div className="w-full bg-[#F3EFEA] h-1.5 rounded-full overflow-hidden">
+            <div className="w-full bg-[#F3EFEA] h-1.5 rounded-md overflow-hidden">
               <div
-                className="bg-[#C2542D] h-full rounded-full transition-all duration-500"
+                className="bg-[#C2542D] h-full rounded-md transition-all duration-500"
                 style={{ width: `${(compute.jetson_kits_allocated / compute.jetson_kits_total) * 100}%` }}
               ></div>
             </div>

@@ -96,8 +96,8 @@ export default function SponsorPortal({
               <span className="font-sans font-bold text-xl text-[#1F1916]">{metrics.foot_traffic.count}</span>
               <span className="text-xs text-[#73645A]">/ {metrics.foot_traffic.target} badges</span>
             </div>
-            <div className="w-full bg-[#E7DFD5] h-1.5 rounded-full mt-2.5 overflow-hidden">
-              <div className="bg-[#2F5B3C] h-full rounded-full" style={{ width: `${metrics.foot_traffic.percentage}%` }}></div>
+            <div className="w-full bg-[#E7DFD5] h-1.5 rounded-md mt-2.5 overflow-hidden">
+              <div className="bg-[#2F5B3C] h-full rounded-md" style={{ width: `${metrics.foot_traffic.percentage}%` }}></div>
             </div>
           </div>
 
@@ -110,8 +110,8 @@ export default function SponsorPortal({
               <span className="font-sans font-bold text-xl text-[#1F1916]">{metrics.sdk_ingestion.teams_active}</span>
               <span className="text-xs text-[#73645A]">teams deployed</span>
             </div>
-            <div className="w-full bg-[#E7DFD5] h-1.5 rounded-full mt-2.5 overflow-hidden">
-              <div className="bg-[#C47D1C] h-full rounded-full" style={{ width: `${metrics.sdk_ingestion.percentage}%` }}></div>
+            <div className="w-full bg-[#E7DFD5] h-1.5 rounded-md mt-2.5 overflow-hidden">
+              <div className="bg-[#C47D1C] h-full rounded-md" style={{ width: `${metrics.sdk_ingestion.percentage}%` }}></div>
             </div>
           </div>
 
@@ -124,8 +124,8 @@ export default function SponsorPortal({
               <span className="font-sans font-bold text-xl text-[#1F1916]">{metrics.talent_pipeline.leads}</span>
               <span className="text-xs text-[#73645A]">verified builders</span>
             </div>
-            <div className="w-full bg-[#E7DFD5] h-1.5 rounded-full mt-2.5 overflow-hidden">
-              <div className="bg-[#C2542D] h-full rounded-full" style={{ width: `${metrics.talent_pipeline.percentage}%` }}></div>
+            <div className="w-full bg-[#E7DFD5] h-1.5 rounded-md mt-2.5 overflow-hidden">
+              <div className="bg-[#C2542D] h-full rounded-md" style={{ width: `${metrics.talent_pipeline.percentage}%` }}></div>
             </div>
           </div>
 
@@ -138,8 +138,8 @@ export default function SponsorPortal({
               <span className="font-sans font-bold text-xl text-[#1F1916]">{metrics.deliverables.percentage}%</span>
               <span className="text-xs text-[#73645A]">audit verified</span>
             </div>
-            <div className="w-full bg-[#E7DFD5] h-1.5 rounded-full mt-2.5 overflow-hidden">
-              <div className="bg-[#2F5B3C] h-full rounded-full" style={{ width: `${metrics.deliverables.percentage}%` }}></div>
+            <div className="w-full bg-[#E7DFD5] h-1.5 rounded-md mt-2.5 overflow-hidden">
+              <div className="bg-[#2F5B3C] h-full rounded-md" style={{ width: `${metrics.deliverables.percentage}%` }}></div>
             </div>
           </div>
         </div>
@@ -197,6 +197,134 @@ export default function SponsorPortal({
               ))}
             </tbody>
           </table>
+        </div>
+      </section>
+
+      {/* NEW: Sponsor SDK & API "Proof of Adoption" Engine (PS 27 Core Differentiator) */}
+      <section className="mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-base text-[#2F5B3C]">query_stats</span>
+              <h2 className="font-sans font-bold text-sm text-[#1F1916]">
+                SDK & API Proof-of-Adoption Engine (AST Verified)
+              </h2>
+              <span className="font-mono text-[10px] bg-[#EFF5F1] text-[#2F5B3C] px-2 py-0.5 rounded-md font-semibold border border-[#DEEBE1]">
+                Live Code Ingestion
+              </span>
+            </div>
+            <p className="text-[11px] text-[#73645A]">
+              Static code analysis across 64 team repositories detecting imported SDKs, API calls, and developer friction logs.
+            </p>
+          </div>
+          <button
+            onClick={() => alert("Verified Sponsor ROI Report (CSV/JSON) exported.")}
+            className="self-start sm:self-auto text-xs font-semibold text-[#2F5B3C] bg-white hover:bg-[#FAF7F2] border border-[#E7DFD5] px-3 py-1.5 rounded-lg shadow-subtle flex items-center gap-1.5 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[14px]">file_download</span>
+            <span>Export Sponsor ROI Packet</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          {/* Left: Verified Imports Grid (7 cols) */}
+          <div className="lg:col-span-7 bg-white rounded-xl p-4 border border-[#E7DFD5] shadow-card flex flex-col justify-between">
+            <div>
+              <div className="flex justify-between items-center pb-2.5 border-b border-[#F0EAE1] mb-3">
+                <span className="text-xs font-semibold text-[#1F1916]">Verified Library AST Ingestion</span>
+                <span className="font-mono text-[11px] text-[#73645A]">312 Total Imports</span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2.5 text-xs">
+                {[
+                  { name: 'tensorrt (C++ / Python)', count: '34 Teams', pct: '85%', note: 'Real-time inference acceleration' },
+                  { name: 'cuda.amp (Mixed Precision)', count: '28 Teams', pct: '70%', note: 'Memory-efficient backpropagation' },
+                  { name: 'jetson-gpio & I2C bus', count: '19 Teams', pct: '48%', note: 'Direct sensor & actuator telemetry' },
+                  { name: 'deepstream-sdk', count: '12 Teams', pct: '30%', note: 'Multi-stream 4K edge analytics' },
+                ].map((sdk, idx) => (
+                  <div key={idx} className="p-3 rounded-lg bg-[#FAF7F2] border border-[#E7DFD5] flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="font-mono font-bold text-xs text-[#1F1916]">{sdk.name}</span>
+                        <span className="font-mono text-[10px] bg-[#EFF5F1] text-[#2F5B3C] px-1.5 py-0.5 rounded font-bold">
+                          {sdk.pct}
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-[#73645A] leading-tight">{sdk.note}</p>
+                    </div>
+                    <span className="text-[11px] font-semibold text-[#2F5B3C] font-mono mt-2 pt-1.5 border-t border-[#E7DFD5]/60">
+                      {sdk.count} Verified Active
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Deepest Implementation Award Highlight */}
+            <div className="mt-3.5 p-3 rounded-lg bg-[#EFF5F1] border border-[#DEEBE1] flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-[#2F5B3C] text-white flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-base">military_tech</span>
+                </div>
+                <div>
+                  <span className="text-[10px] font-mono uppercase font-bold text-[#2F5B3C] block">
+                    AI-Nominated Deepest Implementation
+                  </span>
+                  <span className="text-xs font-semibold text-[#1F1916]">
+                    PRJ-8824: Distributed SLAM with custom sparse CUDA raycaster
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => onRequestInterview({ id: 'cand-001', name: 'Rohan Vernekar' })}
+                className="text-xs font-semibold bg-[#2F5B3C] hover:bg-[#254B31] text-white px-2.5 py-1.5 rounded-md shrink-0 shadow-subtle cursor-pointer"
+              >
+                Fast-Track Interview
+              </button>
+            </div>
+          </div>
+
+          {/* Right: Developer Friction & Error Telemetry (5 cols) */}
+          <div className="lg:col-span-5 bg-white rounded-xl p-4 border border-[#E7DFD5] shadow-card flex flex-col justify-between">
+            <div>
+              <div className="flex justify-between items-center pb-2.5 border-b border-[#F0EAE1] mb-3">
+                <div className="flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-sm text-[#C2542D]">bug_report</span>
+                  <span className="text-xs font-semibold text-[#1F1916]">Developer Friction Radar</span>
+                </div>
+                <span className="font-mono text-[10px] text-[#C2542D] bg-[#FBEFEA] px-2 py-0.5 rounded-md font-semibold">
+                  DevRel Feedback
+                </span>
+              </div>
+
+              <div className="space-y-2.5 text-xs">
+                <div className="p-2.5 rounded-lg bg-[#FAF7F2] border border-[#E7DFD5]">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-semibold text-[#1F1916]">Dynamic Batch ONNX Serialization</span>
+                    <span className="font-mono text-[10px] text-[#C2542D] font-bold">14 Teams Hit</span>
+                  </div>
+                  <p className="text-[11px] text-[#73645A] leading-relaxed">
+                    Teams encountered shape mismatch when converting PyTorch dynamic shapes to TensorRT engine. Resolved via documentation snippet broadcast.
+                  </p>
+                </div>
+
+                <div className="p-2.5 rounded-lg bg-[#FAF7F2] border border-[#E7DFD5]">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-semibold text-[#1F1916]">CUDA Unified Memory Allocation</span>
+                    <span className="font-mono text-[10px] text-[#C47D1C] font-bold">6 Teams Hit</span>
+                  </div>
+                  <p className="text-[11px] text-[#73645A] leading-relaxed">
+                    Page faults on high-rate stereo frame ingestion on Jetson Orin Nano 8GB. Mentors provided zero-copy pointer caching patch.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 text-[11px] font-mono text-[#73645A] flex items-center justify-between border-t border-[#F0EAE1] mt-3">
+              <span>SDK Crash Rate: <strong>0.18%</strong></span>
+              <span className="text-[#2F5B3C] font-semibold">99.82% Pipeline Stability</span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -282,7 +410,7 @@ export default function SponsorPortal({
                 <button
                   key={s}
                   onClick={() => toggleSkill(s)}
-                  className={`px-2.5 py-0.5 rounded-full text-xs font-mono transition-colors cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-md text-xs font-mono transition-colors cursor-pointer ${
                     active
                       ? 'bg-[#2F5B3C] text-white'
                       : 'bg-[#FAF7F2] text-[#73645A] border border-[#E7DFD5] hover:bg-white'

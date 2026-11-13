@@ -201,7 +201,7 @@ export default function OrganiserDashboard() {
           <div className="flex items-center justify-between pb-1">
             <div className="flex items-center gap-1.5 cursor-pointer" onClick={() => setActiveNav('overview')}>
               <span className="font-bold text-2xl tracking-tight text-[#1F2937]">aegis</span>
-              <span className="h-2 w-2 rounded-full bg-[#943C1D]"></span>
+              <span className="h-2 w-2 rounded-sm bg-[#943C1D]"></span>
             </div>
             <button
               onClick={() => setMobileMenuOpen(false)}
@@ -240,10 +240,10 @@ export default function OrganiserDashboard() {
             </select>
           </div>
 
-          {/* "+ New Announcement" Pill Button (Unstop "+ Post" Style) */}
+          {/* "+ New Announcement" Button */}
           <button
             onClick={() => setIsBroadcastOpen(true)}
-            className="w-full py-2 px-3 rounded-full border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold flex items-center justify-center gap-1.5 shadow-2xs transition-colors cursor-pointer"
+            className="w-full py-2 px-3 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold flex items-center justify-center gap-1.5 shadow-2xs transition-colors cursor-pointer"
           >
             <span className="material-symbols-outlined text-base text-[#943C1D]">campaign</span>
             <span>+ Send Announcement</span>
@@ -323,7 +323,7 @@ export default function OrganiserDashboard() {
                 placeholder="Search attendees, colleges, teams, checkpoints..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-[#F9FAFB] hover:bg-white focus:bg-white border border-[#E5E7EB] rounded-full text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#943C1D] shadow-2xs transition-all"
+                className="w-full pl-9 pr-4 py-2 bg-[#F9FAFB] hover:bg-white focus:bg-white border border-[#E5E7EB] rounded-lg text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#943C1D] shadow-2xs transition-all"
               />
             </div>
           </div>
@@ -333,7 +333,7 @@ export default function OrganiserDashboard() {
             {/* Quick Check-in Button */}
             <button
               onClick={() => setIsCheckinOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-sm text-[#2F5B3C]">qr_code_scanner</span>
               <span>Check In Student</span>
@@ -342,7 +342,7 @@ export default function OrganiserDashboard() {
             {/* Switch to Student Portal */}
             <button
               onClick={() => navigate('/participant/dashboard')}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-emerald-200 bg-emerald-50 text-[#24422D] text-xs font-semibold hover:bg-emerald-100 transition-colors cursor-pointer"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50 text-[#24422D] text-xs font-semibold hover:bg-emerald-100 transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-sm">school</span>
               <span>Student View</span>
@@ -351,16 +351,16 @@ export default function OrganiserDashboard() {
             {/* Notification Bell */}
             <button
               onClick={() => showToast("All event systems operational.")}
-              className="relative p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full cursor-pointer"
+              className="relative p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg cursor-pointer"
               title="Notifications"
             >
               <span className="material-symbols-outlined text-xl">notifications</span>
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#943C1D] rounded-full"></span>
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#943C1D] rounded-sm"></span>
             </button>
 
-            {/* User Avatar Circle */}
+            {/* User Avatar */}
             <div
-              className="w-8 h-8 rounded-full bg-[#943C1D] text-white flex items-center justify-center text-xs font-bold cursor-pointer hover:ring-2 hover:ring-red-200 transition-all"
+              className="w-8 h-8 rounded-lg bg-[#943C1D] text-white flex items-center justify-center text-xs font-bold cursor-pointer hover:ring-2 hover:ring-red-200 transition-all"
               title={user?.name || "Organiser Lead"}
             >
               {user?.name ? user.name[0] : 'O'}
@@ -499,20 +499,20 @@ export default function OrganiserDashboard() {
                 {/* Header with accent bar */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-2.5">
-                    <span className="h-5 w-1 bg-[#943C1D] rounded-full"></span>
+                    <span className="h-5 w-1 bg-[#943C1D] rounded-sm"></span>
                     <h3 className="text-lg font-bold text-gray-900">Event Operations Activity</h3>
                   </div>
 
                   <span className="text-xs text-gray-500">Real-time attendance log & student requests</span>
                 </div>
 
-                {/* Sub-Tabs Pills */}
+                {/* Sub-Tabs */}
                 <div className="flex flex-wrap items-center gap-2 pt-1 border-b border-gray-100 pb-3">
                   <button
                     onClick={() => setActivityTab('checkins')}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                       activityTab === 'checkins'
-                        ? 'border border-gray-400 bg-white text-gray-900 shadow-2xs'
+                        ? 'border border-gray-300 bg-white text-gray-900 shadow-2xs'
                         : 'text-gray-500 hover:text-gray-800'
                     }`}
                   >
@@ -521,9 +521,9 @@ export default function OrganiserDashboard() {
 
                   <button
                     onClick={() => setActivityTab('broadcasts')}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                       activityTab === 'broadcasts'
-                        ? 'border border-gray-400 bg-white text-gray-900 shadow-2xs'
+                        ? 'border border-gray-300 bg-white text-gray-900 shadow-2xs'
                         : 'text-gray-500 hover:text-gray-800'
                     }`}
                   >
@@ -532,9 +532,9 @@ export default function OrganiserDashboard() {
 
                   <button
                     onClick={() => setActivityTab('mentors')}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                       activityTab === 'mentors'
-                        ? 'border border-gray-400 bg-white text-gray-900 shadow-2xs'
+                        ? 'border border-gray-300 bg-white text-gray-900 shadow-2xs'
                         : 'text-gray-500 hover:text-gray-800'
                     }`}
                   >
@@ -543,7 +543,7 @@ export default function OrganiserDashboard() {
 
                   <button
                     onClick={() => setActiveNav('judge')}
-                    className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-gray-500 hover:text-gray-800 cursor-pointer"
+                    className="px-3 py-1.5 rounded-md text-xs font-semibold text-gray-500 hover:text-gray-800 cursor-pointer"
                   >
                     Judging Scores &rarr;
                   </button>

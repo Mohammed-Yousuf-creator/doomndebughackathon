@@ -152,7 +152,7 @@ export default function Navbar({
               <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-[#E5DDD2] p-3.5 z-50 animate-fadeIn">
                 <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-[#F0EAE1]">
                   <span className="font-sans text-xs font-bold text-[#1F1916]">Event Dispatches</span>
-                  <span className="font-mono text-[10px] bg-[#EFF5F1] text-[#2F5B3C] px-2 py-0.5 rounded-full font-semibold border border-[#DEEBE1]">
+                  <span className="font-mono text-[10px] bg-[#EFF5F1] text-[#2F5B3C] px-2 py-0.5 rounded-md font-semibold border border-[#DEEBE1]">
                     {broadcasts.length} Messages
                   </span>
                 </div>

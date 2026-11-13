@@ -193,7 +193,7 @@ export default function LoginPage() {
       <main className="my-auto py-8 max-w-4xl mx-auto w-full flex flex-col items-center">
         {/* Editorial Intro Banner */}
         <div className="text-center max-w-xl mx-auto mb-8">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-widest text-[#2F5B3C] bg-[#EFF5F1] px-3.5 py-1 rounded-full border border-[#DEEBE1] font-semibold">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-widest text-[#2F5B3C] bg-[#EFF5F1] px-3.5 py-1 rounded-md border border-[#DEEBE1] font-semibold">
             <span className="material-symbols-outlined text-sm">shield</span>
             Role-Based Authentication
           </span>

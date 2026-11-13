@@ -37,6 +37,42 @@ export default function ParticipantDashboard() {
     abstract: 'We built a friendly open-source app that lets autonomous robots map indoor rooms safely using low-cost cameras and AI.'
   });
   const [submittedStatus, setSubmittedStatus] = useState(false);
+  const [auditRunning, setAuditRunning] = useState(false);
+  const [auditResult, setAuditResult] = useState(null);
+
+  const runPreFlightAudit = () => {
+    setAuditRunning(true);
+    setTimeout(() => {
+      setAuditRunning(false);
+      setAuditResult({
+        score: 88,
+        freshness_score: '94.8%',
+        track_verified: 'Track 01: Autonomous Robotics & AI',
+        pitch_critique: 'Your current tagline sounds like a generic school project rather than an enterprise-grade hackathon champion. It omits the edge latency and sensor fusion hook.',
+        suggested_tagline: 'Deterministic sub-15ms multi-agent visual SLAM for indoor robotics operating without GPS or cloud connectivity.',
+        suggested_abstract: 'Indoor search-and-rescue and autonomous inspection robots routinely suffer connection loss in degraded Wi-Fi environments. We developed a peer-to-peer decentralized mesh state estimation protocol verified on Jetson hardware with 11.4ms loop closure.',
+        checklist: [
+          { label: 'GitHub Repository Public & Active', status: 'pass' },
+          { label: 'Organic Commit Cadence (No 1-commit clone dump detected)', status: 'pass' },
+          { label: 'Required Track SDK (JetPack / TensorRT) Detected in AST', status: 'pass' },
+          { label: 'Architecture & Latency Benchmark Documentation', status: 'warning', note: 'Include hardware power draw specs in README' },
+          { label: '3-Minute Video Demo with Timestamp Chapters', status: 'pass' },
+        ]
+      });
+      showToast('AI Pre-Flight Audit Complete: Score 88/100');
+    }, 1200);
+  };
+
+  const applyAiPolish = () => {
+    if (auditResult) {
+      setSubmissionForm(prev => ({
+        ...prev,
+        tagline: auditResult.suggested_tagline,
+        abstract: auditResult.suggested_abstract
+      }));
+      showToast('AI-Polished Pitch & Value Proposition applied to submission form!');
+    }
+  };
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -267,7 +303,7 @@ export default function ParticipantDashboard() {
           <div className="flex items-center justify-between pb-1">
             <div className="flex items-center gap-1.5 cursor-pointer" onClick={() => setActiveNav('home')}>
               <span className="font-bold text-2xl tracking-tight text-[#1F2937]">aegis</span>
-              <span className="h-2 w-2 rounded-full bg-[#2F5B3C]"></span>
+              <span className="h-2 w-2 rounded-sm bg-[#2F5B3C]"></span>
             </div>
             <button
               onClick={() => setMobileMenuOpen(false)}
@@ -278,7 +314,7 @@ export default function ParticipantDashboard() {
             </button>
           </div>
 
-          {/* "You're viewing as" Dropdown Card (Exact Unstop UI) */}
+          {/* "You're viewing as" Dropdown Card */}
           <div className="bg-[#F3F4F6] p-2.5 rounded-xl border border-[#E5E7EB]">
             <span className="text-[11px] text-gray-500 block mb-1">You're viewing as</span>
             <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-lg border border-[#E5E7EB] shadow-2xs cursor-pointer">
@@ -292,13 +328,13 @@ export default function ParticipantDashboard() {
             </div>
           </div>
 
-          {/* "+ Find Teammates" Pill Button (Unstop "+ Post" Style) */}
+          {/* "+ Find Teammates" Button */}
           <button
             onClick={() => {
               setActiveNav('teams');
               setActivityTab('teams');
             }}
-            className="w-full py-2 px-3 rounded-full border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold flex items-center justify-center gap-1.5 shadow-2xs transition-colors cursor-pointer"
+            className="w-full py-2 px-3 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold flex items-center justify-center gap-1.5 shadow-2xs transition-colors cursor-pointer"
           >
             <span className="material-symbols-outlined text-base text-[#2F5B3C]">add</span>
             <span>Find Teammates</span>
@@ -381,7 +417,7 @@ export default function ParticipantDashboard() {
                 placeholder="Search hackathons, topics, colleges..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-[#F9FAFB] hover:bg-white focus:bg-white border border-[#E5E7EB] rounded-full text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#2F5B3C] shadow-2xs transition-all"
+                className="w-full pl-9 pr-4 py-2 bg-[#F9FAFB] hover:bg-white focus:bg-white border border-[#E5E7EB] rounded-lg text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#2F5B3C] shadow-2xs transition-all"
               />
             </div>
           </div>
@@ -391,16 +427,16 @@ export default function ParticipantDashboard() {
             {/* Help Icon */}
             <button
               onClick={() => showToast("Need help? Reach out to support@aegis.io anytime.")}
-              className="hidden md:flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 text-gray-500 text-sm cursor-pointer"
+              className="hidden md:flex items-center justify-center w-8 h-8 rounded-lg hover:bg-gray-100 text-gray-500 text-sm cursor-pointer"
               title="Help Center"
             >
               <span className="material-symbols-outlined text-lg">help</span>
             </button>
 
-            {/* "For Organizers" Pill Button (Unstop "For Business" Style) */}
+            {/* "For Organizers" Button */}
             <button
               onClick={() => navigate('/organiser/dashboard')}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-emerald-200 bg-emerald-50 text-[#24422D] text-xs font-semibold hover:bg-emerald-100 transition-colors cursor-pointer"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50 text-[#24422D] text-xs font-semibold hover:bg-emerald-100 transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-sm">business_center</span>
               <span>For Organizers</span>
@@ -409,17 +445,17 @@ export default function ParticipantDashboard() {
             {/* Notification Bell */}
             <button
               onClick={() => showToast("No new notifications right now.")}
-              className="relative p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full cursor-pointer"
+              className="relative p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg cursor-pointer"
               title="Notifications"
             >
               <span className="material-symbols-outlined text-xl">notifications</span>
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#2F5B3C] rounded-full"></span>
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#2F5B3C] rounded-sm"></span>
             </button>
 
-            {/* User Avatar Circle */}
+            {/* User Avatar */}
             <div
               onClick={() => setActiveNav('profile')}
-              className="w-8 h-8 rounded-full bg-[#2F5B3C] text-white flex items-center justify-center text-xs font-bold cursor-pointer hover:ring-2 hover:ring-emerald-200 transition-all"
+              className="w-8 h-8 rounded-lg bg-[#2F5B3C] text-white flex items-center justify-center text-xs font-bold cursor-pointer hover:ring-2 hover:ring-emerald-200 transition-all"
               title={currentUser?.name || "Student Profile"}
             >
               {currentUser?.name ? currentUser.name[0] : 'M'}
@@ -453,7 +489,7 @@ export default function ParticipantDashboard() {
                       {/* Banner Visual */}
                       <div className={`h-28 bg-gradient-to-r ${evt.gradient} p-3.5 flex flex-col justify-between text-white relative`}>
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-semibold bg-white/20 backdrop-blur-xs px-2 py-0.5 rounded-full">
+                          <span className="text-[10px] font-semibold bg-white/20 backdrop-blur-xs px-2 py-0.5 rounded-md">
                             {evt.category}
                           </span>
                           <button
@@ -531,7 +567,7 @@ export default function ParticipantDashboard() {
                 {/* Header row with accent bar & title */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-2.5">
-                    <span className="h-5 w-1 bg-[#2F5B3C] rounded-full"></span>
+                    <span className="h-5 w-1 bg-[#2F5B3C] rounded-sm"></span>
                     <h3 className="text-lg font-bold text-gray-900">My Activity</h3>
                   </div>
 
@@ -544,13 +580,13 @@ export default function ParticipantDashboard() {
                   </button>
                 </div>
 
-                {/* Sub-Tab Pills (Unstop style: Registrations, Watchlist, etc.) */}
+                {/* Sub-Tabs (Registrations, Watchlist, etc.) */}
                 <div className="flex flex-wrap items-center gap-2 pt-1 border-b border-gray-100 pb-3">
                   <button
                     onClick={() => setActivityTab('registrations')}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                       activityTab === 'registrations'
-                        ? 'border border-gray-400 bg-white text-gray-900 shadow-2xs'
+                        ? 'border border-gray-300 bg-white text-gray-900 shadow-2xs'
                         : 'text-gray-500 hover:text-gray-800'
                     }`}
                   >
@@ -559,9 +595,9 @@ export default function ParticipantDashboard() {
 
                   <button
                     onClick={() => setActivityTab('teams')}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                       activityTab === 'teams'
-                        ? 'border border-gray-400 bg-white text-gray-900 shadow-2xs'
+                        ? 'border border-gray-300 bg-white text-gray-900 shadow-2xs'
                         : 'text-gray-500 hover:text-gray-800'
                     }`}
                   >
@@ -570,9 +606,9 @@ export default function ParticipantDashboard() {
 
                   <button
                     onClick={() => setActivityTab('matchmaker')}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                       activityTab === 'matchmaker'
-                        ? 'border border-gray-400 bg-white text-gray-900 shadow-2xs'
+                        ? 'border border-gray-300 bg-white text-gray-900 shadow-2xs'
                         : 'text-gray-500 hover:text-gray-800'
                     }`}
                   >
@@ -581,9 +617,9 @@ export default function ParticipantDashboard() {
 
                   <button
                     onClick={() => setActivityTab('submissions')}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                       activityTab === 'submissions'
-                        ? 'border border-gray-400 bg-white text-gray-900 shadow-2xs'
+                        ? 'border border-gray-300 bg-white text-gray-900 shadow-2xs'
                         : 'text-gray-500 hover:text-gray-800'
                     }`}
                   >
@@ -990,59 +1026,225 @@ export default function ParticipantDashboard() {
             </div>
           )}
 
-          {/* TAB 4: SUBMISSIONS */}
+          {/* TAB 4: SUBMISSIONS & AI PITCH DOCTOR */}
           {activeNav === 'submissions' && (
-            <div className="max-w-2xl bg-white rounded-2xl p-6 border border-gray-200 shadow-2xs space-y-4">
-              <h2 className="text-xl font-bold text-gray-900">Submit Your Project</h2>
-              <p className="text-xs text-gray-500">Provide your repository and details before the sprint closes.</p>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+              {/* Left Column: Submission Form (6 cols) */}
+              <div className="lg:col-span-6 bg-white rounded-xl p-5 border border-gray-200 shadow-2xs space-y-4">
+                <div className="flex justify-between items-center pb-2 border-b border-gray-100">
+                  <div>
+                    <h2 className="text-base font-bold text-gray-900">Project Final Submission</h2>
+                    <p className="text-[11px] text-gray-500">Provide your repository and credentials before sprint deadline.</p>
+                  </div>
+                  <span className="text-[10px] font-mono text-[#2F5B3C] bg-[#EFF5F1] px-2 py-0.5 rounded font-semibold border border-[#DEEBE1]">
+                    Track 01
+                  </span>
+                </div>
 
-              <form onSubmit={handleProjectSubmit} className="space-y-4 pt-2">
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Project Title</label>
-                  <input
-                    type="text"
-                    required
-                    value={submissionForm.project_name}
-                    onChange={(e) => setSubmissionForm({ ...submissionForm, project_name: e.target.value })}
-                    className="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:outline-none"
-                  />
+                <form onSubmit={handleProjectSubmit} className="space-y-3 pt-1">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Project Title</label>
+                    <input
+                      type="text"
+                      required
+                      value={submissionForm.project_name}
+                      onChange={(e) => setSubmissionForm({ ...submissionForm, project_name: e.target.value })}
+                      className="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="block text-xs font-semibold text-gray-700">Tagline / Short Summary</label>
+                      {auditResult && (
+                        <button
+                          type="button"
+                          onClick={applyAiPolish}
+                          className="text-[10px] font-bold text-[#2F5B3C] hover:underline flex items-center gap-0.5 cursor-pointer"
+                        >
+                          <span className="material-symbols-outlined text-xs">auto_fix_high</span>
+                          <span>Apply AI Polish</span>
+                        </button>
+                      )}
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      value={submissionForm.tagline}
+                      onChange={(e) => setSubmissionForm({ ...submissionForm, tagline: e.target.value })}
+                      className="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">GitHub Repo Link</label>
+                    <input
+                      type="url"
+                      required
+                      value={submissionForm.repo_url}
+                      onChange={(e) => setSubmissionForm({ ...submissionForm, repo_url: e.target.value })}
+                      className="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:outline-none font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Demo Video Link</label>
+                    <input
+                      type="url"
+                      value={submissionForm.demo_url}
+                      onChange={(e) => setSubmissionForm({ ...submissionForm, demo_url: e.target.value })}
+                      className="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:outline-none font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Executive Abstract</label>
+                    <textarea
+                      rows={3}
+                      value={submissionForm.abstract}
+                      onChange={(e) => setSubmissionForm({ ...submissionForm, abstract: e.target.value })}
+                      className="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:outline-none"
+                    />
+                  </div>
+                  <div className="pt-2 flex items-center justify-between">
+                    <button
+                      type="submit"
+                      className="py-2 px-5 bg-[#24422D] text-white text-xs font-semibold rounded-lg hover:bg-[#1A3322] cursor-pointer shadow-subtle flex items-center gap-1.5"
+                    >
+                      <span className="material-symbols-outlined text-sm">send</span>
+                      <span>Lock & Submit Project</span>
+                    </button>
+                    {submittedStatus && (
+                      <span className="text-xs font-mono text-[#2F5B3C] font-semibold flex items-center gap-1">
+                        <span className="material-symbols-outlined text-sm">check_circle</span>
+                        <span>Submission Confirmed</span>
+                      </span>
+                    )}
+                  </div>
+                </form>
+              </div>
+
+              {/* Right Column: AI Pitch Doctor & Pre-Submission Rubric Co-Pilot (6 cols) */}
+              <div className="lg:col-span-6 bg-white rounded-xl p-5 border border-gray-200 shadow-2xs space-y-3.5">
+                <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-base text-[#C2542D]">smart_toy</span>
+                    <h2 className="text-sm font-bold text-gray-900">AI Pitch Doctor & Rubric Co-Pilot</h2>
+                  </div>
+                  <button
+                    onClick={runPreFlightAudit}
+                    disabled={auditRunning}
+                    className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#2F5B3C] hover:bg-[#254B31] disabled:opacity-50 text-white flex items-center gap-1.5 shadow-subtle cursor-pointer"
+                  >
+                    {auditRunning ? (
+                      <>
+                        <span className="w-3 h-3 rounded-sm border-2 border-white border-t-transparent animate-spin"></span>
+                        <span>Auditing Repo...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="material-symbols-outlined text-sm">rocket_launch</span>
+                        <span>Run Pre-Flight Audit</span>
+                      </>
+                    )}
+                  </button>
                 </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Tagline / Short Summary</label>
-                  <input
-                    type="text"
-                    required
-                    value={submissionForm.tagline}
-                    onChange={(e) => setSubmissionForm({ ...submissionForm, tagline: e.target.value })}
-                    className="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">GitHub Link</label>
-                  <input
-                    type="url"
-                    required
-                    value={submissionForm.repo_url}
-                    onChange={(e) => setSubmissionForm({ ...submissionForm, repo_url: e.target.value })}
-                    className="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Demo Video Link</label>
-                  <input
-                    type="url"
-                    value={submissionForm.demo_url}
-                    onChange={(e) => setSubmissionForm({ ...submissionForm, demo_url: e.target.value })}
-                    className="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:outline-none"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="py-2.5 px-6 bg-[#24422D] text-white text-xs font-semibold rounded-lg hover:bg-[#1A3322] cursor-pointer"
-                >
-                  Confirm & Submit
-                </button>
-              </form>
+
+                {!auditResult && !auditRunning && (
+                  <div className="p-6 rounded-xl bg-gray-50 border border-dashed border-gray-300 text-center space-y-2">
+                    <span className="material-symbols-outlined text-3xl text-gray-400">rate_review</span>
+                    <h3 className="text-xs font-semibold text-gray-800">Pre-Flight Rubric Check Ready</h3>
+                    <p className="text-[11px] text-gray-500 max-w-sm mx-auto leading-relaxed">
+                      Run an automated scan before submitting to cross-examine your repo code against the organizer rubric, verify fresh commits, and polish your pitch.
+                    </p>
+                    <button
+                      onClick={runPreFlightAudit}
+                      className="mt-2 text-xs font-semibold text-[#2F5B3C] hover:underline"
+                    >
+                      Click "Run Pre-Flight Audit" to analyze
+                    </button>
+                  </div>
+                )}
+
+                {auditRunning && (
+                  <div className="p-8 rounded-xl bg-gray-50 text-center space-y-3">
+                    <div className="w-8 h-8 mx-auto rounded-sm border-2 border-[#2F5B3C] border-t-transparent animate-spin"></div>
+                    <p className="text-xs font-semibold text-gray-800">Analyzing GitHub AST & Commit History...</p>
+                    <p className="text-[11px] text-gray-500 font-mono">Cross-referencing Track 01 Rubrics & SLA criteria</p>
+                  </div>
+                )}
+
+                {auditResult && !auditRunning && (
+                  <div className="space-y-3">
+                    {/* Readiness Banner */}
+                    <div className="p-3.5 rounded-xl bg-[#EFF5F1] border border-[#DEEBE1] flex items-center justify-between">
+                      <div>
+                        <span className="text-[10px] font-mono text-[#2F5B3C] uppercase font-bold block">
+                          Rubric Evaluation Readiness
+                        </span>
+                        <div className="flex items-baseline gap-2 mt-0.5">
+                          <span className="text-2xl font-bold font-sans text-[#1F1916]">{auditResult.score}/100</span>
+                          <span className="text-xs text-[#2F5B3C] font-semibold">High Readiness</span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[10px] font-mono text-gray-500 block">Fresh Code Score</span>
+                        <span className="text-xs font-mono font-bold text-[#2F5B3C]">{auditResult.freshness_score} Verified</span>
+                      </div>
+                    </div>
+
+                    {/* AI Pitch Doctor Critique */}
+                    <div className="p-3.5 rounded-xl bg-[#FBF9F5] border border-[#E7DFD5] space-y-2">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-[#C2542D]">
+                        <span className="material-symbols-outlined text-sm">psychology</span>
+                        <span>Pitch Doctor Critique</span>
+                      </div>
+                      <p className="text-[11px] text-gray-600 leading-relaxed italic bg-white p-2.5 rounded-lg border border-[#E7DFD5]">
+                        "{auditResult.pitch_critique}"
+                      </p>
+                      <div>
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-[10px] font-mono uppercase font-bold text-[#2F5B3C]">
+                            Recommended Pitch Hook:
+                          </span>
+                          <button
+                            onClick={applyAiPolish}
+                            className="text-[10px] font-bold text-[#2F5B3C] hover:underline flex items-center gap-0.5 cursor-pointer"
+                          >
+                            <span className="material-symbols-outlined text-xs">content_copy</span>
+                            <span>Apply to Form</span>
+                          </button>
+                        </div>
+                        <p className="text-xs font-medium text-gray-800 bg-[#EFF5F1] p-2.5 rounded-lg border border-[#DEEBE1] leading-relaxed">
+                          {auditResult.suggested_tagline}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Rubric Verification Checklist */}
+                    <div className="p-3 rounded-xl bg-gray-50 border border-gray-200">
+                      <span className="text-[10px] font-mono uppercase font-bold text-gray-500 block mb-2">
+                        Pre-Submission Compliance Checklist
+                      </span>
+                      <div className="space-y-1.5 text-xs">
+                        {auditResult.checklist.map((item, i) => (
+                          <div key={i} className="flex items-start justify-between gap-2 bg-white p-2 rounded-lg border border-gray-100">
+                            <div className="flex items-start gap-1.5">
+                              <span className={`material-symbols-outlined text-sm shrink-0 ${
+                                item.status === 'pass' ? 'text-[#2F5B3C]' : 'text-[#C47D1C]'
+                              }`}>
+                                {item.status === 'pass' ? 'check_circle' : 'warning'}
+                              </span>
+                              <span className="text-[11px] text-gray-700 leading-tight">{item.label}</span>
+                            </div>
+                            <span className={`text-[10px] font-mono uppercase font-bold px-1.5 py-0.2 rounded shrink-0 ${
+                              item.status === 'pass' ? 'bg-[#EFF5F1] text-[#2F5B3C]' : 'bg-[#FDF6EA] text-[#C47D1C]'
+                            }`}>
+                              {item.status}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -1072,7 +1274,7 @@ export default function ParticipantDashboard() {
             <div className="max-w-xl bg-white rounded-2xl p-6 border border-gray-200 shadow-2xs space-y-5">
               <div className="flex items-center justify-between pb-4 border-b border-gray-200">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-full bg-[#2F5B3C] text-white flex items-center justify-center font-bold text-xl">
+                  <div className="w-14 h-14 rounded-xl bg-[#2F5B3C] text-white flex items-center justify-center font-bold text-xl shadow-xs">
                     {currentUser?.name ? currentUser.name[0] : 'M'}
                   </div>
                   <div>
